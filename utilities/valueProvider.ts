@@ -9,11 +9,9 @@ interface HomeData {
 export class ExpectedValueProvider {
   readonly baseUrl: string;
 
-
   constructor() {
     const data = this.loadHomeData();
     this.baseUrl = data.baseUrl;
-    
   }
 
   private loadHomeData(): HomeData {

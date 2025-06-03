@@ -4,7 +4,6 @@ import { FakeUser } from "./fakeData.ts";
 import { EnvData } from "./envData.ts";
 import { HomePage } from "../pageObjectModel/homePage.ts";
 
-
 const test = base.extend<{
   runner: Utils;
   envData: EnvData;
@@ -30,8 +29,6 @@ const test = base.extend<{
     const homePageInstance = new HomePage(page);
     await use(homePageInstance);
   },
-
- 
 });
 
 export { test };

@@ -3,8 +3,6 @@ import logger from "./logger";
 // import { allure } from "allure-playwright";
 import { ExpectedValueProvider } from "./valueProvider";
 
-
-
 export class Utils {
   private page: Page;
   private expected: ExpectedValueProvider;
@@ -334,6 +332,149 @@ export class Utils {
       this.logMessage(errorMsg, "error");
       await this.captureScreenshotOnFailure("isElementVisible");
       return false;
+    }
+  }
+
+  async verifyElementToHaveCSSProperty(
+    identifier: string | string[],
+    property: string,
+    expectedValue: string,
+    isHover: boolean = false,
+    timeout = 3000
+  ): Promise<void> {
+    const identifiers = Array.isArray(identifier) ? identifier : [identifier];
+
+    for (const id of identifiers) {
+      try {
+        await this.page.waitForSelector(id, { state: "visible" });
+        const elements = this.page.locator(id);
+        const count = await elements.count();
+
+        if (count === 0) {
+          throw new Error(`❌ No elements found for identifier "${id}".`);
+        }
+
+        for (let i = 0; i < count; i++) {
+          const element = elements.nth(i);
+          await element.waitFor({ state: "visible" });
+
+          if (isHover) {
+            await element.hover();
+            this.logMessage(
+              `Hovered over element with identifier: ${id} at index ${i}`
+            );
+            await this.page.waitForTimeout(300);
+          }
+
+          try {
+            await expect(element).toHaveCSS(property, expectedValue, {
+              timeout,
+            });
+
+            this.logMessage(
+              `✅ CSS property "${property}" of "${id}" at index ${i} is as expected: "${expectedValue}".`
+            );
+          } catch {
+            const actualValue = await element.evaluate(
+              (el, prop) =>
+                window.getComputedStyle(el).getPropertyValue(prop).trim(),
+              property
+            );
+            console.log(`🔍 [DEBUG] ${property} = "${actualValue}"`);
+
+            if (actualValue !== expectedValue.trim()) {
+              const errorMsg = `❌ Expected CSS property "${property}" to be "${expectedValue}", but found "${actualValue}" for "${id}" at index ${i}.`;
+              this.logMessage(errorMsg, "error");
+              await this.captureScreenshotOnFailure(
+                "verifyElementToHaveCSSProperty"
+              );
+              throw new Error(errorMsg);
+            }
+
+            this.logMessage(
+              `✅ CSS property "${property}" of "${id}" at index ${i} matches expected value (via fallback): "${actualValue}".`
+            );
+          }
+        }
+      } catch (error) {
+        const errorMsg = `❌ Failed to verify CSS property "${property}" for: ${id} | Reason: ${
+          error instanceof Error ? error.message : error
+        }`;
+        this.logMessage(errorMsg, "error");
+        await this.captureScreenshotOnFailure("verifyElementToHaveCSSProperty");
+        throw error instanceof Error ? error : new Error(String(error));
+      }
+    }
+  }
+
+  async validateAttribute(
+    selector: string,
+    attribute: string,
+    expectedValue: string
+  ): Promise<void> {
+    try {
+      const actualValue = await this.page.getAttribute(selector, attribute);
+
+      if (actualValue !== expectedValue) {
+        const errorMsg = `Attribute "${attribute}" value mismatch. Expected: "${expectedValue}", Got: "${actualValue}"`;
+        this.logMessage(errorMsg, "error");
+        await this.captureScreenshotOnFailure("validateAttribute");
+        throw new Error(errorMsg);
+      }
+      this.logMessage(
+        `Validated attribute "${attribute}" with value "${expectedValue}" on selector "${selector}"`
+      );
+    } catch (error) {
+      const errorMsg = `Failed to validate attribute "${attribute}" on selector "${selector}"`;
+      this.logMessage(errorMsg, "error");
+      await this.captureScreenshotOnFailure("validateAttribute");
+      throw new Error(errorMsg);
+    }
+  }
+
+  async verifyElementsIsExist(
+    selector: string,
+    isImage: boolean = false
+  ): Promise<void> {
+    try {
+      const elementCount = await this.page.locator(selector).count();
+
+      if (elementCount === 0) {
+        const errorMsg = `❌ No element selector displayed in: "${selector}"`;
+        this.logMessage(errorMsg, "error");
+        await this.captureScreenshotOnFailure("verifyElementIsExist");
+        throw new Error(errorMsg);
+      }
+
+      this.logMessage(
+        `✅ ${elementCount} element(s) found under selector: "${selector}"`
+      );
+
+      for (let i = 0; i < elementCount; i++) {
+        let target: string | null;
+
+        if (!isImage) {
+          target = await this.page.locator(selector).nth(i).textContent();
+        } else {
+          target = await this.page.locator(selector).nth(i).getAttribute("src");
+        }
+
+        if (!target?.trim()) {
+          const errorMsg = `❌ Element ${
+            i + 1
+          } missing or empty in selector: "${selector}"`;
+          this.logMessage(errorMsg, "error");
+          await this.captureScreenshotOnFailure("verifyElementIsExist");
+          throw new Error(errorMsg);
+        }
+
+        this.logMessage(`✅ Element ${i + 1} content information: "${target}"`);
+      }
+    } catch (error) {
+      const errorMsg = `Failed to verify elements for selector: "${selector}"`;
+      this.logMessage(errorMsg, "error");
+      await this.captureScreenshotOnFailure("verifyElementIsExist");
+      throw new Error(errorMsg);
     }
   }
 }
