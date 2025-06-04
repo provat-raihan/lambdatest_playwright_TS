@@ -1,26 +1,30 @@
-import { createLogger, format, transports } from "winston";
-import fs from "fs";
+import pino from "pino";
+import path from "path";
 
-// Define log file path
-const LOG_FILE_PATH = "test-logs.log";
+// Optional: write to log file + pretty print to console
+const logFilePath = path.resolve("test-logs.log");
 
-// Delete log file before each execution
-if (fs.existsSync(LOG_FILE_PATH)) {
-  fs.unlinkSync(LOG_FILE_PATH);
-}
-
-const logger = createLogger({
+const logger = pino({
   level: "info",
-  format: format.combine(
-    format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-    format.printf(({ timestamp, level, message }) => {
-      return `[${timestamp}] ${level.toUpperCase()}: ${message}`;
-    })
-  ),
-  transports: [
-    new transports.Console(),
-    new transports.File({ filename: LOG_FILE_PATH }),
-  ],
+  transport: {
+    targets: [
+      {
+        target: "pino-pretty",
+        options: {
+          colorize: true,
+          customColors: "error:red,info:green,warn:yellow",
+          translateTime: "yyyy-mm-dd HH:MM:ss",
+          ignore: "pid,hostname",
+        },
+        level: "info",
+      },
+      {
+        target: "pino/file",
+        options: { destination: logFilePath },
+        level: "info",
+      },
+    ],
+  },
 });
 
 export default logger;

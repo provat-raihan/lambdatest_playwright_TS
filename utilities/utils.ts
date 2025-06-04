@@ -25,10 +25,18 @@ export class Utils {
     message: string,
     level: "info" | "error" | "warn" = "info"
   ): void {
-    if (level === "info") {
-      logger.info(message);
-    } else {
-      logger.error(message);
+    switch (level) {
+      case "info":
+        logger.info(message);
+        break;
+      case "warn":
+        logger.warn(message);
+        break;
+      case "error":
+        logger.error(message);
+        break;
+      default:
+        logger.info(message); // fallback
     }
   }
 
