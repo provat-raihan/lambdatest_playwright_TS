@@ -485,17 +485,4 @@ export class Utils {
       throw new Error(errorMsg);
     }
   }
-
-  public async getElementAttribute(selector: string, attribute: string): Promise<string | null> {
-    try {
-      const value = await this.page.getAttribute(selector, attribute);
-      this.logMessage(`Got attribute '${attribute}' from '${selector}': ${value}`);
-      return value;
-    } catch (error) {
-      const errorMsg = `Failed to get attribute '${attribute}' from '${selector}'`;
-      this.logMessage(errorMsg, "error");
-      await this.captureScreenshotOnFailure("getElementAttribute");
-      throw new Error(errorMsg);
-    }
-  }
 }
