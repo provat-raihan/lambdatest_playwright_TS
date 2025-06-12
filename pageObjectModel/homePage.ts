@@ -1,9 +1,9 @@
-import { Page } from "@playwright/test";
+import { Page, Locator } from "@playwright/test";
 
 export class HomePage {
-  readonly homePageLogo: string;
+  readonly logo: Locator;
 
   constructor(page: Page) {
-    this.homePageLogo = `css=div[id='entry_217821'] img`;
+    this.logo = page.locator(`css=div[id='entry_217821'] img`);
   }
 }

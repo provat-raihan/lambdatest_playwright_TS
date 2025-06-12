@@ -64,15 +64,14 @@ export class Utils {
     }
   }
 
-  async verifyElementIsVisible(selector: string): Promise<void> {
+  async verifyElementIsVisible(selector: Locator): Promise<void> {
     try {
-      const element = this.page.locator(selector);
-      const count = await element.count();
+      const count = await selector.count();
       if (count === 0) {
         throw new Error(`No elements found with identifier: ${selector}`);
       }
 
-      await expect(element.first()).toBeVisible({ timeout: 5000 });
+      await expect(selector.first()).toBeVisible({ timeout: 5000 });
       this.logMessage(
         `✅ Verified element(s) with identifier ${selector} is visible`
       );
@@ -84,9 +83,32 @@ export class Utils {
     }
   }
 
-  async verifyElementIsNotVisible(identifier: string): Promise<void> {
+  async waitUntilElementIsVisible(
+    locator: Locator,
+    timeout: number = 30000
+  ): Promise<void> {
     try {
-      await expect.soft(this.page.locator(identifier)).not.toBeVisible();
+      // Wait for network to be idle before checking visibility
+      await this.page.waitForLoadState("networkidle", { timeout });
+
+      // Poll the visibility using .toPass()
+      await expect(async () => {
+        const isVisible = await locator.isVisible();
+        expect(isVisible).toBeTruthy();
+      }).toPass({ timeout });
+
+      this.logMessage(`✅ Element is visible as expected.`);
+    } catch (error: any) {
+      const errorMsg = `❌ Element was not visible within timeout (${timeout}ms).`;
+      this.logMessage(errorMsg, "error");
+      await this.captureScreenshotOnFailure("waitUntilElementIsVisible");
+      throw new Error(`${errorMsg}\nDetails: ${error.message}`);
+    }
+  }
+
+  async verifyElementIsNotVisible(identifier: Locator): Promise<void> {
+    try {
+      await expect.soft(identifier).not.toBeVisible();
       this.logMessage(
         `Verified element with identifier ${identifier} is not visible`
       );
@@ -98,9 +120,9 @@ export class Utils {
     }
   }
 
-  async verifyElementIsHidden(identifier: string): Promise<void> {
+  async verifyElementIsHidden(identifier: Locator): Promise<void> {
     try {
-      await expect.soft(this.page.locator(identifier)).toBeHidden();
+      await expect.soft(identifier).toBeHidden();
       this.logMessage(
         `Verified element with identifier ${identifier} is hidden`
       );
@@ -112,10 +134,10 @@ export class Utils {
     }
   }
 
-  async clickOnElement(identifier: string): Promise<void> {
+  async clickOnElement(identifier: Locator): Promise<void> {
     try {
-      await this.page.isVisible(identifier);
-      await this.page.locator(identifier).click();
+      await identifier.isVisible();
+      await identifier.click();
       this.logMessage(`Clicked on element with identifier: ${identifier}`);
     } catch (error) {
       const errorMsg = `Failed to click on element with identifier: ${identifier}`;
@@ -126,7 +148,7 @@ export class Utils {
   }
 
   async validateAndClick(
-    buttonLocator: string,
+    buttonLocator: Locator,
     expectedText: string
   ): Promise<void> {
     const logIdentifier = `button located by "${buttonLocator}"`;
@@ -135,22 +157,22 @@ export class Utils {
     );
 
     try {
-      const button = this.page.locator(buttonLocator);
-
       // ✅ Only verify expected text
-      await expect(button).toHaveText(expectedText, { timeout: 5000 });
+      await expect(buttonLocator).toHaveText(expectedText, { timeout: 5000 });
       this.logMessage(
         `✅ ${logIdentifier} has expected text: "${expectedText}".`
       );
 
       // ✅ Perform click
-      await button.click();
+      await buttonLocator.click();
       this.logMessage(`✅ Successfully clicked ${logIdentifier}.`);
     } catch (error: any) {
       const errorMsg = `❌ Failed to validate or click ${logIdentifier}: ${error.message}`;
       this.logMessage(errorMsg, "error");
 
-      const screenshotName = `Fail_${buttonLocator.replace(
+      // Use the locator's string representation for the screenshot name
+      const locatorString = buttonLocator.toString();
+      const screenshotName = `Fail_${locatorString.replace(
         /[^a-zA-Z0-9_]/g,
         "_"
       )}`;
@@ -160,16 +182,14 @@ export class Utils {
     }
   }
 
-  async fillInputBox(identifier: string, text: string): Promise<void> {
+  async fillInputBox(identifier: Locator, text: string): Promise<void> {
     try {
-      const inputLocator = this.page.locator(identifier);
-      const currentValue = await inputLocator.inputValue();
+      const currentValue = await identifier.inputValue();
 
       if (currentValue.trim() !== "") {
-        await inputLocator.clear();
+        await identifier.clear();
       }
-
-      await inputLocator.fill(text);
+      await identifier.fill(text);
       this.logMessage(`Filled input box (${identifier}) with text: "${text}"`);
     } catch (error) {
       const errorMsg = `Failed to fill input box (${identifier}) with text: "${text}"`;
@@ -180,13 +200,11 @@ export class Utils {
   }
 
   async verifyToHaveValue(
-    identifier: string,
+    identifier: Locator,
     inputFieldText: string
   ): Promise<void> {
     try {
-      await expect
-        .soft(this.page.locator(identifier))
-        .toHaveValue(inputFieldText);
+      await expect.soft(identifier).toHaveValue(inputFieldText);
       this.logMessage(
         `Verified element (${identifier}) has value: "${inputFieldText}"`
       );
@@ -198,9 +216,9 @@ export class Utils {
     }
   }
 
-  async selectDropdownByValue(selector: string, value: string): Promise<void> {
+  async selectDropdownByValue(selector: Locator, value: string): Promise<void> {
     try {
-      await this.page.selectOption(selector, { value });
+      await selector.selectOption({ value });
       this.logMessage(`Selected dropdown (${selector}) value: "${value}"`);
     } catch (error) {
       const errorMsg = `Failed to select value "${value}" in dropdown: ${selector}`;
@@ -211,13 +229,13 @@ export class Utils {
   }
 
   async verifyContainText(
-    identifier: string,
+    identifier: Locator,
     expectedText: string,
     dynamicExpectedText?: string
   ): Promise<void> {
     try {
       await expect
-        .soft(this.page.locator(identifier))
+        .soft(identifier)
         .toContainText(
           expectedText || expectedText + " " + dynamicExpectedText
         );
@@ -235,7 +253,7 @@ export class Utils {
   async wait(
     time: number,
     options: {
-      waitForSelector?: string;
+      waitForSelector?: Locator;
       waitForNetworkIdle?: boolean;
       waitForLoadState?: "load" | "domcontentloaded" | "networkidle";
     } = {}
@@ -244,7 +262,7 @@ export class Utils {
 
     try {
       if (waitForSelector) {
-        await this.page.waitForSelector(waitForSelector, {
+        await waitForSelector.waitFor({
           state: "visible",
           timeout: time * 1000,
         });
@@ -303,10 +321,9 @@ export class Utils {
     }
   }
 
-  async scrollToElement(selector: string): Promise<void> {
+  async scrollToElement(selector: Locator): Promise<void> {
     try {
-      const targetElement = this.page.locator(selector); // Use the passed selector
-      await targetElement.scrollIntoViewIfNeeded();
+      await selector.scrollIntoViewIfNeeded();
       this.logMessage(`Scrolled to the element with selector: ${selector}`);
     } catch (error) {
       const errorMsg = `Failed to scroll to the element with selector: ${selector}`;
@@ -316,9 +333,9 @@ export class Utils {
     }
   }
 
-  async mouseHover(identifier: string): Promise<void> {
+  async mouseHover(identifier: Locator): Promise<void> {
     try {
-      await this.page.locator(identifier).hover();
+      await identifier.hover();
       this.logMessage(`Hovered over element with identifier: ${identifier}`);
     } catch (error) {
       const errorMsg = `Failed to hover over element with identifier: ${identifier}`;
@@ -328,9 +345,9 @@ export class Utils {
     }
   }
 
-  async isElementVisible(identifier: string): Promise<boolean> {
+  async isElementVisible(identifier: Locator): Promise<boolean> {
     try {
-      const isVisible = await this.page.locator(identifier).isVisible();
+      const isVisible = await identifier.isVisible();
       this.logMessage(
         `Checked visibility for element with identifier: ${identifier} — Result: ${isVisible}`
       );
@@ -344,34 +361,33 @@ export class Utils {
   }
 
   async verifyElementToHaveCSSProperty(
-    identifier: string | string[],
+    locatorOrArray: Locator | Locator[],
     property: string,
     expectedValue: string,
     isHover: boolean = false,
     timeout = 3000
   ): Promise<void> {
-    const identifiers = Array.isArray(identifier) ? identifier : [identifier];
+    const locators = Array.isArray(locatorOrArray)
+      ? locatorOrArray
+      : [locatorOrArray];
 
-    for (const id of identifiers) {
+    for (const locator of locators) {
       try {
-        await this.page.waitForSelector(id, { state: "visible" });
-        const elements = this.page.locator(id);
-        const count = await elements.count();
+        await locator.first().waitFor({ state: "visible", timeout });
 
+        const count = await locator.count();
         if (count === 0) {
-          throw new Error(`❌ No elements found for identifier "${id}".`);
+          throw new Error(`❌ No elements found for provided locator.`);
         }
 
         for (let i = 0; i < count; i++) {
-          const element = elements.nth(i);
-          await element.waitFor({ state: "visible" });
+          const element = locator.nth(i);
+          await element.waitFor({ state: "visible", timeout });
 
           if (isHover) {
             await element.hover();
-            this.logMessage(
-              `Hovered over element with identifier: ${id} at index ${i}`
-            );
-            await this.page.waitForTimeout(300);
+            this.logMessage(`🖱️ Hovered over element at index ${i}`);
+            await this.page.waitForTimeout(300); // allow time for hover styles to apply
           }
 
           try {
@@ -380,7 +396,7 @@ export class Utils {
             });
 
             this.logMessage(
-              `✅ CSS property "${property}" of "${id}" at index ${i} is as expected: "${expectedValue}".`
+              `✅ CSS "${property}" at index ${i} is as expected: "${expectedValue}".`
             );
           } catch {
             const actualValue = await element.evaluate(
@@ -388,24 +404,23 @@ export class Utils {
                 window.getComputedStyle(el).getPropertyValue(prop).trim(),
               property
             );
-            console.log(`🔍 [DEBUG] ${property} = "${actualValue}"`);
 
             if (actualValue !== expectedValue.trim()) {
-              const errorMsg = `❌ Expected CSS property "${property}" to be "${expectedValue}", but found "${actualValue}" for "${id}" at index ${i}.`;
+              const errorMsg = `❌ CSS mismatch at index ${i}: Expected "${property}" = "${expectedValue}", got "${actualValue}"`;
               this.logMessage(errorMsg, "error");
               await this.captureScreenshotOnFailure(
-                "verifyElementToHaveCSSProperty"
+                `CSSMismatch_${property}_${i}`
               );
               throw new Error(errorMsg);
             }
 
             this.logMessage(
-              `✅ CSS property "${property}" of "${id}" at index ${i} matches expected value (via fallback): "${actualValue}".`
+              `✅ CSS "${property}" at index ${i} matched via fallback: "${actualValue}".`
             );
           }
         }
       } catch (error) {
-        const errorMsg = `❌ Failed to verify CSS property "${property}" for: ${id} | Reason: ${
+        const errorMsg = `❌ Failed CSS verification for property "${property}" | Reason: ${
           error instanceof Error ? error.message : error
         }`;
         this.logMessage(errorMsg, "error");
@@ -416,12 +431,12 @@ export class Utils {
   }
 
   async validateAttribute(
-    selector: string,
-    attribute: string,
+    selector: Locator,
+    attribute: string | "src" | "href" | "alt" | "data-test",
     expectedValue: string
   ): Promise<void> {
     try {
-      const actualValue = await this.page.getAttribute(selector, attribute);
+      const actualValue = await selector.getAttribute(attribute);
 
       if (actualValue !== expectedValue) {
         const errorMsg = `Attribute "${attribute}" value mismatch. Expected: "${expectedValue}", Got: "${actualValue}"`;
@@ -441,11 +456,11 @@ export class Utils {
   }
 
   async verifyElementsIsExist(
-    selector: string,
+    selector: Locator,
     isImage: boolean = false
   ): Promise<void> {
     try {
-      const elementCount = await this.page.locator(selector).count();
+      const elementCount = await selector.count();
 
       if (elementCount === 0) {
         const errorMsg = `❌ No element selector displayed in: "${selector}"`;
@@ -462,9 +477,9 @@ export class Utils {
         let target: string | null;
 
         if (!isImage) {
-          target = await this.page.locator(selector).nth(i).textContent();
+          target = await selector.nth(i).textContent();
         } else {
-          target = await this.page.locator(selector).nth(i).getAttribute("src");
+          target = await selector.nth(i).getAttribute("src");
         }
 
         if (!target?.trim()) {
