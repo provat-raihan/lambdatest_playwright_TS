@@ -12,13 +12,21 @@ class HomePageTest extends ExpectedValueProvider {
       test.beforeEach(async ({ runner, envData, homePage }) => {
         await runner.navigateTo(envData.baseUrl);
         await runner.verifyUrlContains(envData.baseUrl);
-        await runner.verifyElementIsVisible(homePage.logo);
-        await runner.validateAttribute(homePage.logo, "src", homeData.logoSrc);
-        await runner.validateAttribute(homePage.logo, "alt", homeData.logoAlt);
+        await runner.verifyElementIsVisible(homePage.headerLogo);
+        await runner.validateAttribute(
+          homePage.headerLogo,
+          "src",
+          homeData.logoSrc
+        );
+        await runner.validateAttribute(
+          homePage.headerLogo,
+          "alt",
+          homeData.logoAlt
+        );
       });
 
       test("Verify something", async ({ runner, homePage }) => {
-        await runner.verifyElementIsVisible(homePage.logo);
+        await runner.verifyElementIsVisible(homePage.headerLogo);
       });
     });
   }
