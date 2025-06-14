@@ -1,12 +1,11 @@
 import { Page } from "@playwright/test";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 export class EnvData {
   readonly baseUrl: string;
+  readonly demoUrl: string;
 
   constructor(page: Page) {
     this.baseUrl = `${process.env.BASE_URL}`;
+    this.demoUrl = `${process.env.DEMO_URL}`;
   }
 }

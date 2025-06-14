@@ -12,16 +12,16 @@ class HomePageTest extends ExpectedValueProvider {
       test.beforeEach(async ({ runner, envData, homePage }) => {
         await runner.navigateTo(envData.baseUrl);
         await runner.verifyUrlContains(envData.baseUrl);
-        await runner.verifyElementIsVisible(homePage.headerLogo);
+        await runner.waitUntilElementIsVisible(homePage.headerLogo);
         await runner.validateAttribute(
           homePage.headerLogo,
           "src",
-          homeData.logoSrc
+          homeData.header.logoSrc
         );
         await runner.validateAttribute(
           homePage.headerLogo,
           "alt",
-          homeData.logoAlt
+          homeData.header.logoAlt
         );
       });
 

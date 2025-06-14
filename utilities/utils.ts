@@ -42,10 +42,13 @@ export class Utils {
 
   async navigateTo(url: string): Promise<void> {
     try {
-      await this.page.goto(url);
-      this.logMessage(`Navigated to ${url}`);
+      await this.page.goto(url, {
+        waitUntil: "domcontentloaded",
+        timeout: 12000,
+      });
+      this.logMessage(`Navigated to ${url} successfully.`);
     } catch (error) {
-      const errorMsg = `Failed to navigate to ${url}`;
+      const errorMsg = `Failed to navigate to ${url}: ${error}`;
       this.logMessage(errorMsg, "error");
       await this.captureScreenshotOnFailure("navigateTo");
       throw new Error(errorMsg);
@@ -243,7 +246,7 @@ export class Utils {
         `Verified element with identifier ${identifier} contains text: "${expectedText} ${dynamicExpectedText}"`
       );
     } catch (error) {
-      const errorMsg = `Failed to verify element with identifier ${identifier} contains text: "${expectedText} ${expectedText}"`;
+      const errorMsg = `Failed to verify element with identifier ${identifier} contains text: "${expectedText}"`;
       this.logMessage(errorMsg, "error");
       await this.captureScreenshotOnFailure("verifyContainText");
       throw new Error(errorMsg);

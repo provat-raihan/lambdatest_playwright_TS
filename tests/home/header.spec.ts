@@ -16,12 +16,12 @@ class HeaderTest extends ExpectedValueProvider {
         await runner.validateAttribute(
           homePage.headerLogo,
           "src",
-          homeData.logoSrc
+          homeData.header.logoSrc
         );
         await runner.validateAttribute(
           homePage.headerLogo,
           "alt",
-          homeData.logoAlt
+          homeData.header.logoAlt
         );
       });
 
@@ -32,10 +32,16 @@ class HeaderTest extends ExpectedValueProvider {
         await runner.verifyElementIsVisible(
           homePage.navbarItems.shopByCategory
         );
+        await runner.verifyContainText(
+          homePage.navbarItems.shopByCategory,
+          "Shop by Category"
+        );
         await runner.verifyElementIsVisible(homePage.navbarItems.home);
-        await runner.verifyContainText(homePage.navbarItems.home, "Home");
+        await runner.verifyContainText(homePage.navbarItems.home, "Home ");
+        // await runner.verifyElementIsVisible();
       });
     });
   }
 }
+
 new HeaderTest().runTest();

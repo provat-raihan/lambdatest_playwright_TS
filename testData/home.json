@@ -1,4 +1,12 @@
 { 
-    "logoSrc": "https://ecommerce-playground.lambdatest.io/image/catalog/maza/svg/image2vector.svg",
-    "logoAlt": "Poco Electro"
+    "header": {
+        "logoSrc": "https://ecommerce-playground.lambdatest.io/image/catalog/maza/svg/image2vector.svg",
+        "logoAlt": "Poco Electro",
+        "navbarItemsText": {
+            "home": "Home",
+            "components": "Components",
+            "aboutUs": "About Us",
+            "contactUs": "Contact Us"
+        }
+    }
 }
