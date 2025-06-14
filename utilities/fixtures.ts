@@ -2,7 +2,7 @@ import { test as base, Page } from "@playwright/test";
 import { Utils } from "./utils";
 import { FakeUser } from "./fakeData.ts";
 import { EnvData } from "./envData.ts";
-import { HomePage } from "../pageObjectModel/homePage.ts";
+import { HomePage } from "../pageObjectModel/home.page.ts";
 
 const test = base.extend<{
   runner: Utils;
