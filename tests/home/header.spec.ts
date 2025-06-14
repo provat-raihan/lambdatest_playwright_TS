@@ -33,6 +33,7 @@ class HeaderTest extends ExpectedValueProvider {
           homePage.navbarItems.shopByCategory
         );
         await runner.verifyElementIsVisible(homePage.navbarItems.home);
+        await runner.verifyContainText(homePage.navbarItems.home, "Home");
       });
     });
   }
