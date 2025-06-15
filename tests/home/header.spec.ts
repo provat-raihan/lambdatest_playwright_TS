@@ -114,7 +114,7 @@ class HeaderTest extends ExpectedValueProvider {
         );
       });
 
-      // Done
+      //
       test("Verify that clicking on shop by category opens modal and contains expected items", async ({
         runner,
         homePage,
