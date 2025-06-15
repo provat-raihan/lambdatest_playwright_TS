@@ -12,7 +12,7 @@ class HeaderTest extends ExpectedValueProvider {
       test.beforeEach(async ({ runner, envData, homePage }) => {
         await runner.navigateTo(envData.baseUrl);
         await runner.verifyUrlContains(envData.baseUrl);
-        await runner.verifyElementIsVisible(homePage.headerLogo);
+        await runner.waitUntilElementIsVisible(homePage.headerLogo);
         await runner.validateAttribute(
           homePage.headerLogo,
           "src",
@@ -25,22 +25,101 @@ class HeaderTest extends ExpectedValueProvider {
         );
       });
 
+      // Done
       test("Verify that navbar items visible properly and contain expected texts", async ({
         runner,
         homePage,
       }) => {
+        // Shop by category
         await runner.verifyElementIsVisible(
           homePage.navbarItems.shopByCategory
         );
+        await runner.validateAttribute(
+          homePage.navbarItems.shopByCategory,
+          "href",
+          homeData.header.navbarItemsHrefValues.shopByCategory
+        );
         await runner.verifyContainText(
           homePage.navbarItems.shopByCategory,
-          "Shop by Category"
+          homeData.header.navbarItemsText.shopByCategory
         );
+
+        // Home
         await runner.verifyElementIsVisible(homePage.navbarItems.home);
-        await runner.verifyContainText(homePage.navbarItems.home, "Home ");
-        // await runner.verifyElementIsVisible();
+        await runner.validateAttribute(
+          homePage.navbarItems.home,
+          "href",
+          homeData.header.navbarItemsHrefValues.home
+        );
+        await runner.verifyContainText(
+          homePage.navbarItems.home,
+          homeData.header.navbarItemsText.home
+        );
+
+        // Special Hot
+        await runner.verifyElementIsVisible(homePage.navbarItems.specialHot);
+        await runner.validateAttribute(
+          homePage.navbarItems.specialHot,
+          "href",
+          homeData.header.navbarItemsHrefValues.specialHot
+        );
+        await runner.verifyContainText(
+          homePage.navbarItems.specialHot,
+          homeData.header.navbarItemsText.specialHot
+        );
+
+        // Blog
+        await runner.verifyElementIsVisible(homePage.navbarItems.blog);
+        await runner.validateAttribute(
+          homePage.navbarItems.blog,
+          "href",
+          homeData.header.navbarItemsHrefValues.blog
+        );
+        await runner.verifyContainText(
+          homePage.navbarItems.blog,
+          homeData.header.navbarItemsText.blog
+        );
+
+        // Mega Menu
+        await runner.verifyElementIsVisible(homePage.navbarItems.megaMenu);
+        await runner.validateAttribute(
+          homePage.navbarItems.megaMenu,
+          "href",
+          homeData.header.navbarItemsHrefValues.megaMenu
+        );
+        await runner.verifyContainText(
+          homePage.navbarItems.megaMenu,
+          homeData.header.navbarItemsText.megaMenu
+        );
+
+        // AddOns Featured
+        await runner.verifyElementIsVisible(
+          homePage.navbarItems.addOnsFeatured
+        );
+        await runner.verifyContainText(
+          homePage.navbarItems.addOnsFeatured,
+          homeData.header.navbarItemsText.addOnsFeatured
+        );
+
+        // My Account
+        await runner.verifyElementIsVisible(homePage.navbarItems.myAccount);
+        await runner.validateAttribute(
+          homePage.navbarItems.myAccount,
+          "href",
+          homeData.header.navbarItemsHrefValues.myAccount
+        );
+        await runner.verifyContainText(
+          homePage.navbarItems.myAccount,
+          homeData.header.navbarItemsText.myAccount
+        );
       });
-    });
+
+      // todo: Validate shop by category opens modal and contains expected items
+      test("Verify that clicking on shop by category opens modal and contains expected items", async ({
+        runner,
+        homePage,
+      }) => {});
+    }); // End of describe block
   }
 }
 

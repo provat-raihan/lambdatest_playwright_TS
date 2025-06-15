@@ -237,14 +237,17 @@ export class Utils {
     dynamicExpectedText?: string
   ): Promise<void> {
     try {
-      await expect
-        .soft(identifier)
-        .toContainText(
-          expectedText || expectedText + " " + dynamicExpectedText
-        );
-      this.logMessage(
-        `Verified element with identifier ${identifier} contains text: "${expectedText} ${dynamicExpectedText}"`
-      );
+      const fullExpectedText = dynamicExpectedText
+        ? `${expectedText} ${dynamicExpectedText}`
+        : expectedText;
+
+      await expect.soft(identifier).toContainText(fullExpectedText);
+
+      const logMessage = dynamicExpectedText
+        ? `Verified element with identifier ${identifier} contains text: "${expectedText} ${dynamicExpectedText}"`
+        : `Verified element with identifier ${identifier} contains text: "${expectedText}"`;
+
+      this.logMessage(logMessage);
     } catch (error) {
       const errorMsg = `Failed to verify element with identifier ${identifier} contains text: "${expectedText}"`;
       this.logMessage(errorMsg, "error");
