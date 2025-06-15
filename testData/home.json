@@ -3,10 +3,40 @@
         "logoSrc": "https://ecommerce-playground.lambdatest.io/image/catalog/maza/svg/image2vector.svg",
         "logoAlt": "Poco Electro",
         "navbarItemsText": {
+            "shopByCategory": "Shop by Category",
             "home": "Home",
+            "specialHot": "Special Hot",
+            "blog": "Blog",
+            "megaMenu": "Mega Menu",
+            "addOnsFeatured": "AddOns Featured",
+            "myAccount": "My account"
+        },
+        "navbarItemsHrefValues": {
+            "shopByCategory": "#mz-component-1626147655",
+            "home": "https://ecommerce-playground.lambdatest.io/index.php?route=common/home",
+            "specialHot": "https://ecommerce-playground.lambdatest.io/index.php?route=product/special",
+            "blog": "https://ecommerce-playground.lambdatest.io/index.php?route=extension/maza/blog/home",
+            "megaMenu": "https://ecommerce-playground.lambdatest.io/index.php?route=information/information&information_id=4",
+            "myAccount": "https://ecommerce-playground.lambdatest.io/index.php?route=account/account"
+        },
+        "shopByCategoryModalTexts":{
+            "header": "Top categories",
             "components": "Components",
-            "aboutUs": "About Us",
-            "contactUs": "Contact Us"
+            "cameras": "Cameras",
+            "phonesTabletAndIpod": "Phone, Tablets & Ipod",
+            "software": "Software",
+            "mp3Players": "MP3 Players",
+            "laptopsAndNotebooks": "Laptops & Notebooks",
+            "desktopsAndMonitors": "Desktops and Monitors",
+            "printersAndScanners": "Printers & Scanners",
+            "miceAndTrackballs": "Mice and Trackballs",
+            "fashionAndAccessories": "Fashion and Accessories",
+            "beautyAndSaloon": "Beauty and Saloon",
+            "autopartsAndAccessories": "Autoparts and Accessories",
+            "washingMachine": "Washing machine",
+            "gamingConsoles": "Gaming consoles",
+            "airConditioner": "Air conditioner",
+            "webCameras": "Web Cameras"
         }
     }
 }
