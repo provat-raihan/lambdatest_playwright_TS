@@ -67,28 +67,9 @@ export class Utils {
     }
   }
 
-  async verifyElementIsVisible(selector: Locator): Promise<void> {
-    try {
-      const count = await selector.count();
-      if (count === 0) {
-        throw new Error(`No elements found with identifier: ${selector}`);
-      }
-
-      await expect(selector.first()).toBeVisible({ timeout: 5000 });
-      this.logMessage(
-        `✅ Verified element(s) with identifier ${selector} is visible`
-      );
-    } catch (error) {
-      const errorMsg = `Failed to verify element(s) with identifier ${selector} is visible: ${error.message}`;
-      this.logMessage(errorMsg, "error");
-      await this.captureScreenshotOnFailure("verifyElementIsVisible");
-      throw new Error(errorMsg);
-    }
-  }
-
-  async waitUntilElementIsVisible(
+  async verifyElementIsVisible(
     locator: Locator,
-    timeout: number = 30000
+    timeout: number = 15000
   ): Promise<void> {
     try {
       // Wait for network to be idle before checking visibility
@@ -104,7 +85,7 @@ export class Utils {
     } catch (error: any) {
       const errorMsg = `❌ Element was not visible within timeout (${timeout}ms).`;
       this.logMessage(errorMsg, "error");
-      await this.captureScreenshotOnFailure("waitUntilElementIsVisible");
+      await this.captureScreenshotOnFailure("verifyElementIsVisible");
       throw new Error(`${errorMsg}\nDetails: ${error.message}`);
     }
   }

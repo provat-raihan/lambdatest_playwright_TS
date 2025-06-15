@@ -1,6 +1,8 @@
 import { test } from "../../utilities/fixtures";
 import { ExpectedValueProvider } from "../../utilities/valueProvider";
 import homeData from "../../testData/home.json";
+import globalData from "../../testData/global.json";
+import blogData from "../../testData/blog.json";
 
 class HeaderTest extends ExpectedValueProvider {
   constructor() {
@@ -12,7 +14,7 @@ class HeaderTest extends ExpectedValueProvider {
       test.beforeEach(async ({ runner, envData, homePage }) => {
         await runner.navigateTo(envData.baseUrl);
         await runner.verifyUrlContains(envData.baseUrl);
-        await runner.waitUntilElementIsVisible(homePage.headerLogo);
+        await runner.verifyElementIsVisible(homePage.headerLogo);
         await runner.validateAttribute(
           homePage.headerLogo,
           "src",
@@ -114,12 +116,12 @@ class HeaderTest extends ExpectedValueProvider {
         );
       });
 
-      //
+      // Done
       test("Verify that clicking on shop by category opens modal and contains expected items", async ({
         runner,
         homePage,
       }) => {
-        await runner.waitUntilElementIsVisible(
+        await runner.verifyElementIsVisible(
           homePage.navbarItems.shopByCategory
         );
         await runner.clickOnElement(homePage.navbarItems.shopByCategory);
@@ -156,6 +158,58 @@ class HeaderTest extends ExpectedValueProvider {
             homeData.header.shopByCategoryModalTexts.webCameras,
           ]
         );
+      });
+
+      // Working
+      test("Verify that clicking on navbar's items navigates to expected pages", async ({
+        runner,
+        envData,
+        homePage,
+        specialOfferPage,
+        blogPage,
+      }) => {
+        // Home -> Should navigate to home page
+        await runner.verifyElementIsVisible(homePage.navbarItems.home);
+        await runner.clickOnElement(homePage.navbarItems.home);
+        await runner.verifyUrlContains(envData.homeUrl);
+        await runner.verifyElementIsVisible(homePage.headerLogo);
+
+        // Special Hot -> Should navigate to Special Offers page
+        await runner.verifyElementIsVisible(homePage.navbarItems.specialHot);
+        await runner.clickOnElement(homePage.navbarItems.specialHot);
+        await runner.verifyUrlContains(envData.specialOfferUrl);
+        await runner.verifyElementIsVisible(homePage.headerLogo);
+        await runner.verifyElementIsVisible(specialOfferPage.headerText);
+        await runner.verifyContainText(
+          specialOfferPage.headerText,
+          globalData.specialOfferText
+        );
+
+        // Blog -> Should navigate to blog page
+        await runner.verifyElementIsVisible(homePage.navbarItems.blog);
+        await runner.clickOnElement(homePage.navbarItems.blog);
+        await runner.verifyUrlContains(envData.blogUrl);
+        await runner.verifyElementIsVisible(homePage.headerLogo);
+        await runner.verifyElementIsVisible(blogPage.latestArticleHeader);
+        await runner.verifyContainText(
+          blogPage.latestArticleHeader,
+          blogData.latestArticleHeaderText
+        );
+        await runner.verifyElementIsVisible(blogPage.mostViewedHeader);
+        await runner.verifyContainText(
+          blogPage.mostViewedHeader,
+          blogData.mostViewedHeaderText
+        );
+
+        // Mega Menu -> Should navigate to Mega Menu page (It navigates to about us page in website but it should be Mega Menu page)
+        // AddOns is not clickable, so we skip it
+
+        // todo: Keep the login elements organized
+        // My Account -> Should navigate to the Login page
+        await runner.verifyElementIsVisible(homePage.navbarItems.myAccount);
+        await runner.clickOnElement(homePage.navbarItems.myAccount);
+        await runner.verifyUrlContains(envData.loginUrl);
+        await runner.verifyElementIsVisible(homePage.headerLogo);
       });
     }); // End of describe block
   }

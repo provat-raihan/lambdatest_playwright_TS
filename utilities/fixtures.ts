@@ -3,12 +3,16 @@ import { Utils } from "./utils";
 import { FakeUser } from "./fakeData.ts";
 import { EnvData } from "./envData.ts";
 import { HomePage } from "../pageObjectModel/home.page.ts";
+import { SpecialOfferPage } from "../pageObjectModel/specialOffer.page.ts";
+import { BlogPage } from "../pageObjectModel/blog.page.ts";
 
 const test = base.extend<{
   runner: Utils;
   envData: EnvData;
   fakeUser: FakeUser;
   homePage: HomePage;
+  specialOfferPage: SpecialOfferPage;
+  blogPage: BlogPage;
 }>({
   runner: async ({ page }: { page: Page }, use) => {
     const utilsInstance = new Utils(page);
@@ -28,6 +32,16 @@ const test = base.extend<{
   homePage: async ({ page }: { page: Page }, use) => {
     const homePageInstance = new HomePage(page);
     await use(homePageInstance);
+  },
+
+  specialOfferPage: async ({ page }: { page: Page }, use) => {
+    const specialOfferPageInstance = new SpecialOfferPage(page);
+    await use(specialOfferPageInstance);
+  },
+
+  blogPage: async ({ page }: { page: Page }, use) => {
+    const blogPageInstance = new BlogPage(page);
+    await use(blogPageInstance);
   },
 });
 
