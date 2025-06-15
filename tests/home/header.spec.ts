@@ -26,7 +26,7 @@ class HeaderTest extends ExpectedValueProvider {
       });
 
       // Done
-      test("Verify that navbar items visible properly and contain expected texts", async ({
+      test("Verify that navbar items visible properly and contain expected links", async ({
         runner,
         homePage,
       }) => {
@@ -118,7 +118,41 @@ class HeaderTest extends ExpectedValueProvider {
       test("Verify that clicking on shop by category opens modal and contains expected items", async ({
         runner,
         homePage,
-      }) => {});
+      }) => {
+        await runner.waitUntilElementIsVisible(
+          homePage.navbarItems.shopByCategory
+        );
+        await runner.clickOnElement(homePage.navbarItems.shopByCategory);
+        await runner.verifyElementIsVisible(
+          homePage.shopByCategoryModalItems.headerText
+        );
+        await runner.verifyContainText(
+          homePage.shopByCategoryModalItems.headerText,
+          homeData.header.shopByCategoryModalTexts.header
+        );
+
+        await runner.verifyMultipleTexts(
+          homePage.shopByCategoryModalItems.itemList,
+          [
+            "Components",
+            "Cameras",
+            "Phone, Tablets & Ipod",
+            "Software",
+            "MP3 Players",
+            "Laptops & Notebooks",
+            "Desktops and Monitors",
+            "Printers & Scanners",
+            "Mice and Trackballs",
+            "Fashion and Accessories",
+            "Beauty and Saloon",
+            "Autoparts and Accessories",
+            "Washing machine",
+            "Gaming consoles",
+            "Air conditioner",
+            "Web Cameras",
+          ]
+        );
+      });
     }); // End of describe block
   }
 }

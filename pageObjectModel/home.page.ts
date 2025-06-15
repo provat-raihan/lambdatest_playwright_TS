@@ -13,6 +13,11 @@ export class HomePage {
     myAccount: Locator;
   };
 
+  readonly shopByCategoryModalItems: {
+    headerText: Locator;
+    itemList: Locator;
+  };
+
   constructor(page: Page) {
     this.headerLogo = page.locator(`css=div[id='entry_217821'] img`);
 
@@ -24,6 +29,16 @@ export class HomePage {
       megaMenu: page.getByRole("button", { name: "Mega Menu" }),
       addOnsFeatured: page.getByRole("button", { name: "AddOns Featured" }),
       myAccount: page.getByRole("button", { name: " My account" }),
+    };
+
+    this.shopByCategoryModalItems = {
+      headerText: page.getByRole("heading", { name: "Top categories" }),
+      // itemList: page
+      //   .getByRole("navigation")
+      //   .filter({ hasText: "Components Cameras Phone," }),
+      itemList: page
+        .getByRole("navigation")
+        .filter({ hasText: "Components Cameras Phone, Tablets & Ipod" }),
     };
   }
 }
