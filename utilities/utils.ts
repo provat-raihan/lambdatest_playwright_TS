@@ -237,14 +237,17 @@ export class Utils {
     dynamicExpectedText?: string
   ): Promise<void> {
     try {
-      await expect
-        .soft(identifier)
-        .toContainText(
-          expectedText || expectedText + " " + dynamicExpectedText
-        );
-      this.logMessage(
-        `Verified element with identifier ${identifier} contains text: "${expectedText} ${dynamicExpectedText}"`
-      );
+      const fullExpectedText = dynamicExpectedText
+        ? `${expectedText} ${dynamicExpectedText}`
+        : expectedText;
+
+      await expect.soft(identifier).toContainText(fullExpectedText);
+
+      const logMessage = dynamicExpectedText
+        ? `Verified element with identifier ${identifier} contains text: "${expectedText} ${dynamicExpectedText}"`
+        : `Verified element with identifier ${identifier} contains text: "${expectedText}"`;
+
+      this.logMessage(logMessage);
     } catch (error) {
       const errorMsg = `Failed to verify element with identifier ${identifier} contains text: "${expectedText}"`;
       this.logMessage(errorMsg, "error");
@@ -503,4 +506,43 @@ export class Utils {
       throw new Error(errorMsg);
     }
   }
+
+  async verifyMultipleTexts(
+    locator: Locator,
+    expectedTexts: string[]
+  ): Promise<void> {
+    const actualText = (await locator.textContent())?.trim() || "";
+    const missingTexts: string[] = [];
+
+    for (const expected of expectedTexts) {
+      if (actualText.includes(expected)) {
+        this.logMessage(
+          `✅ Expected: "${expected}" — Found in: "${
+            actualText.match(expected)?.[0]
+          }"`
+        );
+      } else {
+        this.logMessage(
+          `❌ Expected: "${expected}" — But not found in actual content`,
+          "error"
+        );
+        missingTexts.push(expected);
+      }
+    }
+
+    // console.log(`Actual content: "${actualText}, "`); -> working fine
+
+    if (missingTexts.length > 0) {
+      const errorMsg = `❌ Text verification failed. Missing: ${missingTexts.join(
+        ", "
+      )}`;
+      await this.captureScreenshotOnFailure("verifyMultipleTexts");
+      throw new Error(errorMsg);
+    }
+  }
+
+  // To Test Utils
+  // ---------------------------------------------------------------------------------------------------------------------------------
+  // here you can add any utility methods that you want to test
+  // ---------------------------------------------------------------------------------------------------------------------------------
 }
