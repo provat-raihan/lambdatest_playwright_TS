@@ -114,7 +114,7 @@ class HeaderTest extends ExpectedValueProvider {
         );
       });
 
-      // todo: Validate shop by category opens modal and contains expected items
+      // Done
       test("Verify that clicking on shop by category opens modal and contains expected items", async ({
         runner,
         homePage,
@@ -131,25 +131,29 @@ class HeaderTest extends ExpectedValueProvider {
           homeData.header.shopByCategoryModalTexts.header
         );
 
+        await runner.verifyElementIsVisible(
+          homePage.shopByCategoryModalItems.itemList
+        );
+
         await runner.verifyMultipleTexts(
           homePage.shopByCategoryModalItems.itemList,
           [
-            "Components",
-            "Cameras",
-            "Phone, Tablets & Ipod",
-            "Software",
-            "MP3 Players",
-            "Laptops & Notebooks",
-            "Desktops and Monitors",
-            "Printers & Scanners",
-            "Mice and Trackballs",
-            "Fashion and Accessories",
-            "Beauty and Saloon",
-            "Autoparts and Accessories",
-            "Washing machine",
-            "Gaming consoles",
-            "Air conditioner",
-            "Web Cameras",
+            homeData.header.shopByCategoryModalTexts.components,
+            homeData.header.shopByCategoryModalTexts.cameras,
+            homeData.header.shopByCategoryModalTexts.phonesTabletAndIpod,
+            homeData.header.shopByCategoryModalTexts.software,
+            homeData.header.shopByCategoryModalTexts.mp3Players,
+            homeData.header.shopByCategoryModalTexts.laptopsAndNotebooks,
+            homeData.header.shopByCategoryModalTexts.desktopsAndMonitors,
+            homeData.header.shopByCategoryModalTexts.printersAndScanners,
+            homeData.header.shopByCategoryModalTexts.miceAndTrackballs,
+            homeData.header.shopByCategoryModalTexts.fashionAndAccessories,
+            homeData.header.shopByCategoryModalTexts.beautyAndSaloon,
+            homeData.header.shopByCategoryModalTexts.autopartsAndAccessories,
+            homeData.header.shopByCategoryModalTexts.washingMachine,
+            homeData.header.shopByCategoryModalTexts.gamingConsoles,
+            homeData.header.shopByCategoryModalTexts.airConditioner,
+            homeData.header.shopByCategoryModalTexts.webCameras,
           ]
         );
       });

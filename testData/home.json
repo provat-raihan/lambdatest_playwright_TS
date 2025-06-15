@@ -20,7 +20,23 @@
             "myAccount": "https://ecommerce-playground.lambdatest.io/index.php?route=account/account"
         },
         "shopByCategoryModalTexts":{
-            "header": "Top categories"
+            "header": "Top categories",
+            "components": "Components",
+            "cameras": "Cameras",
+            "phonesTabletAndIpod": "Phone, Tablets & Ipod",
+            "software": "Software",
+            "mp3Players": "MP3 Players",
+            "laptopsAndNotebooks": "Laptops & Notebooks",
+            "desktopsAndMonitors": "Desktops and Monitors",
+            "printersAndScanners": "Printers & Scanners",
+            "miceAndTrackballs": "Mice and Trackballs",
+            "fashionAndAccessories": "Fashion and Accessories",
+            "beautyAndSaloon": "Beauty and Saloon",
+            "autopartsAndAccessories": "Autoparts and Accessories",
+            "washingMachine": "Washing machine",
+            "gamingConsoles": "Gaming consoles",
+            "airConditioner": "Air conditioner",
+            "webCameras": "Web Cameras"
         }
     }
 }
