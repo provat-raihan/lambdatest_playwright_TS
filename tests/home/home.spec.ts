@@ -12,7 +12,7 @@ class HomePageTest extends ExpectedValueProvider {
       test.beforeEach(async ({ runner, envData, homePage }) => {
         await runner.navigateTo(envData.baseUrl);
         await runner.verifyUrlContains(envData.baseUrl);
-        await runner.waitUntilElementIsVisible(homePage.headerLogo);
+        await runner.verifyElementIsVisible(homePage.headerLogo);
         await runner.validateAttribute(
           homePage.headerLogo,
           "src",
