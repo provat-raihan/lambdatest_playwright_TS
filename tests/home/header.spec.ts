@@ -114,7 +114,7 @@ class HeaderTest extends ExpectedValueProvider {
         );
       });
 
-      // Done
+      //
       test("Verify that clicking on shop by category opens modal and contains expected items", async ({
         runner,
         homePage,
@@ -123,6 +123,9 @@ class HeaderTest extends ExpectedValueProvider {
           homePage.navbarItems.shopByCategory
         );
         await runner.clickOnElement(homePage.navbarItems.shopByCategory);
+        await runner.verifyElementIsVisible(
+          homePage.shopByCategoryModalItems.headerText
+        );
         await runner.verifyElementIsVisible(
           homePage.shopByCategoryModalItems.headerText
         );
