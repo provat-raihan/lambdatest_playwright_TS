@@ -126,9 +126,6 @@ class HeaderTest extends ExpectedValueProvider {
         await runner.verifyElementIsVisible(
           homePage.shopByCategoryModalItems.headerText
         );
-        await runner.verifyElementIsVisible(
-          homePage.shopByCategoryModalItems.headerText
-        );
         await runner.verifyContainText(
           homePage.shopByCategoryModalItems.headerText,
           homeData.header.shopByCategoryModalTexts.header
