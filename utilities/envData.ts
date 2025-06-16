@@ -6,6 +6,7 @@ export class EnvData {
   readonly specialOfferUrl: string;
   readonly blogUrl: string;
   readonly loginUrl: string;
+  readonly componentsUrl: string;
 
   constructor(page: Page) {
     this.baseUrl = `${process.env.BASE_URL}`;
@@ -13,5 +14,6 @@ export class EnvData {
     this.specialOfferUrl = `${process.env.SPECIAL_OFFERS_URL}`;
     this.blogUrl = `${process.env.BLOG_URL}`;
     this.loginUrl = `${process.env.LOGIN_URL}`;
+    this.componentsUrl = `${process.env.COMPONENTS_URL}`;
   }
 }

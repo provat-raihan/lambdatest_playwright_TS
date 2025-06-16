@@ -1,4 +1,10 @@
-import { expect, Page, Locator } from "@playwright/test";
+import {
+  expect,
+  Page,
+  Locator,
+  APIRequestContext,
+  request,
+} from "@playwright/test";
 import logger from "./logger";
 // import { allure } from "allure-playwright";
 import { ExpectedValueProvider } from "./valueProvider";
@@ -237,6 +243,31 @@ export class Utils {
     }
   }
 
+  async verifyToHaveExactText(
+    identifier: Locator,
+    expectedText: string,
+    dynamicExpectedText?: string
+  ): Promise<void> {
+    try {
+      const fullExpectedText = dynamicExpectedText
+        ? `${expectedText} ${dynamicExpectedText}`
+        : expectedText;
+
+      await expect.soft(identifier).toHaveText(fullExpectedText);
+
+      const logMessage = dynamicExpectedText
+        ? `Verified element with identifier ${identifier} contains text: "${expectedText} ${dynamicExpectedText}"`
+        : `Verified element with identifier ${identifier} contains text: "${expectedText}"`;
+
+      this.logMessage(logMessage);
+    } catch (error) {
+      const errorMsg = `Failed to verify element with identifier ${identifier} contains text: "${expectedText}"`;
+      this.logMessage(errorMsg, "error");
+      await this.captureScreenshotOnFailure("verifyContainText");
+      throw new Error(errorMsg);
+    }
+  }
+
   async wait(
     time: number,
     options: {
@@ -329,21 +360,6 @@ export class Utils {
       this.logMessage(errorMsg, "error");
       await this.captureScreenshotOnFailure("mouseHover");
       throw new Error(errorMsg);
-    }
-  }
-
-  async isElementVisible(identifier: Locator): Promise<boolean> {
-    try {
-      const isVisible = await identifier.isVisible();
-      this.logMessage(
-        `Checked visibility for element with identifier: ${identifier} — Result: ${isVisible}`
-      );
-      return isVisible;
-    } catch (error) {
-      const errorMsg = `Failed to check visibility of element with identifier: ${identifier}`;
-      this.logMessage(errorMsg, "error");
-      await this.captureScreenshotOnFailure("isElementVisible");
-      return false;
     }
   }
 
@@ -442,6 +458,41 @@ export class Utils {
     }
   }
 
+  async validateAttributes(
+    selector: Locator,
+    attribute: string | "src" | "href" | "alt" | "data-test",
+    expectedValues: string[]
+  ): Promise<void> {
+    try {
+      const elementsCount = await selector.count();
+      if (elementsCount !== expectedValues.length) {
+        const errorMsg = `Elements count (${elementsCount}) does not match expected values count (${expectedValues.length})`;
+        this.logMessage(errorMsg, "error");
+        await this.captureScreenshotOnFailure("validateAttributes");
+        throw new Error(errorMsg);
+      }
+
+      for (let i = 0; i < elementsCount; i++) {
+        const element = selector.nth(i);
+        const actualValue = await element.getAttribute(attribute);
+        if (actualValue !== expectedValues[i]) {
+          const errorMsg = `Attribute "${attribute}" mismatch at index ${i}. Expected: "${expectedValues[i]}", Got: "${actualValue}"`;
+          this.logMessage(errorMsg, "error");
+          await this.captureScreenshotOnFailure("validateAttributes");
+          throw new Error(errorMsg);
+        }
+        this.logMessage(
+          `Validated attribute "${attribute}" with value "${expectedValues[i]}" on element index ${i}`
+        );
+      }
+    } catch (error) {
+      const errorMsg = `Failed to validate attributes "${attribute}" on selector "${selector}"`;
+      this.logMessage(errorMsg, "error");
+      await this.captureScreenshotOnFailure("validateAttributes");
+      throw new Error(errorMsg);
+    }
+  }
+
   async verifyElementsIsExist(
     selector: Locator,
     isImage: boolean = false
@@ -525,5 +576,47 @@ export class Utils {
   // To Test Utils
   // ---------------------------------------------------------------------------------------------------------------------------------
   // here you can add any utility methods that you want to test
+
+  async verifyNavigationForLink(
+    clickableElement: Locator,
+    expectedUrlPart: string,
+    expectedHeader: Locator,
+    expectedHeaderText: string
+  ): Promise<void> {
+    try {
+      await this.logMessage(`🔍 Clicking on element to validate navigation...`);
+
+      await clickableElement.isVisible();
+      await clickableElement.click();
+      const currentUrl = this.page.url();
+      expect(currentUrl).toContain(expectedUrlPart);
+      await expectedHeader.isVisible();
+      await expect(expectedHeader).toContainText(expectedHeaderText);
+
+      this.logMessage(`✅ Navigation and header text verified successfully.`);
+    } catch (error) {
+      await this.captureScreenshotOnFailure("verifyNavigationForLink");
+      this.logMessage(
+        `❌ Navigation verification failed: ${error.message}`,
+        "error"
+      );
+      throw new Error(`Navigation failed: ${error.message}`);
+    }
+  }
+
+  async validateUrlStatus(
+    url: string,
+    expectedStatus: number = 200
+  ): Promise<void> {
+    const apiContext = await request.newContext();
+    const response = await apiContext.get(url);
+    const actualStatus = response.status();
+
+    this.logMessage(
+      `URL: ${url} | Expected: ${expectedStatus} | Received: ${actualStatus}`
+    );
+
+    expect(actualStatus).toBe(expectedStatus);
+  }
   // ---------------------------------------------------------------------------------------------------------------------------------
 }

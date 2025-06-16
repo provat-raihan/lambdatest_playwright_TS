@@ -3,6 +3,8 @@ import { ExpectedValueProvider } from "../../utilities/valueProvider";
 import homeData from "../../testData/home.json";
 import globalData from "../../testData/global.json";
 import blogData from "../../testData/blog.json";
+import loginData from "../../testData/login.json";
+import componentsPageData from "../../testData/components.json";
 
 class HeaderTest extends ExpectedValueProvider {
   constructor() {
@@ -41,7 +43,7 @@ class HeaderTest extends ExpectedValueProvider {
           "href",
           homeData.header.navbarItemsHrefValues.shopByCategory
         );
-        await runner.verifyContainText(
+        await runner.verifyToHaveExactText(
           homePage.navbarItems.shopByCategory,
           homeData.header.navbarItemsText.shopByCategory
         );
@@ -53,7 +55,7 @@ class HeaderTest extends ExpectedValueProvider {
           "href",
           homeData.header.navbarItemsHrefValues.home
         );
-        await runner.verifyContainText(
+        await runner.verifyToHaveExactText(
           homePage.navbarItems.home,
           homeData.header.navbarItemsText.home
         );
@@ -65,7 +67,7 @@ class HeaderTest extends ExpectedValueProvider {
           "href",
           homeData.header.navbarItemsHrefValues.specialHot
         );
-        await runner.verifyContainText(
+        await runner.verifyToHaveExactText(
           homePage.navbarItems.specialHot,
           homeData.header.navbarItemsText.specialHot
         );
@@ -77,7 +79,7 @@ class HeaderTest extends ExpectedValueProvider {
           "href",
           homeData.header.navbarItemsHrefValues.blog
         );
-        await runner.verifyContainText(
+        await runner.verifyToHaveExactText(
           homePage.navbarItems.blog,
           homeData.header.navbarItemsText.blog
         );
@@ -89,7 +91,7 @@ class HeaderTest extends ExpectedValueProvider {
           "href",
           homeData.header.navbarItemsHrefValues.megaMenu
         );
-        await runner.verifyContainText(
+        await runner.verifyToHaveExactText(
           homePage.navbarItems.megaMenu,
           homeData.header.navbarItemsText.megaMenu
         );
@@ -98,7 +100,7 @@ class HeaderTest extends ExpectedValueProvider {
         await runner.verifyElementIsVisible(
           homePage.navbarItems.addOnsFeatured
         );
-        await runner.verifyContainText(
+        await runner.verifyToHaveExactText(
           homePage.navbarItems.addOnsFeatured,
           homeData.header.navbarItemsText.addOnsFeatured
         );
@@ -110,7 +112,7 @@ class HeaderTest extends ExpectedValueProvider {
           "href",
           homeData.header.navbarItemsHrefValues.myAccount
         );
-        await runner.verifyContainText(
+        await runner.verifyToHaveExactText(
           homePage.navbarItems.myAccount,
           homeData.header.navbarItemsText.myAccount
         );
@@ -128,7 +130,7 @@ class HeaderTest extends ExpectedValueProvider {
         await runner.verifyElementIsVisible(
           homePage.shopByCategoryModalItems.headerText
         );
-        await runner.verifyContainText(
+        await runner.verifyToHaveExactText(
           homePage.shopByCategoryModalItems.headerText,
           homeData.header.shopByCategoryModalTexts.header
         );
@@ -161,12 +163,58 @@ class HeaderTest extends ExpectedValueProvider {
       });
 
       // Working
+      test.skip("Verify that shop by category links navigates to the correct and expected pages", async ({
+        runner,
+        envData,
+        homePage,
+        componentsPage,
+      }) => {
+        await runner.verifyElementIsVisible(
+          homePage.navbarItems.shopByCategory
+        );
+        await runner.clickOnElement(homePage.navbarItems.shopByCategory);
+        await runner.verifyElementIsVisible(
+          homePage.shopByCategoryModalItems.headerText
+        );
+        await runner.verifyToHaveExactText(
+          homePage.shopByCategoryModalItems.headerText,
+          homeData.header.shopByCategoryModalTexts.header
+        );
+
+        // Components
+        // await runner.verifyElementIsVisible(
+        //   homePage.shopByCategoryModalItems.componentsButton
+        // );
+        // await runner.clickOnElement(
+        //   homePage.shopByCategoryModalItems.componentsButton
+        // );
+        // await runner.verifyUrlContains(envData.componentsUrl);
+        // await runner.verifyElementIsVisible(componentsPage.header);
+        // await runner.verifyToHaveExactText(
+        //   componentsPage.header,
+        //   componentsPageData.headerText
+        // );
+
+        // await runner.verifyNavigationForLink(
+        //   homePage.shopByCategoryModalItems.componentsButton,
+        //   envData.componentsUrl,
+        //   componentsPage.header,
+        //   componentsPageData.headerText
+        // );
+
+        await runner.validateUrlStatus(
+          "https://ecommerce-playground.lambdatest.io/index.php?route=product/manufacturer/info&manufacturer_id=98"
+        );
+      });
+
+      // Done
       test("Verify that clicking on navbar's items navigates to expected pages", async ({
         runner,
         envData,
         homePage,
         specialOfferPage,
         blogPage,
+        loginPage,
       }) => {
         // Home -> Should navigate to home page
         await runner.verifyElementIsVisible(homePage.navbarItems.home);
@@ -180,7 +228,7 @@ class HeaderTest extends ExpectedValueProvider {
         await runner.verifyUrlContains(envData.specialOfferUrl);
         await runner.verifyElementIsVisible(homePage.headerLogo);
         await runner.verifyElementIsVisible(specialOfferPage.headerText);
-        await runner.verifyContainText(
+        await runner.verifyToHaveExactText(
           specialOfferPage.headerText,
           globalData.specialOfferText
         );
@@ -191,12 +239,12 @@ class HeaderTest extends ExpectedValueProvider {
         await runner.verifyUrlContains(envData.blogUrl);
         await runner.verifyElementIsVisible(homePage.headerLogo);
         await runner.verifyElementIsVisible(blogPage.latestArticleHeader);
-        await runner.verifyContainText(
+        await runner.verifyToHaveExactText(
           blogPage.latestArticleHeader,
           blogData.latestArticleHeaderText
         );
         await runner.verifyElementIsVisible(blogPage.mostViewedHeader);
-        await runner.verifyContainText(
+        await runner.verifyToHaveExactText(
           blogPage.mostViewedHeader,
           blogData.mostViewedHeaderText
         );
@@ -204,12 +252,16 @@ class HeaderTest extends ExpectedValueProvider {
         // Mega Menu -> Should navigate to Mega Menu page (It navigates to about us page in website but it should be Mega Menu page)
         // AddOns is not clickable, so we skip it
 
-        // todo: Keep the login elements organized
         // My Account -> Should navigate to the Login page
         await runner.verifyElementIsVisible(homePage.navbarItems.myAccount);
         await runner.clickOnElement(homePage.navbarItems.myAccount);
         await runner.verifyUrlContains(envData.loginUrl);
         await runner.verifyElementIsVisible(homePage.headerLogo);
+        await runner.verifyElementIsVisible(loginPage.loginFormHeader);
+        await runner.verifyToHaveExactText(
+          loginPage.loginFormHeader,
+          loginData.loginFormHeader
+        );
       });
     }); // End of describe block
   }

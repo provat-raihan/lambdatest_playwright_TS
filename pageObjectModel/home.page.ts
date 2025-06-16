@@ -16,6 +16,7 @@ export class HomePage {
   readonly shopByCategoryModalItems: {
     headerText: Locator;
     itemList: Locator;
+    componentsButton: Locator;
   };
 
   constructor(page: Page) {
@@ -33,12 +34,10 @@ export class HomePage {
 
     this.shopByCategoryModalItems = {
       headerText: page.getByRole("heading", { name: "Top categories" }),
-      // itemList: page
-      //   .getByRole("navigation")
-      //   .filter({ hasText: "Components Cameras Phone," }),
       itemList: page
         .getByRole("navigation")
         .filter({ hasText: "Components Cameras Phone, Tablets & Ipod" }),
+      componentsButton: page.getByRole("link", { name: "Components" }),
     };
   }
 }
