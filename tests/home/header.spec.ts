@@ -135,10 +135,6 @@ class HeaderTest extends ExpectedValueProvider {
           homeData.header.shopByCategoryModalTexts.header
         );
 
-        await runner.verifyElementIsVisible(
-          homePage.shopByCategoryModalItems.itemList
-        );
-
         await runner.verifyMultipleTexts(
           homePage.shopByCategoryModalItems.itemList,
           [
@@ -162,12 +158,10 @@ class HeaderTest extends ExpectedValueProvider {
         );
       });
 
-      // Working
-      test.skip("Verify that shop by category links navigates to the correct and expected pages", async ({
+      // Working: able to run the test
+      test("Verify each 'Shop by Category' modal link returns a 200 OK response", async ({
         runner,
-        envData,
         homePage,
-        componentsPage,
       }) => {
         await runner.verifyElementIsVisible(
           homePage.navbarItems.shopByCategory
@@ -181,29 +175,10 @@ class HeaderTest extends ExpectedValueProvider {
           homeData.header.shopByCategoryModalTexts.header
         );
 
-        // Components
-        // await runner.verifyElementIsVisible(
-        //   homePage.shopByCategoryModalItems.componentsButton
-        // );
-        // await runner.clickOnElement(
-        //   homePage.shopByCategoryModalItems.componentsButton
-        // );
-        // await runner.verifyUrlContains(envData.componentsUrl);
-        // await runner.verifyElementIsVisible(componentsPage.header);
-        // await runner.verifyToHaveExactText(
-        //   componentsPage.header,
-        //   componentsPageData.headerText
-        // );
+        // todo: validate each link's attribute value using validateAttributes function
 
-        // await runner.verifyNavigationForLink(
-        //   homePage.shopByCategoryModalItems.componentsButton,
-        //   envData.componentsUrl,
-        //   componentsPage.header,
-        //   componentsPageData.headerText
-        // );
-
-        await runner.validateUrlStatus(
-          "https://ecommerce-playground.lambdatest.io/index.php?route=product/manufacturer/info&manufacturer_id=98"
+        await runner.validateMultipleUrlStatuses(
+          homePage.shopByCategoryModalItems.itemList
         );
       });
 

@@ -6,7 +6,6 @@ import { HomePage } from "../pageObjectModel/home.page.ts";
 import { SpecialOfferPage } from "../pageObjectModel/specialOffer.page.ts";
 import { BlogPage } from "../pageObjectModel/blog.page.ts";
 import { LoginPage } from "../pageObjectModel/login.page.ts";
-import { ComponentsPage } from "../pageObjectModel/components.page.ts";
 
 const test = base.extend<{
   runner: Utils;
@@ -16,7 +15,6 @@ const test = base.extend<{
   specialOfferPage: SpecialOfferPage;
   blogPage: BlogPage;
   loginPage: LoginPage;
-  componentsPage: ComponentsPage;
 }>({
   runner: async ({ page }: { page: Page }, use) => {
     const utilsInstance = new Utils(page);
@@ -51,11 +49,6 @@ const test = base.extend<{
   loginPage: async ({ page }: { page: Page }, use) => {
     const loginPageInstance = new LoginPage(page);
     await use(loginPageInstance);
-  },
-
-  componentsPage: async ({ page }: { page: Page }, use) => {
-    const componentsPageInstance = new ComponentsPage(page);
-    await use(componentsPageInstance);
   },
 });
 

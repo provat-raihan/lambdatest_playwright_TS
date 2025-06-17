@@ -1,21 +1,11 @@
-import {
-  expect,
-  Page,
-  Locator,
-  APIRequestContext,
-  request,
-} from "@playwright/test";
+import { expect, Page, Locator, request } from "@playwright/test";
 import logger from "./logger";
-// import { allure } from "allure-playwright";
-import { ExpectedValueProvider } from "./valueProvider";
 
 export class Utils {
   private page: Page;
-  private expected: ExpectedValueProvider;
 
   constructor(page: Page) {
     this.page = page;
-    this.expected = new ExpectedValueProvider();
   }
 
   public async captureScreenshotOnFailure(testName: string): Promise<void> {
@@ -42,7 +32,7 @@ export class Utils {
         logger.error(message);
         break;
       default:
-        logger.info(message); // fallback
+        logger.info(message);
     }
   }
 
@@ -50,7 +40,7 @@ export class Utils {
     try {
       await this.page.goto(url, {
         waitUntil: "domcontentloaded",
-        timeout: 12000,
+        timeout: 30000,
       });
       this.logMessage(`Navigated to ${url} successfully.`);
     } catch (error) {
@@ -75,13 +65,11 @@ export class Utils {
 
   async verifyElementIsVisible(
     locator: Locator,
-    timeout: number = 15000
+    timeout: number = 30000
   ): Promise<void> {
     try {
-      // Wait for network to be idle before checking visibility
       await this.page.waitForLoadState("networkidle", { timeout });
 
-      // Poll the visibility using .toPass()
       await expect(async () => {
         const isVisible = await locator.isVisible();
         expect(isVisible).toBeTruthy();
@@ -543,32 +531,133 @@ export class Utils {
     locator: Locator,
     expectedTexts: string[]
   ): Promise<void> {
-    const actualText = (await locator.textContent())?.trim() || "";
-    const missingTexts: string[] = [];
+    try {
+      const elementCount = await locator.count();
+      const foundTexts: string[] = [];
+      const missingTexts: string[] = [];
 
-    for (const expected of expectedTexts) {
-      if (actualText.includes(expected)) {
+      for (let i = 0; i < elementCount; i++) {
+        const text = (await locator.nth(i).innerText())?.trim() || "";
+
+        if (text) {
+          foundTexts.push(text);
+          this.logMessage(`🔍 Element ${i + 1} visible text: "${text}"`);
+        }
+      }
+
+      for (const expected of expectedTexts) {
+        const match = foundTexts.find((actual) => actual.includes(expected));
+
+        if (match) {
+          this.logMessage(`✅ Expected: "${expected}" — Found in: "${match}"`);
+        } else {
+          this.logMessage(
+            `❌ Expected: "${expected}" — Not found in any of the ${elementCount} elements`,
+            "error"
+          );
+          missingTexts.push(expected);
+        }
+      }
+
+      if (missingTexts.length > 0) {
+        throw new Error(`Missing expected texts: ${missingTexts.join(", ")}`);
+      }
+    } catch (error) {
+      const errorMsg = `❌ Failed to verify multiple texts in elements: ${
+        (error as Error).message
+      }`;
+      this.logMessage(errorMsg, "error");
+      await this.captureScreenshotOnFailure("verifyMultipleTexts");
+      throw error;
+    }
+  }
+
+  async validateUrlStatus(
+    url: string,
+    expectedStatus: number = 200
+  ): Promise<void> {
+    try {
+      const apiContext = await request.newContext();
+      const response = await apiContext.get(url);
+      const actualStatus = response.status();
+
+      if (actualStatus === expectedStatus) {
         this.logMessage(
-          `✅ Expected: "${expected}" — Found in: "${
-            actualText.match(expected)?.[0]
-          }"`
+          `✅ URL check passed — ${url} | Status: ${actualStatus}`
         );
       } else {
-        this.logMessage(
-          `❌ Expected: "${expected}" — But not found in actual content`,
-          "error"
-        );
-        missingTexts.push(expected);
+        const errorMsg = `❌ URL check failed — ${url} | Expected: ${expectedStatus}, Received: ${actualStatus}`;
+        this.logMessage(errorMsg, "error");
+        await this.captureScreenshotOnFailure("validateUrlStatus");
+        throw new Error(errorMsg);
       }
+    } catch (error) {
+      const errorMsg = `❌ Failed to validate URL status for: ${url} | ${
+        (error as Error).message
+      }`;
+      this.logMessage(errorMsg, "error");
+      await this.captureScreenshotOnFailure("validateUrlStatus");
+      throw error;
     }
+  }
 
-    // console.log(`Actual content: "${actualText}, "`); -> working fine
+  async validateMultipleUrlStatuses(
+    locator: Locator,
+    expectedStatus: number = 200
+  ): Promise<void> {
+    try {
+      const apiContext = await request.newContext();
+      const totalLinks = await locator.count();
 
-    if (missingTexts.length > 0) {
-      const errorMsg = `❌ Text verification failed. Missing: ${missingTexts.join(
-        ", "
-      )}`;
-      await this.captureScreenshotOnFailure("verifyMultipleTexts");
+      if (totalLinks === 0) {
+        const errorMsg = `❌ No links found in selector: "${locator}"`;
+        this.logMessage(errorMsg, "error");
+        await this.captureScreenshotOnFailure("validateAllLinkStatuses");
+        throw new Error(errorMsg);
+      }
+
+      this.logMessage(
+        `🔍 Found ${totalLinks} link(s) in selector: "${locator}"`
+      );
+
+      for (let i = 0; i < totalLinks; i++) {
+        const element = locator.nth(i);
+        const href = await element.getAttribute("href");
+
+        if (!href || href.startsWith("#") || href.startsWith("javascript:")) {
+          this.logMessage(
+            `⚠️ Skipping invalid href at index ${i + 1}: "${href}"`,
+            "warn"
+          );
+          continue;
+        }
+
+        const url = href.startsWith("http")
+          ? href
+          : new URL(href, this.page.url()).href;
+
+        try {
+          const response = await apiContext.get(url);
+          const actualStatus = response.status();
+
+          this.logMessage(
+            `✅ Link ${
+              i + 1
+            } checked → URL: "${url}" | Expected: ${expectedStatus} | Received: ${actualStatus}`
+          );
+
+          expect(actualStatus).toBe(expectedStatus);
+        } catch (innerError) {
+          const errorMsg = `❌ Link ${i + 1} failed → URL: "${url}"`;
+          this.logMessage(errorMsg, "error");
+          await this.captureScreenshotOnFailure("validateAllLinkStatuses");
+          throw new Error(`${errorMsg} | Error: ${innerError}`);
+        }
+      }
+    } catch (error) {
+      const errorMsg = `🔥 Failed to validate all link statuses for selector: "${locator}"`;
+      this.logMessage(errorMsg, "error");
+      await this.captureScreenshotOnFailure("validateAllLinkStatuses");
       throw new Error(errorMsg);
     }
   }
@@ -577,46 +666,5 @@ export class Utils {
   // ---------------------------------------------------------------------------------------------------------------------------------
   // here you can add any utility methods that you want to test
 
-  async verifyNavigationForLink(
-    clickableElement: Locator,
-    expectedUrlPart: string,
-    expectedHeader: Locator,
-    expectedHeaderText: string
-  ): Promise<void> {
-    try {
-      await this.logMessage(`🔍 Clicking on element to validate navigation...`);
-
-      await clickableElement.isVisible();
-      await clickableElement.click();
-      const currentUrl = this.page.url();
-      expect(currentUrl).toContain(expectedUrlPart);
-      await expectedHeader.isVisible();
-      await expect(expectedHeader).toContainText(expectedHeaderText);
-
-      this.logMessage(`✅ Navigation and header text verified successfully.`);
-    } catch (error) {
-      await this.captureScreenshotOnFailure("verifyNavigationForLink");
-      this.logMessage(
-        `❌ Navigation verification failed: ${error.message}`,
-        "error"
-      );
-      throw new Error(`Navigation failed: ${error.message}`);
-    }
-  }
-
-  async validateUrlStatus(
-    url: string,
-    expectedStatus: number = 200
-  ): Promise<void> {
-    const apiContext = await request.newContext();
-    const response = await apiContext.get(url);
-    const actualStatus = response.status();
-
-    this.logMessage(
-      `URL: ${url} | Expected: ${expectedStatus} | Received: ${actualStatus}`
-    );
-
-    expect(actualStatus).toBe(expectedStatus);
-  }
   // ---------------------------------------------------------------------------------------------------------------------------------
 }

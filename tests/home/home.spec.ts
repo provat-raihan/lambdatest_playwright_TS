@@ -2,6 +2,8 @@ import { test } from "../../utilities/fixtures";
 import { ExpectedValueProvider } from "../../utilities/valueProvider";
 import homeData from "../../testData/home.json";
 
+// message: after complete the header, we will work on homepage functionality
+
 class HomePageTest extends ExpectedValueProvider {
   constructor() {
     super();
