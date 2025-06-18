@@ -4,7 +4,6 @@ import homeData from "../../testData/home.json";
 import globalData from "../../testData/global.json";
 import blogData from "../../testData/blog.json";
 import loginData from "../../testData/login.json";
-import componentsPageData from "../../testData/components.json";
 
 class HeaderTest extends ExpectedValueProvider {
   constructor() {
@@ -158,9 +157,10 @@ class HeaderTest extends ExpectedValueProvider {
         );
       });
 
-      // Working: able to run the test
+      // Done
       test("Verify each 'Shop by Category' modal link returns a 200 OK response", async ({
         runner,
+        envData,
         homePage,
       }) => {
         await runner.verifyElementIsVisible(
@@ -175,7 +175,28 @@ class HeaderTest extends ExpectedValueProvider {
           homeData.header.shopByCategoryModalTexts.header
         );
 
-        // todo: validate each link's attribute value using validateAttributes function
+        await runner.validateAttributes(
+          homePage.shopByCategoryModalItems.itemList,
+          "href",
+          [
+            envData.shopByCategoryItemsHrefValues.components,
+            envData.shopByCategoryItemsHrefValues.camera,
+            envData.shopByCategoryItemsHrefValues.phoneTabletsIpod,
+            envData.shopByCategoryItemsHrefValues.software,
+            envData.shopByCategoryItemsHrefValues.mp3Player,
+            envData.shopByCategoryItemsHrefValues.laptopsAndNotebooks,
+            envData.shopByCategoryItemsHrefValues.desktopsAndMonitors,
+            envData.shopByCategoryItemsHrefValues.printersAndScanners,
+            envData.shopByCategoryItemsHrefValues.miceAndTrackballs,
+            envData.shopByCategoryItemsHrefValues.fashionAndAccessories,
+            envData.shopByCategoryItemsHrefValues.beautyAndSaloon,
+            envData.shopByCategoryItemsHrefValues.autopartsAndAccessories,
+            envData.shopByCategoryItemsHrefValues.washingMachine,
+            envData.shopByCategoryItemsHrefValues.gamingConsole,
+            envData.shopByCategoryItemsHrefValues.airConditioner,
+            envData.shopByCategoryItemsHrefValues.webCameras,
+          ]
+        );
 
         await runner.validateMultipleUrlStatuses(
           homePage.shopByCategoryModalItems.itemList

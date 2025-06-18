@@ -19,7 +19,8 @@ export class HomePage {
   };
 
   constructor(page: Page) {
-    this.headerLogo = page.locator(`css=[id='entry_217821'] img`);
+    this.headerLogo = page.locator(`css=div[id='entry_217821'] img`);
+    // this.headerLogo = page.getByRole("img", { name: "Poco Electro" });
 
     this.navbarItems = {
       shopByCategory: page.getByRole("button", { name: "Shop by Category" }),

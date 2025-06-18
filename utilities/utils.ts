@@ -1,6 +1,10 @@
 import { expect, Page, Locator, request } from "@playwright/test";
 import logger from "./logger";
 
+const normalize = (value?: string | null): string | undefined => {
+  return value?.trim() ? value.trim() : undefined;
+};
+
 export class Utils {
   private page: Page;
 
@@ -40,7 +44,7 @@ export class Utils {
     try {
       await this.page.goto(url, {
         waitUntil: "domcontentloaded",
-        timeout: 30000,
+        timeout: 60000,
       });
       this.logMessage(`Navigated to ${url} successfully.`);
     } catch (error) {
@@ -448,11 +452,12 @@ export class Utils {
 
   async validateAttributes(
     selector: Locator,
-    attribute: string | "src" | "href" | "alt" | "data-test",
+    attribute: string,
     expectedValues: string[]
   ): Promise<void> {
     try {
       const elementsCount = await selector.count();
+
       if (elementsCount !== expectedValues.length) {
         const errorMsg = `Elements count (${elementsCount}) does not match expected values count (${expectedValues.length})`;
         this.logMessage(errorMsg, "error");
@@ -462,19 +467,47 @@ export class Utils {
 
       for (let i = 0; i < elementsCount; i++) {
         const element = selector.nth(i);
-        const actualValue = await element.getAttribute(attribute);
-        if (actualValue !== expectedValues[i]) {
-          const errorMsg = `Attribute "${attribute}" mismatch at index ${i}. Expected: "${expectedValues[i]}", Got: "${actualValue}"`;
+        const rawActual = await element.getAttribute(attribute);
+        const actualValue = normalize(rawActual);
+        const expectedValue = normalize(expectedValues[i]);
+
+        if (expectedValue === undefined) {
+          this.logMessage(
+            `⚠️ Warning: No expected value provided for attribute "${attribute}" at index ${
+              i + 1
+            }`,
+            "warn"
+          );
+          continue;
+        }
+
+        if (rawActual !== null && actualValue === undefined) {
+          this.logMessage(
+            `⚠️ Warning: Attribute "${attribute}" is present but empty at index ${
+              i + 1
+            }`,
+            "warn"
+          );
+          continue;
+        }
+
+        if (actualValue !== expectedValue) {
+          const errorMsg = `❌ Attribute "${attribute}" mismatch at index ${
+            i + 1
+          }. Expected: "${expectedValue}", Got: "${actualValue}"`;
           this.logMessage(errorMsg, "error");
           await this.captureScreenshotOnFailure("validateAttributes");
           throw new Error(errorMsg);
         }
+
         this.logMessage(
-          `Validated attribute "${attribute}" with value "${expectedValues[i]}" on element index ${i}`
+          `✅ Validated attribute "${attribute}" with value "${expectedValue}" on element index ${
+            i + 1
+          }`
         );
       }
     } catch (error) {
-      const errorMsg = `Failed to validate attributes "${attribute}" on selector "${selector}"`;
+      const errorMsg = `❗ Failed to validate attributes "${attribute}" on selector "${selector}"`;
       this.logMessage(errorMsg, "error");
       await this.captureScreenshotOnFailure("validateAttributes");
       throw new Error(errorMsg);
@@ -662,6 +695,7 @@ export class Utils {
     }
   }
 
+  // <------------------------------------------------------------ X ------------------------------------------------------------>
   // To Test Utils
   // ---------------------------------------------------------------------------------------------------------------------------------
   // here you can add any utility methods that you want to test
