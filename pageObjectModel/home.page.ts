@@ -19,7 +19,7 @@ export class HomePage {
   };
 
   constructor(page: Page) {
-    this.headerLogo = page.locator(`css=div[id='entry_217821'] img`);
+    this.headerLogo = page.locator(`css=[id='entry_217821'] img`);
 
     this.navbarItems = {
       shopByCategory: page.getByRole("button", { name: "Shop by Category" }),
@@ -33,12 +33,7 @@ export class HomePage {
 
     this.shopByCategoryModalItems = {
       headerText: page.getByRole("heading", { name: "Top categories" }),
-      // itemList: page
-      //   .getByRole("navigation")
-      //   .filter({ hasText: "Components Cameras Phone," }),
-      itemList: page
-        .getByRole("navigation")
-        .filter({ hasText: "Components Cameras Phone, Tablets & Ipod" }),
+      itemList: page.locator(`css=[id='widget-navbar-217841'] a[href]`),
     };
   }
 }
