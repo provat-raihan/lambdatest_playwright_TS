@@ -234,6 +234,19 @@ class registerTest extends ExpectedValueProvider {
         await runner.verifyElementIsVisible(myAccountPage.registerPage.passwordWarning);
         await runner.verifyToHaveExactText(myAccountPage.registerPage.passwordWarning, registerData.passwordWarningText);
       }); // This closing brace ends the 'test' function.
+      test("Verify warning is shown when email is without @ ", async ({ runner, envData, myAccountPage, registerAuthHelper, fakeUser }) => {
+        await registerAuthHelper.register(envData.baseUrl, {
+          firstName: fakeUser.firstName,
+          lastName: fakeUser.lastName,
+          email: fakeUser.invalidEmail,
+          telephone: fakeUser.telephone,
+          password: fakeUser.password,
+          passwordConfirm: fakeUser.passwordConfirm,
+          newsletterSubscribe: fakeUser.newsletterSubscribe
+        });
+        await runner.assertNativeValidationMessage(myAccountPage.registerPage.emailInputBox,registerData.invalidEmailWarning);
+
+      });// This closing brace ends the 'test' function.
       test("Verify warning is shown when confirm password doesn't match password typed ", async ({ runner, envData, myAccountPage, registerAuthHelper, fakeUser }) => {
         await registerAuthHelper.register(envData.baseUrl, {
           firstName: fakeUser.firstName,
@@ -260,7 +273,7 @@ class registerTest extends ExpectedValueProvider {
         await runner.verifyElementIsVisible(myAccountPage.registerPage.warningTextAlreadyRegistered);
         await runner.verifyToHaveExactText(myAccountPage.registerPage.warningTextAlreadyRegistered, registerData.warningTextAlreadyRegistered);
       }); // This closing brace ends the 'test' function.
-      
+
       }); // This closes the 'describe' block for "RegisterPage functionality test".
   } // This closes the 'runTest' method.
 } 

@@ -9,6 +9,6 @@
     "telephoneWarningText": "Telephone must be between 3 and 32 characters!",
     "telephoneGuideMessageText": "Enter valid phone number with country code!",
     "passwordConfirmationWarningText": "Password confirmation does not match password!",
-    "passwordWarningText": "Password must be between 4 and 20 characters!"
-
+    "passwordWarningText": "Password must be between 4 and 20 characters!",
+    "invalidEmailWarning": "Please include an '@' in the email address."
 }

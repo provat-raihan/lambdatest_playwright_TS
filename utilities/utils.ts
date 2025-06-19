@@ -694,6 +694,43 @@ export class Utils {
       throw new Error(errorMsg);
     }
   }
+  async assertNativeValidationMessage(
+    locator: Locator,
+    expectedMessageSubstring: string // Renamed for clarity to indicate it's a substring
+  ): Promise<void> {
+    try {
+      // 1. Ensure the element is focused and then blurred to trigger native validation
+      //    This is crucial if the validation message only appears on blur.
+      await locator.focus();
+      // Click body or another element to cause the input to blur
+      await this.page.locator('body').click();
+
+      // 2. Get the native validation message from the element
+      const actualMessage = await locator.evaluate(
+        (el: HTMLInputElement) => el.validationMessage
+      );
+
+      // 3. Perform partial match
+      const trimmedActual = actualMessage.trim();
+      const trimmedExpected = expectedMessageSubstring.trim();
+
+      if (!trimmedActual.includes(trimmedExpected)) {
+        const msg = `❌ Native validation message mismatch (partial match failed).
+Expected to contain: "${trimmedExpected}"
+Actual message:      "${trimmedActual}"`;
+        this.logMessage(msg, "error");
+        await this.captureScreenshotOnFailure("assertNativeValidationMessage");
+        throw new Error(msg);
+      }
+
+      this.logMessage(`✅ Native validation message partially matched: "${trimmedActual}" contains "${trimmedExpected}"`);
+    } catch (error) {
+      const errorMsg = `❌ Failed to assert native validation message: ${error}`;
+      this.logMessage(errorMsg, "error");
+      await this.captureScreenshotOnFailure("assertNativeValidationMessage");
+      throw new Error(errorMsg);
+    }
+  }
 
   // <------------------------------------------------------------ X ------------------------------------------------------------>
   // To Test Utils

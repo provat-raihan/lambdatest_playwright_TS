@@ -5,6 +5,7 @@ export class FakeUser {
   firstName: string;
   lastName: string;
   email: string;
+  invalidEmail: string;
   telephone: string;
   password: string;
   passwordConfirm: string;
@@ -15,6 +16,7 @@ export class FakeUser {
     this.firstName = faker.person.firstName();
     this.lastName = faker.person.lastName();
     this.email = faker.internet.email();
+    this.invalidEmail = faker.internet.displayName();
     this.telephone = faker.phone.number();
     this.password = faker.internet.password();
     this.passwordConfirm = this.password;
