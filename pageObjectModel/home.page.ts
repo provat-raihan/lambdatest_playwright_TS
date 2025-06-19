@@ -11,6 +11,8 @@ export class HomePage {
     megaMenu: Locator;
     addOnsFeatured: Locator;
     myAccount: Locator;
+    myAccountLogin: Locator;
+    myAccountRegister: Locator;
   };
 
   readonly shopByCategoryModalItems: {
@@ -30,6 +32,9 @@ export class HomePage {
       megaMenu: page.getByRole("button", { name: "Mega Menu" }),
       addOnsFeatured: page.getByRole("button", { name: "AddOns Featured" }),
       myAccount: page.getByRole("button", { name: " My account" }),
+      myAccountLogin: page.getByRole('link', { name: 'Login' }),
+      myAccountRegister: page.getByRole('link', { name: 'Register' }),
+
     };
 
     this.shopByCategoryModalItems = {

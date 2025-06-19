@@ -5,6 +5,7 @@ export class EnvData {
   readonly specialOfferUrl: string;
   readonly blogUrl: string;
   readonly loginUrl: string;
+  readonly registerUrl: string;
 
   readonly shopByCategoryItemsHrefValues: {
     components: string;
@@ -31,6 +32,7 @@ export class EnvData {
     this.specialOfferUrl = `${process.env.SPECIAL_OFFERS_URL}`;
     this.blogUrl = `${process.env.BLOG_URL}`;
     this.loginUrl = `${process.env.LOGIN_URL}`;
+    this.registerUrl = `${process.env.REGISTER_URL}`;
 
     this.shopByCategoryItemsHrefValues = {
       components: `${process.env.COMPONENTS_URL}`,

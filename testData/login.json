@@ -1,3 +1,4 @@
 {
-    "loginFormHeader": "Returning Customer"
+    "loginFormHeader": "Returning Customer",
+    "registerFormHeader": "New Customer"
 }
