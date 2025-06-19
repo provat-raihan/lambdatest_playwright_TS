@@ -2,15 +2,23 @@ import { faker } from "@faker-js/faker";
 import { Page } from "@playwright/test";
 
 export class FakeUser {
-  username: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  telephone: string;
   password: string;
-
+  passwordConfirm: string;
+  newsletterSubscribe: boolean;
+  
 
   constructor(page: Page) {
-    this.username = faker.internet.username();
+    this.firstName = faker.person.firstName();
+    this.lastName = faker.person.lastName();
     this.email = faker.internet.email();
+    this.telephone = faker.phone.number();
     this.password = faker.internet.password();
+    this.passwordConfirm = this.password;
+    this.newsletterSubscribe = faker.datatype.boolean();
     
   }
 }
