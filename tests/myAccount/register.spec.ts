@@ -3,7 +3,8 @@ import { ExpectedValueProvider } from "../../utilities/valueProvider";
 import registerData from "../../testData/register.json";
 import homeData from "../../testData/home.json";
 
-// message: after complete the header, we will work on homepage functionality
+
+
 
 class registerTest extends ExpectedValueProvider {
   constructor() {
@@ -68,6 +69,37 @@ class registerTest extends ExpectedValueProvider {
           await runner.verifyElementIsVisible(myAccountPage.registerPage.registerPageHeader);
           await runner.verifyToHaveExactText(myAccountPage.registerPage.registerPageHeader, registerData.registerFormHeader);
         }); // This closing brace ends the 'test' function.
+        test("Verify the warning message without all the fields provided ", async ({ runner, homePage,envData, myAccountPage}) => {
+          await runner.mouseHover(homePage.navbarItems.myAccount);
+          await runner.clickOnElement(homePage.navbarItems.myAccountRegister);
+          await runner.verifyUrlContains(envData.registerUrl);
+          await runner.verifyElementIsVisible(myAccountPage.registerPage.registerPageBreadcrumbText);
+          await runner.verifyElementIsVisible(myAccountPage.registerPage.registerPageHeader);
+          await runner.verifyToHaveExactText(myAccountPage.registerPage.registerPageHeader, registerData.registerFormHeader);
+          await runner.clickOnElement(myAccountPage.registerPage.continueButton)
+          await runner.verifyElementIsVisible(myAccountPage.registerPage.warningTextToAgreePolicy)
+          await runner.verifyToHaveExactText(myAccountPage.registerPage.warningTextToAgreePolicy,registerData.warningTextToAgreePolicy)
+
+
+
+        }); // This closing brace ends the 'test' function.
+        test("Verify registration is complete with valid credentials ", async ({ runner, envData, myAccountPage, registerAuthHelper, fakeUser }) => {
+           await registerAuthHelper.register(envData.baseUrl, {
+               firstName: fakeUser.firstName,
+               lastName: fakeUser.lastName,
+               email: fakeUser.email,
+               telephone: fakeUser.telephone,
+               password: fakeUser.password,
+               passwordConfirm: fakeUser.passwordConfirm,
+               newsletterSubscribe: fakeUser.newsletterSubscribe
+           });
+          await runner.verifyElementIsVisible(myAccountPage.successPage.successPageBreadcrumbText);
+          await runner.verifyElementIsVisible(myAccountPage.successPage.successPageHeader);
+          await runner.verifyToHaveExactText(myAccountPage.successPage.successPageHeader, registerData.successOfAccountCreation);
+        
+
+        }); // This closing brace ends the 'test' function.
+      
 
     }); // <--- THIS IS THE CRUCIAL CLOSING BRACE for the test.describe's function.
   } // This closes the 'runTest' method.

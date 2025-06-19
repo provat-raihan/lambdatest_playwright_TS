@@ -1,3 +1,7 @@
 {
-    "registerFormHeader": "Register Account"
+    "registerFormHeader": "Register Account",
+    "warningTextToAgreePolicy": " Warning: You must agree to the Privacy Policy!",
+    "warningTextAlreadyRegistered": " Warning: E-Mail Address is already registered!",
+    "successOfAccountCreation": " Your Account Has Been Created!"
+
 }

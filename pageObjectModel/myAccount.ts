@@ -22,6 +22,18 @@ export class MyAccountPage {
   readonly registerPage: {
     registerPageHeader: Locator;
       registerPageBreadcrumbText: Locator;
+      warningTextToAgreePolicy: Locator;
+      warningTextAlreadyRegistered: Locator;
+      firstNameInputBox: Locator;
+      lastNameInputBox: Locator;
+      emailInputBox: Locator;
+      telephoneInputBox: Locator;
+      passwordInputBox: Locator;
+      confirmPasswordInputBox: Locator;
+      newsletterYesButton: Locator;
+      newsletterNoButton: Locator;
+      privacyPolicyCheckbox: Locator;
+      continueButton: Locator;
 
   };
   readonly loginPage: {
@@ -29,6 +41,12 @@ export class MyAccountPage {
       loginPageBreadcrumbText: Locator;
     registerSectionHeader: Locator;
     registerSectionContinueButton: Locator;
+
+  };
+  readonly successPage: {
+    successPageBreadcrumbText: Locator;
+    successPageHeader: Locator;
+    successPageContinueButton: Locator;
 
   };
 
@@ -54,6 +72,18 @@ export class MyAccountPage {
     this.registerPage = {
       registerPageHeader: page.getByRole('heading', { name: 'Register Account' }),
       registerPageBreadcrumbText: page.getByLabel('breadcrumb').getByText('Register'),
+        warningTextToAgreePolicy: page.getByText('Warning: You must agree to'),
+        warningTextAlreadyRegistered: page.getByText('Warning: E-Mail Address is already'),
+        firstNameInputBox: page.getByRole('textbox', { name: 'First Name*' }),
+        lastNameInputBox: page.getByRole('textbox', { name: 'Last Name*' }),
+        emailInputBox: page.getByRole('textbox', { name: 'E-Mail*' }),
+        telephoneInputBox: page.getByRole('textbox', { name: 'Telephone*' }),
+        passwordInputBox: page.getByRole('textbox', { name: 'Password*' }),
+        confirmPasswordInputBox: page.getByRole('textbox', { name: 'Password Confirm*' }),
+        newsletterYesButton: page.getByText('Yes'),
+        newsletterNoButton: page.getByText('No', { exact: true }),
+        privacyPolicyCheckbox: page.getByText('I have read and agree to the'),
+        continueButton: page.getByRole('button', { name: 'Continue' }),
 
     };
     this.loginPage = {
@@ -63,7 +93,11 @@ export class MyAccountPage {
       registerSectionContinueButton: page.getByRole('link', { name: 'Continue' }),
 
     };
+    this.successPage = {
+      successPageHeader: page.getByRole('heading', { name: ' Your Account Has Been' }),
+      successPageBreadcrumbText: page.getByText('Success', { exact: true }),
+      successPageContinueButton: page.getByRole('link', { name: 'Continue' }),
 
-    
+    };
   }
 }
