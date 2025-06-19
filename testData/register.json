@@ -2,6 +2,13 @@
     "registerFormHeader": "Register Account",
     "warningTextToAgreePolicy": " Warning: You must agree to the Privacy Policy!",
     "warningTextAlreadyRegistered": " Warning: E-Mail Address is already registered!",
-    "successOfAccountCreation": " Your Account Has Been Created!"
+    "successOfAccountCreation": " Your Account Has Been Created!",
+    "firstNameWarningText": "First Name must be between 1 and 32 characters!",
+    "lastNameWarningText": "Last Name must be between 1 and 32 characters!",
+    "emailWarningText": "E-Mail Address does not appear to be valid!",
+    "telephoneWarningText": "Telephone must be between 3 and 32 characters!",
+    "telephoneGuideMessageText": "Enter valid phone number with country code!",
+    "passwordConfirmationWarningText": "Password confirmation does not match password!",
+    "passwordWarningText": "Password must be between 4 and 20 characters!"
 
 }

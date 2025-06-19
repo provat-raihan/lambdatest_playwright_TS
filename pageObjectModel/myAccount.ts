@@ -34,6 +34,13 @@ export class MyAccountPage {
       newsletterNoButton: Locator;
       privacyPolicyCheckbox: Locator;
       continueButton: Locator;
+      firstNameWarning: Locator;
+      lastNameWarning: Locator;
+      emailWarning: Locator;
+      telephoneGuideMessage: Locator;
+      telephoneWarning: Locator;
+      passwordWarning: Locator;
+      passwordConfirmWarning: Locator;
 
   };
   readonly loginPage: {
@@ -84,6 +91,13 @@ export class MyAccountPage {
         newsletterNoButton: page.getByText('No', { exact: true }),
         privacyPolicyCheckbox: page.getByText('I have read and agree to the'),
         continueButton: page.getByRole('button', { name: 'Continue' }),
+        firstNameWarning: page.getByText('First Name must be between 1'),
+        lastNameWarning: page.getByText('Last Name must be between 1'),
+        emailWarning: page.getByText('E-Mail Address does not'),
+        telephoneGuideMessage: page.getByText('Enter valid phone number with'),
+        telephoneWarning: page.getByText('Telephone must be between 3'),
+        passwordWarning: page.getByText('Password must be between 4'),
+        passwordConfirmWarning: page.getByText('Password confirmation does'),
 
     };
     this.loginPage = {

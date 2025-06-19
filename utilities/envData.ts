@@ -6,6 +6,8 @@ export class EnvData {
   readonly blogUrl: string;
   readonly loginUrl: string;
   readonly registerUrl: string;
+  readonly email: string;
+  readonly password: string;
 
   readonly shopByCategoryItemsHrefValues: {
     components: string;
@@ -33,6 +35,8 @@ export class EnvData {
     this.blogUrl = `${process.env.BLOG_URL}`;
     this.loginUrl = `${process.env.LOGIN_URL}`;
     this.registerUrl = `${process.env.REGISTER_URL}`;
+    this.email = `${process.env.EMAIL}`;
+    this.password = `${process.env.PASSWORD}`;
 
     this.shopByCategoryItemsHrefValues = {
       components: `${process.env.COMPONENTS_URL}`,
