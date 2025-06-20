@@ -21,7 +21,7 @@ export class MyAccountPage {
   };
   readonly registerPage: {
     registerPageHeader: Locator;
-      registerPageBreadcrumbText: Locator;
+      // registerPageBreadcrumbText: Locator;
       warningTextToAgreePolicy: Locator;
       warningTextAlreadyRegistered: Locator;
       firstNameInputBox: Locator;
@@ -45,15 +45,25 @@ export class MyAccountPage {
   };
   readonly loginPage: {
     loginPageHeader: Locator;
-      loginPageBreadcrumbText: Locator;
+    // loginPageBreadcrumbText: Locator;
     registerSectionHeader: Locator;
     registerSectionContinueButton: Locator;
+    loginPageEmailField: Locator;
+    loginPagePasswordField: Locator;
+    loginPageForgottenPasswordButton: Locator;
+    loginPageLoginButton: Locator;
+    loginPageWarningSection: Locator;
 
   };
   readonly successPage: {
-    successPageBreadcrumbText: Locator;
+    // successPageBreadcrumbText: Locator;
     successPageHeader: Locator;
     successPageContinueButton: Locator;
+
+  };
+  readonly myAccount: {
+    myAccountBreadcrumb: Locator;
+    myAccountBreadcrumbActive: Locator;
 
   };
 
@@ -78,7 +88,7 @@ export class MyAccountPage {
     };
     this.registerPage = {
       registerPageHeader: page.getByRole('heading', { name: 'Register Account' }),
-      registerPageBreadcrumbText: page.getByLabel('breadcrumb').getByText('Register'),
+      // registerPageBreadcrumbText: page.getByLabel('breadcrumb').getByText('Register'),
         warningTextToAgreePolicy: page.getByText('Warning: You must agree to'),
         warningTextAlreadyRegistered: page.getByText('Warning: E-Mail Address is already'),
         firstNameInputBox: page.getByRole('textbox', { name: 'First Name*' }),
@@ -102,15 +112,25 @@ export class MyAccountPage {
     };
     this.loginPage = {
       loginPageHeader: page.getByRole('heading', { name: 'Returning Customer' }),
-      loginPageBreadcrumbText: page.getByLabel('breadcrumb').getByText('Login'),
+      // loginPageBreadcrumbText: page.getByLabel('breadcrumb').getByText('Login'),
       registerSectionHeader: page.getByRole('heading', { name: 'New Customer' }),
       registerSectionContinueButton: page.getByRole('link', { name: 'Continue' }),
+      loginPageEmailField: page.getByRole('textbox', { name: 'E-Mail Address' }),
+      loginPagePasswordField: page.getByRole('textbox', { name: 'Password' }),
+      loginPageForgottenPasswordButton: page.getByRole('link', { name: 'Forgotten Password', exact: true }),
+      loginPageLoginButton: page.getByRole('button', { name: 'Login' }),
+      loginPageWarningSection: page.locator(`css=div[class="alert alert-danger alert-dismissible"]`),
 
     };
     this.successPage = {
       successPageHeader: page.getByRole('heading', { name: ' Your Account Has Been' }),
-      successPageBreadcrumbText: page.getByText('Success', { exact: true }),
+      // successPageBreadcrumbText: page.getByText('Success', { exact: true }),
       successPageContinueButton: page.getByRole('link', { name: 'Continue' }),
+
+    };
+    this.myAccount = {
+      myAccountBreadcrumb: page.locator(`css=ol[class="breadcrumb"]`),
+      myAccountBreadcrumbActive: page.locator(`css=li[class="breadcrumb-item active"]`),
 
     };
   }
