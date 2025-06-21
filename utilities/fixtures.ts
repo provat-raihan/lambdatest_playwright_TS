@@ -8,6 +8,7 @@ import { BlogPage } from "../pageObjectModel/blog.page.ts";
 import { LoginPage } from "../pageObjectModel/login.page.ts";
 import { MyAccountPage } from "../pageObjectModel/myAccount.ts";
 import { RegisterAuthHelper } from "../utilities/helper/authHelper.ts";
+import { LoginAuthHelper } from "../utilities/helper/authHelper.ts";
 
 const test = base.extend<{
   runner: Utils;
@@ -19,6 +20,7 @@ const test = base.extend<{
   loginPage: LoginPage;
   myAccountPage: MyAccountPage;
   registerAuthHelper: RegisterAuthHelper;
+  loginAuthHelper: LoginAuthHelper;
 }>({
   runner: async ({ page }: { page: Page }, use) => {
     const utilsInstance = new Utils(page);
@@ -61,6 +63,10 @@ const test = base.extend<{
   registerAuthHelper: async ({ page }: { page: Page }, use) => {
     const registerAuthHelperInstance = new RegisterAuthHelper(page);
     await use(registerAuthHelperInstance);
+  },
+  loginAuthHelper: async ({ page }: { page: Page }, use) => {
+    const loginAuthHelperInstance = new LoginAuthHelper(page);
+    await use(loginAuthHelperInstance);
   },
 });
 

@@ -9,7 +9,49 @@ export interface RegistrationDetails {
   password: string;
   passwordConfirm: string;
   newsletterSubscribe: boolean;
-  // removed agreeToPrivacy as per previous instruction
+
+}
+export interface LoginDetails {
+  email: string;
+  password: string;
+}
+
+export class LoginAuthHelper {
+  private utils: Utils;
+  private myAccountPage: MyAccountPage; // Or a specific LoginPage if you have one
+
+  constructor(page: Page) {
+    this.utils = new Utils(page);
+    this.myAccountPage = new MyAccountPage(page); // Initialize with your page object model
+  }
+
+  async login(baseUrl: string, details: LoginDetails): Promise<void> {
+    try {
+      this.utils.logMessage(`Attempting to log in user: "${details.email}"`);
+
+      // 1. Navigate to the login page
+      // Based on your screenshot, it seems the login form is at '/account/login'
+      await this.utils.navigateTo(baseUrl + '/index.php?route=account/login');
+      this.utils.logMessage('Navigated to login page.');
+
+      // 2. Fill in email and password
+      // Assuming you have locators for email and password input boxes in your MyAccountPage
+      await this.utils.fillInputBox(this.myAccountPage.loginPage.loginPageEmailField, details.email);
+      await this.utils.fillInputBox(this.myAccountPage.loginPage.loginPagePasswordField, details.password);
+      this.utils.logMessage('Filled in login credentials.');
+
+      // 3. Click the Login button
+      // Assuming you have a locator for the login button
+      await this.utils.clickOnElement(this.myAccountPage.loginPage.loginPageLoginButton);
+      this.utils.logMessage(`Clicked 'Login' button for user: "${details.email}"`);
+
+    } catch (error) {
+      const errorMsg = `Failed to perform login for user: "${details.email}". Error: ${error.message}`;
+      this.utils.logMessage(errorMsg, "error");
+      await this.utils.captureScreenshotOnFailure("login_failure_" + details.email.split('@')[0]);
+      throw new Error(errorMsg);
+    }
+  }
 }
 
 export class RegisterAuthHelper {
