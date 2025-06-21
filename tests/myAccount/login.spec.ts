@@ -1,12 +1,9 @@
 import { test } from "../../utilities/fixtures";
 import { ExpectedValueProvider } from "../../utilities/valueProvider";
 import homeData from "../../testData/home.json";
-import registerData from "../../testData/register.json"
-import loginData from "../../testData/login.json"
-import { RegisterAuthHelper } from "../../utilities/helper/authHelper";
-import  myAccountData  from "../../testData/myAccount.json";
-
-
+import registerData from "../../testData/register.json";
+import loginData from "../../testData/login.json";
+import myAccountData from "../../testData/myAccount.json";
 
 class loginPageTest extends ExpectedValueProvider {
   constructor() {
@@ -31,27 +28,45 @@ class loginPageTest extends ExpectedValueProvider {
         );
       });
 
-      test("Verify login is done with valid credentials", async ({ runner, homePage, myAccountPage,loginAuthHelper,envData}) => {
+      test("Verify login is done with valid credentials", async ({
+        runner,
+        homePage,
+        myAccountPage,
+        authHelper,
+        envData,
+      }) => {
         await runner.clickOnElement(homePage.navbarItems.myAccount);
         await runner.clickOnElement(homePage.navbarItems.myAccountLogin);
 
-        await runner.verifyElementIsVisible(myAccountPage.loginPage.loginPageHeader);
-        await runner.verifyElementIsVisible(myAccountPage.myAccount.myAccountBreadcrumbActive);
-        await runner.verifyToHaveExactText(myAccountPage.myAccount.myAccountBreadcrumbActive, myAccountData.loginBreadcrumbText);
-        await runner.verifyElementIsVisible(myAccountPage.loginPage.registerSectionHeader);
-        await loginAuthHelper.login(envData.baseUrl,{
+        await runner.verifyElementIsVisible(
+          myAccountPage.loginPage.loginPageHeader
+        );
+        await runner.verifyElementIsVisible(
+          myAccountPage.myAccount.myAccountBreadcrumbActive
+        );
+        await runner.verifyToHaveExactText(
+          myAccountPage.myAccount.myAccountBreadcrumbActive,
+          myAccountData.loginBreadcrumbText
+        );
+        await runner.verifyElementIsVisible(
+          myAccountPage.loginPage.registerSectionHeader
+        );
+        await authHelper.login(envData.baseUrl, {
           email: envData.email,
-          password: envData.password
+          password: envData.password,
         });
-        await runner.verifyElementIsVisible(myAccountPage.myAccount.myAccountBreadcrumb);
-        await runner.verifyElementIsVisible(myAccountPage.myAccount.myAccountBreadcrumbActive);
-        await runner.verifyToHaveExactText(myAccountPage.myAccount.myAccountBreadcrumbActive, myAccountData.accountBreadcrumbText);
-
+        await runner.verifyElementIsVisible(
+          myAccountPage.myAccount.myAccountBreadcrumb
+        );
+        await runner.verifyElementIsVisible(
+          myAccountPage.myAccount.myAccountBreadcrumbActive
+        );
+        await runner.verifyToHaveExactText(
+          myAccountPage.myAccount.myAccountBreadcrumbActive,
+          myAccountData.accountBreadcrumbText
+        );
       });
-
-
-
-    })
-}
+    });
+  }
 }
 new loginPageTest().runTest();
