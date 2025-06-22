@@ -1,8 +1,6 @@
 import { test } from "../../utilities/fixtures";
 import { ExpectedValueProvider } from "../../utilities/valueProvider";
 import homeData from "../../testData/home.json";
-import registerData from "../../testData/register.json";
-import loginData from "../../testData/login.json";
 import myAccountData from "../../testData/myAccount.json";
 
 class loginPageTest extends ExpectedValueProvider {
@@ -100,7 +98,7 @@ class loginPageTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.loginPage.loginPageWarningSection,
-          loginData.loginPageInvalidCredentialWarningText
+          myAccountData.login.loginPageInvalidCredentialWarningText
         );
       });
 
@@ -137,7 +135,7 @@ class loginPageTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.loginPage.loginPageWarningSection,
-          loginData.loginPageInvalidCredentialWarningText
+          myAccountData.login.loginPageInvalidCredentialWarningText
         );
       });
 
@@ -147,7 +145,6 @@ class loginPageTest extends ExpectedValueProvider {
         myAccountPage,
         authHelper,
         envData,
-        fakeUser,
       }) => {
         await runner.mouseHover(homePage.navbarItems.myAccount);
         await runner.clickOnElement(homePage.navbarItems.myAccountLogin);
@@ -174,7 +171,7 @@ class loginPageTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.loginPage.loginPageWarningSection,
-          loginData.loginPageRetryLimitWarningText
+          myAccountData.login.loginPageRetryLimitWarningText
         );
       });
 
@@ -231,7 +228,7 @@ class loginPageTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.loginPage.loginPageWarningSection,
-          loginData.loginPageRetryLimitWarningText
+          myAccountData.login.loginPageRetryLimitWarningText
         );
       });
     });

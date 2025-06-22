@@ -1,6 +1,5 @@
 import { test } from "../../utilities/fixtures";
 import { ExpectedValueProvider } from "../../utilities/valueProvider";
-import registerData from "../../testData/register.json";
 import homeData from "../../testData/home.json";
 import myAccountData from "../../testData/myAccount.json";
 
@@ -45,7 +44,7 @@ class registerTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.registerPageHeader,
-          registerData.registerFormHeader
+          myAccountData.register.registerFormHeader
         );
       }); // This closing brace ends the 'test' function.
 
@@ -83,7 +82,7 @@ class registerTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.registerPageHeader,
-          registerData.registerFormHeader
+          myAccountData.register.registerFormHeader
         );
       }); // This closing brace ends the 'test' function.
       test("Verify that clicking on my account then clicking the register button directs to register page", async ({
@@ -115,7 +114,7 @@ class registerTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.registerPageHeader,
-          registerData.registerFormHeader
+          myAccountData.register.registerFormHeader
         );
       }); // This closing brace ends the 'test' function.
       test("Verify the warning message without all the fields provided ", async ({
@@ -139,7 +138,7 @@ class registerTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.registerPageHeader,
-          registerData.registerFormHeader
+          myAccountData.register.registerFormHeader
         );
         await runner.clickOnElement(myAccountPage.registerPage.continueButton);
         await runner.verifyElementIsVisible(
@@ -147,7 +146,7 @@ class registerTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.warningTextToAgreePolicy,
-          registerData.warningTextToAgreePolicy
+          myAccountData.register.warningTextToAgreePolicy
         );
       }); // This closing brace ends the 'test' function.
       test("Verify registration is complete with valid credentials ", async ({
@@ -178,7 +177,7 @@ class registerTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.successPage.successPageHeader,
-          registerData.successOfAccountCreation
+          myAccountData.register.successOfAccountCreation
         );
       }); // This closing brace ends the 'test' function.
       test("Verify warning is shown when first name is empty ", async ({
@@ -203,7 +202,7 @@ class registerTest extends ExpectedValueProvider {
 
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.firstNameWarning,
-          registerData.firstNameWarningText
+          myAccountData.register.firstNameWarningText
         );
       }); // This closing brace ends the 'test' function.
       test("Verify warning is shown when last name is empty ", async ({
@@ -227,7 +226,7 @@ class registerTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.lastNameWarning,
-          registerData.lastNameWarningText
+          myAccountData.register.lastNameWarningText
         );
       }); // This closing brace ends the 'test' function.
       test("Verify warning is shown when email is empty ", async ({
@@ -251,7 +250,7 @@ class registerTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.emailWarning,
-          registerData.emailWarningText
+          myAccountData.register.emailWarningText
         );
       }); // This closing brace ends the 'test' function.
       test("Verify warning is shown when telephone is empty ", async ({
@@ -275,11 +274,11 @@ class registerTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.telephoneGuideMessage,
-          registerData.telephoneGuideMessageText
+          myAccountData.register.telephoneGuideMessageText
         );
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.telephoneWarning,
-          registerData.telephoneWarningText
+          myAccountData.register.telephoneWarningText
         );
       }); // This closing brace ends the 'test' function.
       test("Verify warning is shown when password is empty ", async ({
@@ -303,7 +302,7 @@ class registerTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.passwordWarning,
-          registerData.passwordWarningText
+          myAccountData.register.passwordWarningText
         );
       }); // This closing brace ends the 'test' function.
       test("Verify warning is shown when confirm password is empty ", async ({
@@ -327,7 +326,7 @@ class registerTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.passwordConfirmWarning,
-          registerData.passwordConfirmationWarningText
+          myAccountData.register.passwordConfirmationWarningText
         );
       }); // This closing brace ends the 'test' function.
       test("Verify warning is shown when first name exceeds 32 characters ", async ({
@@ -351,7 +350,7 @@ class registerTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.firstNameWarning,
-          registerData.firstNameWarningText
+          myAccountData.register.firstNameWarningText
         );
       }); // This closing brace ends the 'test' function.
       test("Verify warning is shown when last name exceeds 32 characters ", async ({
@@ -375,7 +374,7 @@ class registerTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.lastNameWarning,
-          registerData.lastNameWarningText
+          myAccountData.register.lastNameWarningText
         );
       }); // This closing brace ends the 'test' function.
 
@@ -400,11 +399,11 @@ class registerTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.telephoneGuideMessage,
-          registerData.telephoneGuideMessageText
+          myAccountData.register.telephoneGuideMessageText
         );
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.telephoneWarning,
-          registerData.telephoneWarningText
+          myAccountData.register.telephoneWarningText
         );
       }); // This closing brace ends the 'test' function.
 
@@ -429,7 +428,7 @@ class registerTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.passwordWarning,
-          registerData.passwordWarningText
+          myAccountData.register.passwordWarningText
         );
       }); // This closing brace ends the 'test' function.
       test("Verify warning is shown when email is without @ ", async ({
@@ -450,7 +449,7 @@ class registerTest extends ExpectedValueProvider {
         });
         await runner.assertNativeValidationMessage(
           myAccountPage.registerPage.emailInputBox,
-          registerData.invalidEmailWarning
+          myAccountData.register.invalidEmailWarning
         );
       }); // This closing brace ends the 'test' function.
       test("Verify warning is shown when confirm password doesn't match password typed ", async ({
@@ -474,7 +473,7 @@ class registerTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.passwordConfirmWarning,
-          registerData.passwordConfirmationWarningText
+          myAccountData.register.passwordConfirmationWarningText
         );
       }); // This closing brace ends the 'test' function.
       test("Verify that while registering with existing email it shows warning", async ({
@@ -498,7 +497,7 @@ class registerTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           myAccountPage.registerPage.warningTextAlreadyRegistered,
-          registerData.warningTextAlreadyRegistered
+          myAccountData.register.warningTextAlreadyRegistered
         );
       }); // This closing brace ends the 'test' function.
     }); // This closes the 'describe' block for "RegisterPage functionality test".
