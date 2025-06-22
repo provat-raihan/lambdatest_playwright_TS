@@ -31,7 +31,7 @@ class registerTest extends ExpectedValueProvider {
         );
       }); // This closing brace ends the 'beforeEach' function.
 
-      test("Verify that clicking on register directs to register page", async ({
+      test("Verify that clicking on register directs to the register page", async ({
         runner,
         homePage,
         envData,
@@ -86,7 +86,6 @@ class registerTest extends ExpectedValueProvider {
           registerData.registerFormHeader
         );
       }); // This closing brace ends the 'test' function.
-
       test("Verify that clicking on my account then clicking the register button directs to register page", async ({
         runner,
         homePage,
@@ -119,7 +118,6 @@ class registerTest extends ExpectedValueProvider {
           registerData.registerFormHeader
         );
       }); // This closing brace ends the 'test' function.
-
       test("Verify the warning message without all the fields provided ", async ({
         runner,
         homePage,
@@ -152,15 +150,14 @@ class registerTest extends ExpectedValueProvider {
           registerData.warningTextToAgreePolicy
         );
       }); // This closing brace ends the 'test' function.
-
       test("Verify registration is complete with valid credentials ", async ({
         runner,
         envData,
         myAccountPage,
-        registerAuthHelper,
+        authHelper,
         fakeUser,
       }) => {
-        await registerAuthHelper.register(envData.baseUrl, {
+        await authHelper.register(envData.baseUrl, {
           firstName: fakeUser.firstName,
           lastName: fakeUser.lastName,
           email: fakeUser.email,
@@ -184,15 +181,14 @@ class registerTest extends ExpectedValueProvider {
           registerData.successOfAccountCreation
         );
       }); // This closing brace ends the 'test' function.
-
       test("Verify warning is shown when first name is empty ", async ({
         runner,
         envData,
         myAccountPage,
-        registerAuthHelper,
+        authHelper,
         fakeUser,
       }) => {
-        await registerAuthHelper.register(envData.baseUrl, {
+        await authHelper.register(envData.baseUrl, {
           firstName: "",
           lastName: fakeUser.lastName,
           email: fakeUser.email,
@@ -210,15 +206,14 @@ class registerTest extends ExpectedValueProvider {
           registerData.firstNameWarningText
         );
       }); // This closing brace ends the 'test' function.
-
       test("Verify warning is shown when last name is empty ", async ({
         runner,
         envData,
         myAccountPage,
-        registerAuthHelper,
+        authHelper,
         fakeUser,
       }) => {
-        await registerAuthHelper.register(envData.baseUrl, {
+        await authHelper.register(envData.baseUrl, {
           firstName: fakeUser.firstName,
           lastName: "",
           email: fakeUser.email,
@@ -235,15 +230,14 @@ class registerTest extends ExpectedValueProvider {
           registerData.lastNameWarningText
         );
       }); // This closing brace ends the 'test' function.
-
       test("Verify warning is shown when email is empty ", async ({
         runner,
         envData,
         myAccountPage,
-        registerAuthHelper,
+        authHelper,
         fakeUser,
       }) => {
-        await registerAuthHelper.register(envData.baseUrl, {
+        await authHelper.register(envData.baseUrl, {
           firstName: fakeUser.firstName,
           lastName: fakeUser.lastName,
           email: "",
@@ -260,15 +254,14 @@ class registerTest extends ExpectedValueProvider {
           registerData.emailWarningText
         );
       }); // This closing brace ends the 'test' function.
-
       test("Verify warning is shown when telephone is empty ", async ({
         runner,
         envData,
         myAccountPage,
-        registerAuthHelper,
+        authHelper,
         fakeUser,
       }) => {
-        await registerAuthHelper.register(envData.baseUrl, {
+        await authHelper.register(envData.baseUrl, {
           firstName: fakeUser.firstName,
           lastName: fakeUser.lastName,
           email: fakeUser.email,
@@ -289,15 +282,14 @@ class registerTest extends ExpectedValueProvider {
           registerData.telephoneWarningText
         );
       }); // This closing brace ends the 'test' function.
-
       test("Verify warning is shown when password is empty ", async ({
         runner,
         envData,
         myAccountPage,
-        registerAuthHelper,
+        authHelper,
         fakeUser,
       }) => {
-        await registerAuthHelper.register(envData.baseUrl, {
+        await authHelper.register(envData.baseUrl, {
           firstName: fakeUser.firstName,
           lastName: fakeUser.lastName,
           email: fakeUser.email,
@@ -314,15 +306,14 @@ class registerTest extends ExpectedValueProvider {
           registerData.passwordWarningText
         );
       }); // This closing brace ends the 'test' function.
-
       test("Verify warning is shown when confirm password is empty ", async ({
         runner,
         envData,
         myAccountPage,
-        registerAuthHelper,
+        authHelper,
         fakeUser,
       }) => {
-        await registerAuthHelper.register(envData.baseUrl, {
+        await authHelper.register(envData.baseUrl, {
           firstName: fakeUser.firstName,
           lastName: fakeUser.lastName,
           email: fakeUser.email,
@@ -339,15 +330,14 @@ class registerTest extends ExpectedValueProvider {
           registerData.passwordConfirmationWarningText
         );
       }); // This closing brace ends the 'test' function.
-
       test("Verify warning is shown when first name exceeds 32 characters ", async ({
         runner,
         envData,
         myAccountPage,
-        registerAuthHelper,
+        authHelper,
         fakeUser,
       }) => {
-        await registerAuthHelper.register(envData.baseUrl, {
+        await authHelper.register(envData.baseUrl, {
           firstName: "fake".repeat(10), // This will exceed 32 characters
           lastName: fakeUser.lastName,
           email: fakeUser.email,
@@ -364,15 +354,14 @@ class registerTest extends ExpectedValueProvider {
           registerData.firstNameWarningText
         );
       }); // This closing brace ends the 'test' function.
-
       test("Verify warning is shown when last name exceeds 32 characters ", async ({
         runner,
         envData,
         myAccountPage,
-        registerAuthHelper,
+        authHelper,
         fakeUser,
       }) => {
-        await registerAuthHelper.register(envData.baseUrl, {
+        await authHelper.register(envData.baseUrl, {
           firstName: fakeUser.firstName,
           lastName: "fake".repeat(10), // This will exceed 32 characters
           email: fakeUser.email,
@@ -394,10 +383,10 @@ class registerTest extends ExpectedValueProvider {
         runner,
         envData,
         myAccountPage,
-        registerAuthHelper,
+        authHelper,
         fakeUser,
       }) => {
-        await registerAuthHelper.register(envData.baseUrl, {
+        await authHelper.register(envData.baseUrl, {
           firstName: fakeUser.firstName,
           lastName: fakeUser.lastName,
           email: fakeUser.email,
@@ -423,10 +412,10 @@ class registerTest extends ExpectedValueProvider {
         runner,
         envData,
         myAccountPage,
-        registerAuthHelper,
+        authHelper,
         fakeUser,
       }) => {
-        await registerAuthHelper.register(envData.baseUrl, {
+        await authHelper.register(envData.baseUrl, {
           firstName: fakeUser.firstName,
           lastName: fakeUser.lastName,
           email: fakeUser.email,
@@ -443,15 +432,14 @@ class registerTest extends ExpectedValueProvider {
           registerData.passwordWarningText
         );
       }); // This closing brace ends the 'test' function.
-
       test("Verify warning is shown when email is without @ ", async ({
         runner,
         envData,
         myAccountPage,
-        registerAuthHelper,
+        authHelper,
         fakeUser,
       }) => {
-        await registerAuthHelper.register(envData.baseUrl, {
+        await authHelper.register(envData.baseUrl, {
           firstName: fakeUser.firstName,
           lastName: fakeUser.lastName,
           email: fakeUser.invalidEmail,
@@ -465,15 +453,14 @@ class registerTest extends ExpectedValueProvider {
           registerData.invalidEmailWarning
         );
       }); // This closing brace ends the 'test' function.
-
       test("Verify warning is shown when confirm password doesn't match password typed ", async ({
         runner,
         envData,
         myAccountPage,
-        registerAuthHelper,
+        authHelper,
         fakeUser,
       }) => {
-        await registerAuthHelper.register(envData.baseUrl, {
+        await authHelper.register(envData.baseUrl, {
           firstName: fakeUser.firstName,
           lastName: fakeUser.lastName,
           email: fakeUser.email,
@@ -490,15 +477,14 @@ class registerTest extends ExpectedValueProvider {
           registerData.passwordConfirmationWarningText
         );
       }); // This closing brace ends the 'test' function.
-
       test("Verify that while registering with existing email it shows warning", async ({
         runner,
         envData,
         myAccountPage,
-        registerAuthHelper,
+        authHelper,
         fakeUser,
       }) => {
-        await registerAuthHelper.register(envData.baseUrl, {
+        await authHelper.register(envData.baseUrl, {
           firstName: fakeUser.firstName,
           lastName: fakeUser.lastName,
           email: envData.email,

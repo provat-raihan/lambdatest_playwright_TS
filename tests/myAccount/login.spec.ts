@@ -3,7 +3,6 @@ import { ExpectedValueProvider } from "../../utilities/valueProvider";
 import homeData from "../../testData/home.json";
 import registerData from "../../testData/register.json";
 import loginData from "../../testData/login.json";
-import { RegisterAuthHelper } from "../../utilities/helper/authHelper";
 import myAccountData from "../../testData/myAccount.json";
 
 class loginPageTest extends ExpectedValueProvider {
@@ -33,7 +32,7 @@ class loginPageTest extends ExpectedValueProvider {
         runner,
         homePage,
         myAccountPage,
-        loginAuthHelper,
+        authHelper,
         envData,
       }) => {
         await runner.mouseHover(homePage.navbarItems.myAccount);
@@ -52,7 +51,7 @@ class loginPageTest extends ExpectedValueProvider {
         await runner.verifyElementIsVisible(
           myAccountPage.loginPage.registerSectionHeader
         );
-        await loginAuthHelper.login(envData.baseUrl, {
+        await authHelper.login(envData.baseUrl, {
           email: envData.email,
           password: envData.password,
         });
@@ -72,7 +71,7 @@ class loginPageTest extends ExpectedValueProvider {
         runner,
         homePage,
         myAccountPage,
-        loginAuthHelper,
+        authHelper,
         envData,
         fakeUser,
       }) => {
@@ -92,7 +91,7 @@ class loginPageTest extends ExpectedValueProvider {
         await runner.verifyElementIsVisible(
           myAccountPage.loginPage.registerSectionHeader
         );
-        await loginAuthHelper.login(envData.baseUrl, {
+        await authHelper.login(envData.baseUrl, {
           email: fakeUser.email,
           password: envData.password,
         });
@@ -109,7 +108,7 @@ class loginPageTest extends ExpectedValueProvider {
         runner,
         homePage,
         myAccountPage,
-        loginAuthHelper,
+        authHelper,
         envData,
         fakeUser,
       }) => {
@@ -129,7 +128,7 @@ class loginPageTest extends ExpectedValueProvider {
         await runner.verifyElementIsVisible(
           myAccountPage.loginPage.registerSectionHeader
         );
-        await loginAuthHelper.login(envData.baseUrl, {
+        await authHelper.login(envData.baseUrl, {
           email: envData.email,
           password: fakeUser.password,
         });
@@ -146,7 +145,7 @@ class loginPageTest extends ExpectedValueProvider {
         runner,
         homePage,
         myAccountPage,
-        loginAuthHelper,
+        authHelper,
         envData,
         fakeUser,
       }) => {
@@ -166,7 +165,7 @@ class loginPageTest extends ExpectedValueProvider {
         await runner.verifyElementIsVisible(
           myAccountPage.loginPage.registerSectionHeader
         );
-        await loginAuthHelper.login(envData.baseUrl, {
+        await authHelper.login(envData.baseUrl, {
           email: "",
           password: "",
         });
@@ -183,7 +182,7 @@ class loginPageTest extends ExpectedValueProvider {
         runner,
         homePage,
         myAccountPage,
-        loginAuthHelper,
+        authHelper,
         envData,
         fakeUser,
       }) => {
@@ -203,27 +202,27 @@ class loginPageTest extends ExpectedValueProvider {
         await runner.verifyElementIsVisible(
           myAccountPage.loginPage.registerSectionHeader
         );
-        await loginAuthHelper.login(envData.baseUrl, {
+        await authHelper.login(envData.baseUrl, {
           email: fakeUser.email,
           password: fakeUser.password,
         });
-        await loginAuthHelper.login(envData.baseUrl, {
+        await authHelper.login(envData.baseUrl, {
           email: fakeUser.email,
           password: fakeUser.password,
         });
-        await loginAuthHelper.login(envData.baseUrl, {
+        await authHelper.login(envData.baseUrl, {
           email: fakeUser.email,
           password: fakeUser.password,
         });
-        await loginAuthHelper.login(envData.baseUrl, {
+        await authHelper.login(envData.baseUrl, {
           email: fakeUser.email,
           password: fakeUser.password,
         });
-        await loginAuthHelper.login(envData.baseUrl, {
+        await authHelper.login(envData.baseUrl, {
           email: fakeUser.email,
           password: fakeUser.password,
         });
-        await loginAuthHelper.login(envData.baseUrl, {
+        await authHelper.login(envData.baseUrl, {
           email: fakeUser.email,
           password: fakeUser.password,
         });
