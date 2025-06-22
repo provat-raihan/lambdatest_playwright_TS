@@ -5,7 +5,6 @@ import { EnvData } from "./envData.ts";
 import { HomePage } from "../pageObjectModel/home.page.ts";
 import { SpecialOfferPage } from "../pageObjectModel/specialOffer.page.ts";
 import { BlogPage } from "../pageObjectModel/blog.page.ts";
-import { LoginPage } from "../pageObjectModel/login.page.ts";
 import { MyAccountPage } from "../pageObjectModel/myAccount.ts";
 import { AuthHelper } from "./helper/authHelper.ts";
 
@@ -16,7 +15,6 @@ const test = base.extend<{
   homePage: HomePage;
   specialOfferPage: SpecialOfferPage;
   blogPage: BlogPage;
-  loginPage: LoginPage;
   myAccountPage: MyAccountPage;
   authHelper: AuthHelper;
 }>({
@@ -48,11 +46,6 @@ const test = base.extend<{
   blogPage: async ({ page }: { page: Page }, use) => {
     const blogPageInstance = new BlogPage(page);
     await use(blogPageInstance);
-  },
-
-  loginPage: async ({ page }: { page: Page }, use) => {
-    const loginPageInstance = new LoginPage(page);
-    await use(loginPageInstance);
   },
   myAccountPage: async ({ page }: { page: Page }, use) => {
     const myAccountPageInstance = new MyAccountPage(page);

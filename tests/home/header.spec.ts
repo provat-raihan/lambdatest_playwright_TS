@@ -3,7 +3,7 @@ import { ExpectedValueProvider } from "../../utilities/valueProvider";
 import homeData from "../../testData/home.json";
 import globalData from "../../testData/global.json";
 import blogData from "../../testData/blog.json";
-import loginData from "../../testData/login.json";
+import myAccountData from "../../testData/myAccount.json";
 
 class HeaderTest extends ExpectedValueProvider {
   constructor() {
@@ -210,7 +210,7 @@ class HeaderTest extends ExpectedValueProvider {
         homePage,
         specialOfferPage,
         blogPage,
-        loginPage,
+        myAccountPage,
       }) => {
         // Home -> Should navigate to home page
         await runner.verifyElementIsVisible(homePage.navbarItems.home);
@@ -253,10 +253,12 @@ class HeaderTest extends ExpectedValueProvider {
         await runner.clickOnElement(homePage.navbarItems.myAccount);
         await runner.verifyUrlContains(envData.loginUrl);
         await runner.verifyElementIsVisible(homePage.headerLogo);
-        await runner.verifyElementIsVisible(loginPage.loginFormHeader);
+        await runner.verifyElementIsVisible(
+          myAccountPage.loginPage.loginPageHeader
+        );
         await runner.verifyToHaveExactText(
-          loginPage.loginFormHeader,
-          loginData.loginFormHeader
+          myAccountPage.loginPage.loginPageHeader,
+          myAccountData.login.loginFormHeader
         );
       });
     }); // End of describe block
