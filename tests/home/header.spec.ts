@@ -1,9 +1,12 @@
 import { test } from "../../utilities/fixtures";
 import { ExpectedValueProvider } from "../../utilities/valueProvider";
 import homeData from "../../testData/home.json";
+import { NavbarKeys } from "../../constants/navbarKeys";
 import globalData from "../../testData/global.json";
 import blogData from "../../testData/blog.json";
 import myAccountData from "../../testData/myAccount.json";
+
+const navbarKeys = new NavbarKeys();
 
 class HeaderTest extends ExpectedValueProvider {
   constructor() {
@@ -15,6 +18,14 @@ class HeaderTest extends ExpectedValueProvider {
       test.beforeEach(async ({ runner, envData, homePage }) => {
         await runner.navigateTo(envData.baseUrl);
         await runner.verifyUrlContains(envData.baseUrl);
+        await runner.verifyElementIsVisible(homePage.headerLogo);
+      });
+
+      // Done
+      test("Verify that header logo renders correctly", async ({
+        runner,
+        homePage,
+      }) => {
         await runner.verifyElementIsVisible(homePage.headerLogo);
         await runner.validateAttribute(
           homePage.headerLogo,
@@ -28,136 +39,95 @@ class HeaderTest extends ExpectedValueProvider {
         );
       });
 
-      // Done
-      test("Verify that navbar items visible properly and contain expected links", async ({
+      // Done -> An example of data driven testing technique
+      test("Verify navbar items are visible and contain expected links and texts", async ({
         runner,
         homePage,
       }) => {
-        // Shop by category
-        await runner.verifyElementIsVisible(
-          homePage.navbarItems.shopByCategory
-        );
-        await runner.validateAttribute(
-          homePage.navbarItems.shopByCategory,
-          "href",
-          homeData.header.navbarItemsHrefValues.shopByCategory
-        );
-        await runner.verifyToHaveExactText(
-          homePage.navbarItems.shopByCategory,
-          homeData.header.navbarItemsText.shopByCategory
-        );
+        const navbarItems = [
+          {
+            key: navbarKeys.shopByCategory,
+            locator: homePage.navbarItems.shopByCategory,
+          },
+          {
+            key: navbarKeys.home,
+            locator: homePage.navbarItems.home,
+          },
+          {
+            key: navbarKeys.specialHot,
+            locator: homePage.navbarItems.specialHot,
+          },
+          {
+            key: navbarKeys.blog,
+            locator: homePage.navbarItems.blog,
+          },
+          {
+            key: navbarKeys.megaMenu,
+            locator: homePage.navbarItems.megaMenu,
+          },
+          {
+            key: navbarKeys.addOnsFeatured,
+            locator: homePage.navbarItems.addOnsFeatured,
+            hasHref: false,
+          },
+          {
+            key: navbarKeys.myAccount,
+            locator: homePage.navbarItems.myAccount,
+          },
+        ];
 
-        // Home
-        await runner.verifyElementIsVisible(homePage.navbarItems.home);
-        await runner.validateAttribute(
-          homePage.navbarItems.home,
-          "href",
-          homeData.header.navbarItemsHrefValues.home
-        );
-        await runner.verifyToHaveExactText(
-          homePage.navbarItems.home,
-          homeData.header.navbarItemsText.home
-        );
+        for (const item of navbarItems) {
+          await runner.verifyElementIsVisible(item.locator);
 
-        // Special Hot
-        await runner.verifyElementIsVisible(homePage.navbarItems.specialHot);
-        await runner.validateAttribute(
-          homePage.navbarItems.specialHot,
-          "href",
-          homeData.header.navbarItemsHrefValues.specialHot
-        );
-        await runner.verifyToHaveExactText(
-          homePage.navbarItems.specialHot,
-          homeData.header.navbarItemsText.specialHot
-        );
+          if (item.hasHref !== false) {
+            await runner.validateAttribute(
+              item.locator,
+              "href",
+              homeData.header.navbarItemsHrefValues[item.key]
+            );
+          }
 
-        // Blog
-        await runner.verifyElementIsVisible(homePage.navbarItems.blog);
-        await runner.validateAttribute(
-          homePage.navbarItems.blog,
-          "href",
-          homeData.header.navbarItemsHrefValues.blog
-        );
-        await runner.verifyToHaveExactText(
-          homePage.navbarItems.blog,
-          homeData.header.navbarItemsText.blog
-        );
-
-        // Mega Menu
-        await runner.verifyElementIsVisible(homePage.navbarItems.megaMenu);
-        await runner.validateAttribute(
-          homePage.navbarItems.megaMenu,
-          "href",
-          homeData.header.navbarItemsHrefValues.megaMenu
-        );
-        await runner.verifyToHaveExactText(
-          homePage.navbarItems.megaMenu,
-          homeData.header.navbarItemsText.megaMenu
-        );
-
-        // AddOns Featured
-        await runner.verifyElementIsVisible(
-          homePage.navbarItems.addOnsFeatured
-        );
-        await runner.verifyToHaveExactText(
-          homePage.navbarItems.addOnsFeatured,
-          homeData.header.navbarItemsText.addOnsFeatured
-        );
-
-        // My Account
-        await runner.verifyElementIsVisible(homePage.navbarItems.myAccount);
-        await runner.validateAttribute(
-          homePage.navbarItems.myAccount,
-          "href",
-          homeData.header.navbarItemsHrefValues.myAccount
-        );
-        await runner.verifyToHaveExactText(
-          homePage.navbarItems.myAccount,
-          homeData.header.navbarItemsText.myAccount
-        );
+          await runner.verifyToHaveExactText(
+            item.locator,
+            homeData.header.navbarItemsText[item.key]
+          );
+        }
       });
 
       // Done
-      test("Verify that clicking on shop by category opens modal and contains expected items", async ({
+      // Message: Using test.step inside test function for better reporting and debugging (For checking only)
+      test("Should display a modal when 'Shop by Category' is clicked", async ({
         runner,
         homePage,
       }) => {
-        await runner.verifyElementIsVisible(
-          homePage.navbarItems.shopByCategory
-        );
-        await runner.clickOnElement(homePage.navbarItems.shopByCategory);
-        await runner.verifyElementIsVisible(
-          homePage.shopByCategoryModalItems.headerText
-        );
-        await runner.verifyToHaveExactText(
-          homePage.shopByCategoryModalItems.headerText,
-          homeData.header.shopByCategoryModalTexts.header
-        );
+        await test.step("Open modal by clicking 'Shop by Category'", async () => {
+          await runner.verifyElementIsVisible(
+            homePage.navbarItems.shopByCategory
+          );
+          await runner.clickOnElement(homePage.navbarItems.shopByCategory);
+        });
 
-        await runner.verifyMultipleTexts(
-          homePage.shopByCategoryModalItems.itemList,
-          [
-            homeData.header.shopByCategoryModalTexts.components,
-            homeData.header.shopByCategoryModalTexts.cameras,
-            homeData.header.shopByCategoryModalTexts.phonesTabletAndIpod,
-            homeData.header.shopByCategoryModalTexts.software,
-            homeData.header.shopByCategoryModalTexts.mp3Players,
-            homeData.header.shopByCategoryModalTexts.laptopsAndNotebooks,
-            homeData.header.shopByCategoryModalTexts.desktopsAndMonitors,
-            homeData.header.shopByCategoryModalTexts.printersAndScanners,
-            homeData.header.shopByCategoryModalTexts.miceAndTrackballs,
-            homeData.header.shopByCategoryModalTexts.fashionAndAccessories,
-            homeData.header.shopByCategoryModalTexts.beautyAndSaloon,
-            homeData.header.shopByCategoryModalTexts.autopartsAndAccessories,
-            homeData.header.shopByCategoryModalTexts.washingMachine,
-            homeData.header.shopByCategoryModalTexts.gamingConsoles,
-            homeData.header.shopByCategoryModalTexts.airConditioner,
-            homeData.header.shopByCategoryModalTexts.webCameras,
-          ]
-        );
+        await test.step("Verify modal header is correct", async () => {
+          await runner.verifyElementIsVisible(
+            homePage.shopByCategoryModalItems.headerText
+          );
+          await runner.verifyToHaveExactText(
+            homePage.shopByCategoryModalItems.headerText,
+            homeData.header.shopByCategoryModalHeaderText
+          );
+        });
+
+        await test.step("Verify modal item list contains expected items", async () => {
+          await runner.verifyMultipleTexts(
+            homePage.shopByCategoryModalItems.itemList,
+            Object.values(homeData.header.shopByCategoryModalTexts).filter(
+              (item, i) => item
+            )
+          );
+        });
       });
 
-      // Done
+      // Done: API response checking
       test("Verify each 'Shop by Category' modal link returns a 200 OK response", async ({
         runner,
         envData,
@@ -172,30 +142,7 @@ class HeaderTest extends ExpectedValueProvider {
         );
         await runner.verifyToHaveExactText(
           homePage.shopByCategoryModalItems.headerText,
-          homeData.header.shopByCategoryModalTexts.header
-        );
-
-        await runner.validateAttributes(
-          homePage.shopByCategoryModalItems.itemList,
-          "href",
-          [
-            envData.shopByCategoryItemsHrefValues.components,
-            envData.shopByCategoryItemsHrefValues.camera,
-            envData.shopByCategoryItemsHrefValues.phoneTabletsIpod,
-            envData.shopByCategoryItemsHrefValues.software,
-            envData.shopByCategoryItemsHrefValues.mp3Player,
-            envData.shopByCategoryItemsHrefValues.laptopsAndNotebooks,
-            envData.shopByCategoryItemsHrefValues.desktopsAndMonitors,
-            envData.shopByCategoryItemsHrefValues.printersAndScanners,
-            envData.shopByCategoryItemsHrefValues.miceAndTrackballs,
-            envData.shopByCategoryItemsHrefValues.fashionAndAccessories,
-            envData.shopByCategoryItemsHrefValues.beautyAndSaloon,
-            envData.shopByCategoryItemsHrefValues.autopartsAndAccessories,
-            envData.shopByCategoryItemsHrefValues.washingMachine,
-            envData.shopByCategoryItemsHrefValues.gamingConsole,
-            envData.shopByCategoryItemsHrefValues.airConditioner,
-            envData.shopByCategoryItemsHrefValues.webCameras,
-          ]
+          homeData.header.shopByCategoryModalHeaderText
         );
 
         await runner.validateMultipleUrlStatuses(
@@ -260,6 +207,30 @@ class HeaderTest extends ExpectedValueProvider {
           myAccountPage.loginPage.loginPageHeader,
           myAccountData.login.loginFormHeader
         );
+      });
+
+      // Done: warning: API response is slow
+      test("Verify that hovering over 'Mega Menu' on navbar displays a dropdown and all dropdown links return a 200 OK response", async ({
+        runner,
+        homePage,
+        page,
+      }) => {
+        await runner.verifyElementIsVisible(homePage.navbarItems.megaMenu);
+        await runner.mouseHover(homePage.navbarItems.megaMenu);
+        await runner.verifyElementIsVisible(homePage.megaMenuItems.container);
+
+        await runner.validateMultipleUrlStatuses(homePage.megaMenuItems.links);
+      });
+
+      test("Verify that hovering over 'AddOns Featured' on navbar displays a dropdown and all dropdown links return a 200 OK response", async ({
+        runner,
+        homePage,
+      }) => {
+        await runner.verifyElementIsVisible(
+          homePage.navbarItems.addOnsFeatured
+        );
+        await runner.mouseHover(homePage.navbarItems.addOnsFeatured);
+        await runner.validateMultipleUrlStatuses(homePage.addOnItems.links);
       });
     }); // End of describe block
   }

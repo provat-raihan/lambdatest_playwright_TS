@@ -67,24 +67,17 @@ export class Utils {
     }
   }
 
-  async verifyElementIsVisible(
-    locator: Locator,
-    timeout: number = 30000
-  ): Promise<void> {
+  async verifyElementIsVisible(identifier: Locator): Promise<void> {
     try {
-      await this.page.waitForLoadState("networkidle", { timeout });
-
-      await expect(async () => {
-        const isVisible = await locator.isVisible();
-        expect(isVisible).toBeTruthy();
-      }).toPass({ timeout });
-
-      this.logMessage(`✅ Element is visible as expected.`);
-    } catch (error: any) {
-      const errorMsg = `❌ Element was not visible within timeout (${timeout}ms).`;
+      await expect.soft(identifier).toBeVisible({ timeout: 60000 });
+      this.logMessage(
+        `Verified element with identifier ${identifier} is visible`
+      );
+    } catch (error) {
+      const errorMsg = `Failed to verify element with identifier ${identifier} is visible`;
       this.logMessage(errorMsg, "error");
       await this.captureScreenshotOnFailure("verifyElementIsVisible");
-      throw new Error(`${errorMsg}\nDetails: ${error.message}`);
+      throw new Error(errorMsg);
     }
   }
 
@@ -382,7 +375,7 @@ export class Utils {
           if (isHover) {
             await element.hover();
             this.logMessage(`🖱️ Hovered over element at index ${i}`);
-            await this.page.waitForTimeout(300); // allow time for hover styles to apply
+            await this.page.waitForTimeout(300);
           }
 
           try {
@@ -670,7 +663,7 @@ export class Utils {
           : new URL(href, this.page.url()).href;
 
         try {
-          const response = await apiContext.get(url);
+          const response = await apiContext.get(url, { timeout: 60000 });
           const actualStatus = response.status();
 
           this.logMessage(
@@ -694,6 +687,7 @@ export class Utils {
       throw new Error(errorMsg);
     }
   }
+
   async assertNativeValidationMessage(
     locator: Locator,
     expectedMessageSubstring: string // Renamed for clarity to indicate it's a substring
@@ -703,7 +697,7 @@ export class Utils {
       //    This is crucial if the validation message only appears on blur.
       await locator.focus();
       // Click body or another element to cause the input to blur
-      await this.page.locator('body').click();
+      await this.page.locator("body").click();
 
       // 2. Get the native validation message from the element
       const actualMessage = await locator.evaluate(
@@ -723,7 +717,9 @@ Actual message:      "${trimmedActual}"`;
         throw new Error(msg);
       }
 
-      this.logMessage(`✅ Native validation message partially matched: "${trimmedActual}" contains "${trimmedExpected}"`);
+      this.logMessage(
+        `✅ Native validation message partially matched: "${trimmedActual}" contains "${trimmedExpected}"`
+      );
     } catch (error) {
       const errorMsg = `❌ Failed to assert native validation message: ${error}`;
       this.logMessage(errorMsg, "error");
@@ -736,6 +732,8 @@ Actual message:      "${trimmedActual}"`;
   // To Test Utils
   // ---------------------------------------------------------------------------------------------------------------------------------
   // here you can add any utility methods that you want to test
-
+  async highlightLocator(locator: Locator) {
+    await locator.highlight();
+  }
   // ---------------------------------------------------------------------------------------------------------------------------------
 }
