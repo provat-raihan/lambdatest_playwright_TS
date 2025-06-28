@@ -37,6 +37,19 @@
             "gamingConsoles": "Gaming consoles",
             "airConditioner": "Air conditioner",
             "webCameras": "Web Cameras"
+        },
+        "searchBar": {
+            "allCategoriesText": {
+                "allCategories": "All Categories",
+                "desktops": "Desktops",
+                "laptops": "Laptops",
+                "components": "Component",
+                "tables": "Tables",
+                "software": "Software",
+                "phonesAndPdas": "Phones & PDAs",
+                "cameras": "Cameras",
+                "mp3Players":"MP3 Players"
+            }
         }
     }
 }

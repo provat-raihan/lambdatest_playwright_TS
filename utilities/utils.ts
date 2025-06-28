@@ -627,66 +627,66 @@ export class Utils {
     }
   }
 
-  async validateMultipleUrlStatuses(
-    locator: Locator,
-    expectedStatus: number = 200
-  ): Promise<void> {
-    try {
-      const apiContext = await request.newContext();
-      const totalLinks = await locator.count();
+  // async validateMultipleUrlStatuses(
+  //   locator: Locator,
+  //   expectedStatus: number = 200
+  // ): Promise<void> {
+  //   try {
+  //     const apiContext = await request.newContext();
+  //     const totalLinks = await locator.count();
 
-      if (totalLinks === 0) {
-        const errorMsg = `❌ No links found in selector: "${locator}"`;
-        this.logMessage(errorMsg, "error");
-        await this.captureScreenshotOnFailure("validateAllLinkStatuses");
-        throw new Error(errorMsg);
-      }
+  //     if (totalLinks === 0) {
+  //       const errorMsg = `❌ No links found in selector: "${locator}"`;
+  //       this.logMessage(errorMsg, "error");
+  //       await this.captureScreenshotOnFailure("validateAllLinkStatuses");
+  //       throw new Error(errorMsg);
+  //     }
 
-      this.logMessage(
-        `🔍 Found ${totalLinks} link(s) in selector: "${locator}"`
-      );
+  //     this.logMessage(
+  //       `🔍 Found ${totalLinks} link(s) in selector: "${locator}"`
+  //     );
 
-      for (let i = 0; i < totalLinks; i++) {
-        const element = locator.nth(i);
-        const href = await element.getAttribute("href");
+  //     for (let i = 0; i < totalLinks; i++) {
+  //       const element = locator.nth(i);
+  //       const href = await element.getAttribute("href");
 
-        if (!href || href.startsWith("#") || href.startsWith("javascript:")) {
-          this.logMessage(
-            `⚠️ Skipping invalid href at index ${i + 1}: "${href}"`,
-            "warn"
-          );
-          continue;
-        }
+  //       if (!href || href.startsWith("#") || href.startsWith("javascript:")) {
+  //         this.logMessage(
+  //           `⚠️ Skipping invalid href at index ${i + 1}: "${href}"`,
+  //           "warn"
+  //         );
+  //         continue;
+  //       }
 
-        const url = href.startsWith("http")
-          ? href
-          : new URL(href, this.page.url()).href;
+  //       const url = href.startsWith("http")
+  //         ? href
+  //         : new URL(href, this.page.url()).href;
 
-        try {
-          const response = await apiContext.get(url, { timeout: 60000 });
-          const actualStatus = response.status();
+  //       try {
+  //         const response = await apiContext.get(url, { timeout: 60000 });
+  //         const actualStatus = response.status();
 
-          this.logMessage(
-            `✅ Link ${
-              i + 1
-            } checked → URL: "${url}" | Expected: ${expectedStatus} | Received: ${actualStatus}`
-          );
+  //         this.logMessage(
+  //           `✅ Link ${
+  //             i + 1
+  //           } checked → URL: "${url}" | Expected: ${expectedStatus} | Received: ${actualStatus}`
+  //         );
 
-          expect(actualStatus).toBe(expectedStatus);
-        } catch (innerError) {
-          const errorMsg = `❌ Link ${i + 1} failed → URL: "${url}"`;
-          this.logMessage(errorMsg, "error");
-          await this.captureScreenshotOnFailure("validateAllLinkStatuses");
-          throw new Error(`${errorMsg} | Error: ${innerError}`);
-        }
-      }
-    } catch (error) {
-      const errorMsg = `🔥 Failed to validate all link statuses for selector: "${locator}"`;
-      this.logMessage(errorMsg, "error");
-      await this.captureScreenshotOnFailure("validateAllLinkStatuses");
-      throw new Error(errorMsg);
-    }
-  }
+  //         expect(actualStatus).toBe(expectedStatus);
+  //       } catch (innerError) {
+  //         const errorMsg = `❌ Link ${i + 1} failed → URL: "${url}"`;
+  //         this.logMessage(errorMsg, "error");
+  //         await this.captureScreenshotOnFailure("validateAllLinkStatuses");
+  //         throw new Error(`${errorMsg} | Error: ${innerError}`);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     const errorMsg = `🔥 Failed to validate all link statuses for selector: "${locator}"`;
+  //     this.logMessage(errorMsg, "error");
+  //     await this.captureScreenshotOnFailure("validateAllLinkStatuses");
+  //     throw new Error(errorMsg);
+  //   }
+  // }
 
   async assertNativeValidationMessage(
     locator: Locator,
@@ -735,5 +735,77 @@ Actual message:      "${trimmedActual}"`;
   async highlightLocator(locator: Locator) {
     await locator.highlight();
   }
+
+  async validateMultipleUrlStatuses(
+    locator: Locator,
+    expectedStatus: number = 200
+  ): Promise<void> {
+    const logs: string[] = [];
+    const apiContext = await request.newContext();
+    const totalLinks = await locator.count();
+
+    const log = (msg: string, level: "info" | "warn" | "error" = "info") => {
+      const prefix = {
+        info: "ℹ️",
+        warn: "⚠️",
+        error: "❌",
+      }[level];
+      logs.push(`${prefix} ${msg}`);
+    };
+
+    const flushLogs = () => {
+      for (const line of logs) {
+        this.logMessage(line); // Send to your actual logger here
+      }
+    };
+
+    if (totalLinks === 0) {
+      const errorMsg = `No links found in selector: "${locator}"`;
+      log(errorMsg, "error");
+      await this.captureScreenshotOnFailure("validateAllLinkStatuses");
+      flushLogs();
+      throw new Error(errorMsg);
+    }
+
+    log(`Found ${totalLinks} link(s) in selector: "${locator}"`);
+
+    for (let i = 0; i < totalLinks; i++) {
+      const element = locator.nth(i);
+      const href = await element.getAttribute("href");
+
+      if (!href || href.startsWith("#") || href.startsWith("javascript:")) {
+        log(`Skipping invalid href at index ${i + 1}: "${href}"`, "warn");
+        continue;
+      }
+
+      const url = href.startsWith("http")
+        ? href
+        : new URL(href, this.page.url()).href;
+
+      try {
+        const response = await apiContext.get(url, { timeout: 60000 });
+        const actualStatus = response.status();
+
+        log(
+          `Link ${
+            i + 1
+          } checked → URL: "${url}" | Expected: ${expectedStatus} | Received: ${actualStatus}`
+        );
+
+        expect(actualStatus).toBe(expectedStatus);
+      } catch (innerError) {
+        const errorMsg = `Link ${
+          i + 1
+        } failed → URL: "${url}" | Error: ${innerError}`;
+        log(errorMsg, "error");
+        await this.captureScreenshotOnFailure(`Link_${i + 1}_Failure`);
+        flushLogs(); // Log before throwing
+        throw new Error(errorMsg);
+      }
+    }
+
+    flushLogs(); // Print all logs at the end in one go
+  }
+
   // ---------------------------------------------------------------------------------------------------------------------------------
 }

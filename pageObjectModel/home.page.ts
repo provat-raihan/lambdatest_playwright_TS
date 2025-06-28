@@ -21,12 +21,19 @@ export class HomePage {
   };
 
   readonly megaMenuItems: {
-    container: Locator;
     links: Locator;
   };
 
   readonly addOnItems: {
     links: Locator;
+  };
+
+  readonly myAccountItems: {
+    links: Locator;
+  };
+
+  readonly searchBar: {
+    allCategoryDropdownButton: Locator;
   };
 
   constructor(page: Page) {
@@ -52,12 +59,21 @@ export class HomePage {
     };
 
     this.megaMenuItems = {
-      container: page.locator("#entry281_216475"),
       links: page.locator("#entry281_216475 li a"),
     };
 
     this.addOnItems = {
       links: page.locator("ul.mz-sub-menu-25.dropdown-menu li a"),
+    };
+
+    this.myAccountItems = {
+      links: page.locator("ul.mz-sub-menu-96.dropdown-menu a"),
+    };
+
+    this.searchBar = {
+      allCategoryDropdownButton: page.getByRole("button", {
+        name: "All Categories",
+      }),
     };
   }
 }
