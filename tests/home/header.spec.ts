@@ -283,9 +283,106 @@ class HeaderTest extends ExpectedValueProvider {
           homePage,
         }) => {
           await runner.verifyElementIsVisible(
-            homePage.searchBar.allCategoryDropdownButton
+            homePage.searchBar.allCategoriesDropdownButton
           );
-          // message: Let's check the button text and button text changing dynamically
+          await runner.clickOnElement(
+            homePage.searchBar.allCategoriesDropdownButton
+          );
+          await runner.verifyElementIsVisible(
+            homePage.searchBar.dropdownContainer
+          );
+          await runner.verifyElementsIsExist(
+            homePage.searchBar.allCategoriesLinks
+          );
+        });
+
+        test("Verify that user can select each link with mouse and keyboard navigation", async ({
+          runner,
+          page,
+          homePage,
+        }) => {
+          const categoryOptions = [
+            homeData.header.searchBar.allCategoriesText.allCategories,
+            homeData.header.searchBar.allCategoriesText.desktops,
+            homeData.header.searchBar.allCategoriesText.laptops,
+            homeData.header.searchBar.allCategoriesText.components,
+            homeData.header.searchBar.allCategoriesText.tables,
+            homeData.header.searchBar.allCategoriesText.software,
+            homeData.header.searchBar.allCategoriesText.phonesAndPdas,
+            homeData.header.searchBar.allCategoriesText.cameras,
+            homeData.header.searchBar.allCategoriesText.mp3Players,
+          ];
+
+          for (const category of categoryOptions) {
+            // Message: normal selection
+            await runner.verifyElementIsVisible(
+              homePage.searchBar.allCategoriesDropdownButton
+            );
+            await runner.clickOnElement(
+              homePage.searchBar.allCategoriesDropdownButton
+            );
+            const categoryLink = homePage.searchBar.allCategoriesLinks.filter({
+              hasText: category,
+            });
+            await runner.verifyElementIsVisible(categoryLink);
+            await runner.clickOnElement(categoryLink);
+
+            const escapedCategory = await runner.escapeRegExp(category);
+            const updatedButton = page.getByRole("button", {
+              name: new RegExp(`${escapedCategory}.*`, "i"), // i means 'case-insensitive here' and '.*' means any char after category
+            });
+            await runner.verifyElementIsVisible(updatedButton);
+            await runner.verifyContainText(updatedButton, category);
+
+            // message: keyboard selection
+            await runner.clickOnElement(
+              homePage.searchBar.allCategoriesDropdownButton
+            );
+            const options = homePage.searchBar.allCategoriesLinks;
+            const count = await options.count();
+
+            for (let i = 0; i < count; i++) {
+              const currentOption = options.nth(i);
+              const text = (await currentOption.innerText()).trim();
+
+              if (text === category) {
+                await runner.focusOnElement(currentOption);
+                await runner.keyboardEnterPress();
+                break;
+              }
+            }
+
+            const updatedButtonKeyboard = page.getByRole("button", {
+              name: new RegExp(`${escapedCategory}.*`, "i"),
+            });
+            await runner.verifyElementIsVisible(updatedButtonKeyboard);
+            await runner.verifyContainText(updatedButtonKeyboard, category);
+          }
+        });
+
+        test("Verify that the search input field is enabled and user can type anything into it", async ({
+          runner,
+          homePage,
+        }) => {
+          await runner.verifyElementIsVisible(homePage.searchBar.inputField);
+          await runner.verifyElementIsEnabled(homePage.searchBar.inputField);
+          await runner.validateAttribute(
+            homePage.searchBar.inputField,
+            "placeholder",
+            homeData.header.searchBar.placeholderText
+          );
+          await runner.fillInputBox(homePage.searchBar.inputField, "anything");
+        });
+
+        // Working
+        test("Match exact value", async ({ searchHelper }) => {
+          // Message: search helper is working fine
+          const value = "iPhone";
+          await searchHelper.search(
+            value,
+            `https://ecommerce-playground.lambdatest.io/index.php?route=product%2Fsearch&search=${value}`,
+            `Search - ${value}`
+          );
         });
       }); // End of search bar test describe block
     }); // End of describe block

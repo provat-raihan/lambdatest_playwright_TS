@@ -49,7 +49,8 @@
                 "phonesAndPdas": "Phones & PDAs",
                 "cameras": "Cameras",
                 "mp3Players":"MP3 Players"
-            }
+            },
+            "placeholderText": "Search For Products"
         }
     }
 }

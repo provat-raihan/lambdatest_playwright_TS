@@ -33,7 +33,11 @@ export class HomePage {
   };
 
   readonly searchBar: {
-    allCategoryDropdownButton: Locator;
+    allCategoriesDropdownButton: Locator;
+    dropdownContainer: Locator;
+    allCategoriesLinks: Locator;
+    inputField: Locator;
+    button: Locator;
   };
 
   constructor(page: Page) {
@@ -69,11 +73,18 @@ export class HomePage {
     this.myAccountItems = {
       links: page.locator("ul.mz-sub-menu-96.dropdown-menu a"),
     };
-
     this.searchBar = {
-      allCategoryDropdownButton: page.getByRole("button", {
-        name: "All Categories",
-      }),
+      allCategoriesDropdownButton: page
+        .locator(".dropdown.search-category button[data-toggle='dropdown']")
+        .first(),
+      dropdownContainer: page
+        .locator("#entry_217822")
+        .getByText("All Categories Desktops"),
+      allCategoriesLinks: page.locator(
+        "div.dropdown-menu.dropdown-menu-left.show a"
+      ),
+      inputField: page.getByRole("textbox", { name: "Search For Products" }),
+      button: page.getByRole("button", { name: "Search" }),
     };
   }
 }

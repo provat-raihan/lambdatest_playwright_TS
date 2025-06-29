@@ -133,7 +133,9 @@ export class Utils {
 
     try {
       // ✅ Only verify expected text
-      await expect(buttonLocator).toHaveText(expectedText, { timeout: 5000 });
+      await expect
+        .soft(buttonLocator)
+        .toHaveText(expectedText, { timeout: 5000 });
       this.logMessage(
         `✅ ${logIdentifier} has expected text: "${expectedText}".`
       );
@@ -627,67 +629,6 @@ export class Utils {
     }
   }
 
-  // async validateMultipleUrlStatuses(
-  //   locator: Locator,
-  //   expectedStatus: number = 200
-  // ): Promise<void> {
-  //   try {
-  //     const apiContext = await request.newContext();
-  //     const totalLinks = await locator.count();
-
-  //     if (totalLinks === 0) {
-  //       const errorMsg = `❌ No links found in selector: "${locator}"`;
-  //       this.logMessage(errorMsg, "error");
-  //       await this.captureScreenshotOnFailure("validateAllLinkStatuses");
-  //       throw new Error(errorMsg);
-  //     }
-
-  //     this.logMessage(
-  //       `🔍 Found ${totalLinks} link(s) in selector: "${locator}"`
-  //     );
-
-  //     for (let i = 0; i < totalLinks; i++) {
-  //       const element = locator.nth(i);
-  //       const href = await element.getAttribute("href");
-
-  //       if (!href || href.startsWith("#") || href.startsWith("javascript:")) {
-  //         this.logMessage(
-  //           `⚠️ Skipping invalid href at index ${i + 1}: "${href}"`,
-  //           "warn"
-  //         );
-  //         continue;
-  //       }
-
-  //       const url = href.startsWith("http")
-  //         ? href
-  //         : new URL(href, this.page.url()).href;
-
-  //       try {
-  //         const response = await apiContext.get(url, { timeout: 60000 });
-  //         const actualStatus = response.status();
-
-  //         this.logMessage(
-  //           `✅ Link ${
-  //             i + 1
-  //           } checked → URL: "${url}" | Expected: ${expectedStatus} | Received: ${actualStatus}`
-  //         );
-
-  //         expect(actualStatus).toBe(expectedStatus);
-  //       } catch (innerError) {
-  //         const errorMsg = `❌ Link ${i + 1} failed → URL: "${url}"`;
-  //         this.logMessage(errorMsg, "error");
-  //         await this.captureScreenshotOnFailure("validateAllLinkStatuses");
-  //         throw new Error(`${errorMsg} | Error: ${innerError}`);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     const errorMsg = `🔥 Failed to validate all link statuses for selector: "${locator}"`;
-  //     this.logMessage(errorMsg, "error");
-  //     await this.captureScreenshotOnFailure("validateAllLinkStatuses");
-  //     throw new Error(errorMsg);
-  //   }
-  // }
-
   async assertNativeValidationMessage(
     locator: Locator,
     expectedMessageSubstring: string // Renamed for clarity to indicate it's a substring
@@ -728,14 +669,6 @@ Actual message:      "${trimmedActual}"`;
     }
   }
 
-  // <------------------------------------------------------------ X ------------------------------------------------------------>
-  // To Test Utils
-  // ---------------------------------------------------------------------------------------------------------------------------------
-  // here you can add any utility methods that you want to test
-  async highlightLocator(locator: Locator) {
-    await locator.highlight();
-  }
-
   async validateMultipleUrlStatuses(
     locator: Locator,
     expectedStatus: number = 200
@@ -750,7 +683,7 @@ Actual message:      "${trimmedActual}"`;
         warn: "⚠️",
         error: "❌",
       }[level];
-      logs.push(`${prefix} ${msg}`);
+      logs.push(`${prefix}  ${msg}`);
     };
 
     const flushLogs = () => {
@@ -805,6 +738,57 @@ Actual message:      "${trimmedActual}"`;
     }
 
     flushLogs(); // Print all logs at the end in one go
+  }
+
+  async focusOnElement(identifier: Locator): Promise<void> {
+    try {
+      await identifier.focus();
+      this.logMessage(`Focused on element with identifier: ${identifier}`);
+    } catch (error) {
+      const errorMsg = `Failed to focus on element with identifier: ${identifier}`;
+      this.logMessage(errorMsg, "error");
+      await this.captureScreenshotOnFailure("focusOnElement");
+      throw new Error(errorMsg);
+    }
+  }
+
+  async keyboardEnterPress(): Promise<void> {
+    try {
+      await this.page.keyboard.press("Enter");
+      this.logMessage(`Pressed Enter key on the page`);
+    } catch (error) {
+      const errorMsg = `Failed to press Enter key on the page`;
+      this.logMessage(errorMsg, "error");
+      await this.captureScreenshotOnFailure("keyboardEnterPress");
+      throw new Error(errorMsg);
+    }
+  }
+
+  async verifyElementIsEnabled(locator: Locator): Promise<void> {
+    try {
+      await expect(locator).toBeVisible();
+
+      await expect.soft(locator).toBeEnabled();
+
+      this.logMessage(`Verified element: ${locator} is enabled`);
+    } catch (err: any) {
+      const msg = `Failed to verify element is enabled: ${err.message}`;
+      this.logMessage(msg, "error");
+      await this.captureScreenshotOnFailure("verifyElementIsEnabled");
+      throw new Error(msg);
+    }
+  }
+
+  // <------------------------------------------------------------ X ------------------------------------------------------------>
+  // To Test Utils
+  // ---------------------------------------------------------------------------------------------------------------------------------
+  // here you can add any utility methods that you want to test
+  async highlightLocator(locator: Locator) {
+    await locator.highlight();
+  }
+
+  async escapeRegExp(text: string): Promise<string> {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
 
   // ---------------------------------------------------------------------------------------------------------------------------------
