@@ -41,7 +41,7 @@ export class MyAccountPage {
   };
   readonly loginPage: {
     loginPageHeader: Locator;
-    // loginPageBreadcrumbText: Locator;
+    loginPageBreadcrumbText: Locator;
     registerSectionHeader: Locator;
     registerSectionContinueButton: Locator;
     loginPageEmailField: Locator;
@@ -113,7 +113,7 @@ export class MyAccountPage {
       loginPageHeader: page.getByRole("heading", {
         name: "Returning Customer",
       }),
-      // loginPageBreadcrumbText: page.getByLabel('breadcrumb').getByText('Login'),
+      loginPageBreadcrumbText: page.getByLabel("breadcrumb").getByText("Login"),
       registerSectionHeader: page.getByRole("heading", {
         name: "New Customer",
       }),

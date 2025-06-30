@@ -19,6 +19,7 @@
   "accountBreadcrumbText": "Account",
 
   "login": {
+    "loginBreadcrumbText": "Login",
     "loginFormHeader": "Returning Customer",
     "registerFormHeader": "New Customer",
     "loginPageInvalidCredentialWarningText": "Warning: No match for E-Mail Address and/or Password.",

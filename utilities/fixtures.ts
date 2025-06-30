@@ -7,6 +7,8 @@ import { SpecialOfferPage } from "../pageObjectModel/specialOffer.page.ts";
 import { BlogPage } from "../pageObjectModel/blog.page.ts";
 import { MyAccountPage } from "../pageObjectModel/myAccount.ts";
 import { AuthHelper } from "./helper/authHelper.ts";
+import { SearchResultPage } from "../pageObjectModel/searchResult.page.ts";
+import { SearchHelper } from "./helper/searchHelper.ts";
 
 const test = base.extend<{
   runner: Utils;
@@ -17,6 +19,8 @@ const test = base.extend<{
   blogPage: BlogPage;
   myAccountPage: MyAccountPage;
   authHelper: AuthHelper;
+  searchResultPage: SearchResultPage;
+  searchHelper: SearchHelper;
 }>({
   runner: async ({ page }: { page: Page }, use) => {
     const utilsInstance = new Utils(page);
@@ -54,6 +58,14 @@ const test = base.extend<{
   authHelper: async ({ page }: { page: Page }, use) => {
     const authHelperInstance = new AuthHelper(page);
     await use(authHelperInstance);
+  },
+  searchResultPage: async ({ page }: { page: Page }, use) => {
+    const searchResultPageInstance = new SearchResultPage(page);
+    await use(searchResultPageInstance);
+  },
+  searchHelper: async ({ page }: { page: Page }, use) => {
+    const searchHelperInstance = new SearchHelper(page);
+    await use(searchHelperInstance);
   },
 });
 
