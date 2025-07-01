@@ -1,6 +1,7 @@
 import { Page, Locator } from "@playwright/test";
 
 export class HomePage {
+  private readonly page: Page;
   readonly headerLogo: Locator;
 
   readonly navbarItems: {
@@ -41,6 +42,7 @@ export class HomePage {
   };
 
   constructor(page: Page) {
+    this.page = page;
     this.headerLogo = page.locator("#entry_217821 img");
 
     this.navbarItems = {

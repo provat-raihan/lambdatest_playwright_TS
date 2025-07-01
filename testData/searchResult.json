@@ -1,0 +1,15 @@
+{
+    "searchResultPageHeaderText": "Search - ",
+    "searchResultProducts": {
+        "valueEmptyResults": {
+            "value": "",
+            "texts": {
+                "firstProductTitle": "HTC Touch HD",
+                "secondProductTitle": "Palm Treo Pro",
+                "thirdProductTitle": "Canon EOS 5D",
+                "fourthProductTitle": "Nikon D300",
+                "lastProductTitleOfPaginationOne": "Sony VAIO"
+            }
+        }
+    }   
+}
