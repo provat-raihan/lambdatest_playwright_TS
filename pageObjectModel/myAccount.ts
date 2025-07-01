@@ -15,6 +15,10 @@ export class MyAccountPage {
     returns: Locator;
     transactions: Locator;
     newsletter: Locator;
+    editAccount: Locator;
+    password: Locator;
+    notification: Locator;
+    logout: Locator;
   };
   readonly registerPage: {
     registerPageHeader: Locator;
@@ -48,12 +52,20 @@ export class MyAccountPage {
     loginPagePasswordField: Locator;
     loginPageForgottenPasswordButton: Locator;
     loginPageLoginButton: Locator;
-    loginPageWarningSection: Locator;
+    loginPageSuccessWarningSection: Locator;
+    loginPageDangerWarningSection: Locator;
   };
   readonly successPage: {
     // successPageBreadcrumbText: Locator;
     successPageHeader: Locator;
     successPageContinueButton: Locator;
+  };
+  readonly forgottenPasswordPage: {
+    forgottenPasswordPageHeader: Locator;
+    forgottenPasswordPageEmailLegend: Locator;
+    forgottenPasswordPageEmailField: Locator;
+    forgottenPasswordPageContinueButton: Locator;
+    forgottenPasswordPageBackButton: Locator;
   };
   readonly myAccount: {
     myAccountBreadcrumb: Locator;
@@ -79,6 +91,10 @@ export class MyAccountPage {
       returns: page.getByRole("link", { name: " Returns" }),
       transactions: page.getByRole("link", { name: " Transactions" }),
       newsletter: page.getByRole("link", { name: " Newsletter" }),
+      editAccount: page.getByRole('link', { name: ' Edit Account' }),
+      password: page.getByRole('link', { name: ' Password' }),
+      notification: page.getByRole('link', { name: ' Notification' }),
+      logout: page.getByRole('link', { name: ' Logout' }),
     };
     this.registerPage = {
       registerPageHeader: page.getByRole("heading", {
@@ -129,7 +145,10 @@ export class MyAccountPage {
         exact: true,
       }),
       loginPageLoginButton: page.getByRole("button", { name: "Login" }),
-      loginPageWarningSection: page.locator(
+      loginPageSuccessWarningSection: page.locator(
+        `css=div[class="alert alert-success alert-dismissible"]`
+      ),
+      loginPageDangerWarningSection: page.locator(
         `css=div[class="alert alert-danger alert-dismissible"]`
       ),
     };
@@ -139,6 +158,14 @@ export class MyAccountPage {
       }),
       // successPageBreadcrumbText: page.getByText('Success', { exact: true }),
       successPageContinueButton: page.getByRole("link", { name: "Continue" }),
+    };
+    this.forgottenPasswordPage = {
+      forgottenPasswordPageHeader: page.getByRole('heading', { name: 'Forgot Your Password?' }),
+      forgottenPasswordPageEmailField: page.getByRole('textbox', { name: 'E-Mail Address*' }),
+      forgottenPasswordPageEmailLegend: page.getByText('Your E-Mail Address'),
+      forgottenPasswordPageContinueButton: page.getByRole('button', { name: 'Continue' }),
+      forgottenPasswordPageBackButton: page.getByRole('link', { name: ' Back' })
+      
     };
     this.myAccount = {
       myAccountBreadcrumb: page.locator(`css=ol[class="breadcrumb"]`),

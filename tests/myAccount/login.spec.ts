@@ -94,10 +94,10 @@ class loginPageTest extends ExpectedValueProvider {
           password: envData.password,
         });
         await runner.verifyElementIsVisible(
-          myAccountPage.loginPage.loginPageWarningSection
+          myAccountPage.loginPage.loginPageDangerWarningSection
         );
         await runner.verifyToHaveExactText(
-          myAccountPage.loginPage.loginPageWarningSection,
+          myAccountPage.loginPage.loginPageDangerWarningSection,
           myAccountData.login.loginPageInvalidCredentialWarningText
         );
       });
@@ -131,10 +131,10 @@ class loginPageTest extends ExpectedValueProvider {
           password: fakeUser.password,
         });
         await runner.verifyElementIsVisible(
-          myAccountPage.loginPage.loginPageWarningSection
+          myAccountPage.loginPage.loginPageDangerWarningSection
         );
         await runner.verifyToHaveExactText(
-          myAccountPage.loginPage.loginPageWarningSection,
+          myAccountPage.loginPage.loginPageDangerWarningSection,
           myAccountData.login.loginPageInvalidCredentialWarningText
         );
       });
@@ -167,10 +167,10 @@ class loginPageTest extends ExpectedValueProvider {
           password: "",
         });
         await runner.verifyElementIsVisible(
-          myAccountPage.loginPage.loginPageWarningSection
+          myAccountPage.loginPage.loginPageDangerWarningSection
         );
         await runner.verifyToHaveExactText(
-          myAccountPage.loginPage.loginPageWarningSection,
+          myAccountPage.loginPage.loginPageDangerWarningSection,
           myAccountData.login.loginPageRetryLimitWarningText
         );
       });
@@ -224,11 +224,56 @@ class loginPageTest extends ExpectedValueProvider {
           password: fakeUser.password,
         });
         await runner.verifyElementIsVisible(
-          myAccountPage.loginPage.loginPageWarningSection
+          myAccountPage.loginPage.loginPageDangerWarningSection
         );
         await runner.verifyToHaveExactText(
-          myAccountPage.loginPage.loginPageWarningSection,
+          myAccountPage.loginPage.loginPageDangerWarningSection,
           myAccountData.login.loginPageRetryLimitWarningText
+        );
+      });
+      test("Verify forgotten password button directs to the correct page", async ({
+        runner,
+        homePage,
+        myAccountPage,
+      }) => {
+        await runner.mouseHover(homePage.navbarItems.myAccount);
+        await runner.clickOnElement(homePage.navbarItems.myAccountLogin);
+
+        await runner.verifyElementIsVisible(
+          myAccountPage.loginPage.loginPageHeader
+        );
+        await runner.verifyElementIsVisible(
+          myAccountPage.myAccount.myAccountBreadcrumbActive
+        );
+        await runner.verifyToHaveExactText(
+          myAccountPage.myAccount.myAccountBreadcrumbActive,
+          myAccountData.loginBreadcrumbText
+        );
+        await runner.verifyElementIsVisible(
+          myAccountPage.loginPage.registerSectionHeader
+        );
+        await runner.clickOnElement(myAccountPage.loginPage.loginPageForgottenPasswordButton)
+
+        await runner.verifyElementIsVisible(
+          myAccountPage.forgottenPasswordPage.forgottenPasswordPageHeader
+        );
+        await runner.verifyElementIsVisible(
+          myAccountPage.forgottenPasswordPage.forgottenPasswordPageEmailLegend
+        );
+        await runner.verifyToHaveExactText(
+           myAccountPage.forgottenPasswordPage.forgottenPasswordPageHeader,
+          myAccountData.forgottenPassword.forgottenPasswordHeaderText
+        );
+        await runner.verifyToHaveExactText(
+           myAccountPage.forgottenPasswordPage.forgottenPasswordPageEmailLegend,
+          myAccountData.forgottenPassword.forgottenPasswordEmailLegendText
+        );
+        await runner.verifyElementIsVisible(
+          myAccountPage.myAccount.myAccountBreadcrumbActive
+        );
+        await runner.verifyToHaveExactText(
+          myAccountPage.myAccount.myAccountBreadcrumbActive,
+          myAccountData.forgottenPasswordBreadcrumbText
         );
       });
     });
