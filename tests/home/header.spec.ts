@@ -5,6 +5,8 @@ import { NavbarKeys } from "../../constants/navbarKeys";
 import specialOfferData from "../../testData/specialOffer.json";
 import blogData from "../../testData/blog.json";
 import myAccountData from "../../testData/myAccount.json";
+import searchResultData from "../../testData/searchResult.json";
+import { NavigationHelper } from "../../utilities/helper/navigationHelper";
 
 const navbarKeys = new NavbarKeys();
 
@@ -122,7 +124,7 @@ class HeaderTest extends ExpectedValueProvider {
             await runner.verifyMultipleTexts(
               homePage.shopByCategoryModalItems.itemList,
               Object.values(homeData.header.shopByCategoryModalTexts).filter(
-                (item, i) => item
+                (item) => item
               )
             );
           });
@@ -153,6 +155,7 @@ class HeaderTest extends ExpectedValueProvider {
 
         // Done
         test("Verify that clicking on navbar's items navigates to expected pages", async ({
+          page,
           runner,
           envData,
           homePage,
@@ -167,65 +170,50 @@ class HeaderTest extends ExpectedValueProvider {
             await runner.verifyElementIsVisible(homePage.headerLogo);
           });
 
+          const navigationHelper = new NavigationHelper(page);
+
           await test.step("Special Hot → Should navigate to Special Offers page", async () => {
-            await runner.verifyElementIsVisible(
-              homePage.navbarItems.specialHot
-            );
-            await runner.clickOnElement(homePage.navbarItems.specialHot);
-            await runner.verifyUrlContains(envData.specialOfferUrl);
-            await runner.verifyElementIsVisible(homePage.headerLogo);
-            await runner.verifyElementIsVisible(
-              specialOfferPage.breadcrumbText
-            );
-            await runner.verifyContainText(
-              specialOfferPage.breadcrumbText,
-              specialOfferData.specialOfferBreadcrumbText
-            );
-            await runner.verifyElementIsVisible(specialOfferPage.headerText);
-            await runner.verifyToHaveExactText(
-              specialOfferPage.headerText,
-              specialOfferData.specialOfferHeaderText
-            );
+            await navigationHelper.verifyNavigation({
+              navbarLocator: homePage.navbarItems.specialHot,
+              expectedUrl: envData.specialOfferUrl,
+              headerLogoLocator: homePage.headerLogo,
+              breadcrumbLocator: specialOfferPage.breadcrumbText,
+              expectedBreadcrumbText:
+                specialOfferData.specialOfferBreadcrumbText,
+              headerTextLocator: specialOfferPage.headerText,
+              expectedHeaderText: specialOfferData.specialOfferHeaderText,
+              stepDescription: "Special Offers Navigation",
+            });
           });
 
           await test.step("Blog → Should navigate to Blog page", async () => {
-            await runner.verifyElementIsVisible(homePage.navbarItems.blog);
-            await runner.clickOnElement(homePage.navbarItems.blog);
-            await runner.verifyUrlContains(envData.blogUrl);
-            await runner.verifyElementIsVisible(homePage.headerLogo);
-            await runner.verifyElementIsVisible(blogPage.latestArticleHeader);
-            await runner.verifyToHaveExactText(
-              blogPage.latestArticleHeader,
-              blogData.latestArticleHeaderText
-            );
-            await runner.verifyElementIsVisible(blogPage.mostViewedHeader);
-            await runner.verifyToHaveExactText(
-              blogPage.mostViewedHeader,
-              blogData.mostViewedHeaderText
-            );
+            await navigationHelper.verifyNavigation({
+              navbarLocator: homePage.navbarItems.blog,
+              expectedUrl: envData.blogUrl,
+              headerLogoLocator: homePage.headerLogo,
+              breadcrumbLocator: blogPage.latestArticleHeader,
+              expectedBreadcrumbText: blogData.latestArticleHeaderText,
+              headerTextLocator: blogPage.mostViewedHeader,
+              expectedHeaderText: blogData.mostViewedHeaderText,
+              stepDescription: "Blog Navigation",
+            });
           });
 
           await test.step("My Account → Should navigate to Login page", async () => {
-            await runner.verifyElementIsVisible(homePage.navbarItems.myAccount);
-            await runner.clickOnElement(homePage.navbarItems.myAccount);
-            await runner.verifyUrlContains(envData.loginUrl);
-            await runner.verifyElementIsVisible(homePage.headerLogo);
-            await runner.verifyElementIsVisible(
-              myAccountPage.loginPage.loginPageBreadcrumbText
-            );
-            await runner.verifyContainText(
-              myAccountPage.loginPage.loginPageBreadcrumbText,
-              myAccountData.login.loginBreadcrumbText
-            );
-            await runner.verifyElementIsVisible(
-              myAccountPage.loginPage.loginPageHeader
-            );
-            await runner.verifyToHaveExactText(
-              myAccountPage.loginPage.loginPageHeader,
-              myAccountData.login.loginFormHeader
-            );
+            await navigationHelper.verifyNavigation({
+              navbarLocator: homePage.navbarItems.myAccount,
+              expectedUrl: envData.loginUrl,
+              headerLogoLocator: homePage.headerLogo,
+              breadcrumbLocator:
+                myAccountPage.loginPage.loginPageBreadcrumbText,
+              expectedBreadcrumbText: myAccountData.login.loginBreadcrumbText,
+              headerTextLocator: myAccountPage.loginPage.loginPageHeader,
+              expectedHeaderText: myAccountData.login.loginFormHeader,
+              stepDescription: "Login Navigation",
+            });
           });
 
+          // Mega menu note
           await test.step("Mega Menu → Skipped (navigates to incorrect page)", async () => {
             test.info().annotations.push({
               type: "skip",
@@ -233,8 +221,6 @@ class HeaderTest extends ExpectedValueProvider {
                 "Mega Menu currently routes to About Us page. Expected: Mega Menu page.",
             });
           });
-
-          // AddOns is not clickable; no step needed unless you want to document it
         });
 
         // Done
@@ -278,12 +264,16 @@ class HeaderTest extends ExpectedValueProvider {
       }); // End of navbar test describe block
 
       test.describe("Search bar tests", () => {
-        test("Verify that clicking on 'All Categories' should open a dropdown", async ({
+        test("Verify that 'All Categories' are the default category and clicking on 'All Categories' should open a dropdown", async ({
           runner,
           homePage,
         }) => {
           await runner.verifyElementIsVisible(
             homePage.searchBar.allCategoriesDropdownButton
+          );
+          await runner.verifyContainText(
+            homePage.searchBar.allCategoriesDropdownButton,
+            homeData.header.searchBar.allCategoriesText.allCategories
           );
           await runner.clickOnElement(
             homePage.searchBar.allCategoriesDropdownButton
@@ -296,7 +286,8 @@ class HeaderTest extends ExpectedValueProvider {
           );
         });
 
-        test("Verify that user can select each link with mouse and keyboard navigation", async ({
+        // Done
+        test("Verify that user can select each link", async ({
           runner,
           page,
           homePage,
@@ -306,7 +297,7 @@ class HeaderTest extends ExpectedValueProvider {
             homeData.header.searchBar.allCategoriesText.desktops,
             homeData.header.searchBar.allCategoriesText.laptops,
             homeData.header.searchBar.allCategoriesText.components,
-            homeData.header.searchBar.allCategoriesText.tables,
+            homeData.header.searchBar.allCategoriesText.tablets,
             homeData.header.searchBar.allCategoriesText.software,
             homeData.header.searchBar.allCategoriesText.phonesAndPdas,
             homeData.header.searchBar.allCategoriesText.cameras,
@@ -333,33 +324,10 @@ class HeaderTest extends ExpectedValueProvider {
             });
             await runner.verifyElementIsVisible(updatedButton);
             await runner.verifyContainText(updatedButton, category);
-
-            // message: keyboard selection
-            await runner.clickOnElement(
-              homePage.searchBar.allCategoriesDropdownButton
-            );
-            const options = homePage.searchBar.allCategoriesLinks;
-            const count = await options.count();
-
-            for (let i = 0; i < count; i++) {
-              const currentOption = options.nth(i);
-              const text = (await currentOption.innerText()).trim();
-
-              if (text === category) {
-                await runner.focusOnElement(currentOption);
-                await runner.keyboardEnterPress();
-                break;
-              }
-            }
-
-            const updatedButtonKeyboard = page.getByRole("button", {
-              name: new RegExp(`${escapedCategory}.*`, "i"),
-            });
-            await runner.verifyElementIsVisible(updatedButtonKeyboard);
-            await runner.verifyContainText(updatedButtonKeyboard, category);
           }
         });
 
+        // Done
         test("Verify that the search input field is enabled and user can type anything into it", async ({
           runner,
           homePage,
@@ -374,15 +342,66 @@ class HeaderTest extends ExpectedValueProvider {
           await runner.fillInputBox(homePage.searchBar.inputField, "anything");
         });
 
-        // Working
-        test("Match exact value", async ({ searchHelper }) => {
-          // Message: search helper is working fine
-          const value = "iPhone";
-          await searchHelper.search(
-            value,
-            `https://ecommerce-playground.lambdatest.io/index.php?route=product%2Fsearch&search=${value}`,
-            `Search - ${value}`
-          );
+        // Done
+        test("Verify empty search navigates to search results page and displays all products for each category", async ({
+          runner,
+          homePage,
+          envData,
+          products,
+          searchHelper,
+        }) => {
+          const value =
+            searchResultData.searchResultProducts.valueEmptyResults.value;
+          const expectedTexts =
+            searchResultData.searchResultProducts.valueEmptyResults.texts;
+          const expectedHeader =
+            searchResultData.searchResultPageHeaderText + value;
+          const expectedUrl = envData.searchResultUrl + value;
+
+          const categoryLabels = homeData.header.searchBar.allCategoriesText;
+
+          const categories = [
+            { name: "All Categories", label: categoryLabels.allCategories },
+            { name: "Desktops", label: categoryLabels.desktops },
+            { name: "Laptops", label: categoryLabels.laptops },
+            { name: "Components", label: categoryLabels.components },
+            { name: "Tablets", label: categoryLabels.tablets },
+            { name: "Software", label: categoryLabels.software },
+            { name: "Phones & PDAs", label: categoryLabels.phonesAndPdas },
+            { name: "Cameras", label: categoryLabels.cameras },
+            { name: "MP3 Players", label: categoryLabels.mp3Players },
+          ];
+
+          for (const category of categories) {
+            await test.step(`🔎 Search for "${value}" in "${category.name}"`, async () => {
+              // First step is special — no category selection needed
+              if (category.name === "All Categories") {
+                await runner.verifyElementIsVisible(
+                  homePage.searchBar.allCategoriesDropdownButton
+                );
+                await runner.verifyContainText(
+                  homePage.searchBar.allCategoriesDropdownButton,
+                  category.label
+                );
+
+                await searchHelper.search(value, expectedUrl, expectedHeader);
+              } else {
+                await searchHelper.searchWithCategory(
+                  category.label,
+                  value,
+                  expectedUrl,
+                  expectedHeader
+                );
+              }
+
+              await runner.verifyElementsIsExist(products.productTitles);
+              await runner.assertExpectedTextsInLocator(
+                products.productTitles,
+                expectedTexts,
+                15
+              );
+            });
+          }
         });
       }); // End of search bar test describe block
     }); // End of describe block

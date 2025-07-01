@@ -69,7 +69,7 @@ export class Utils {
 
   async verifyElementIsVisible(identifier: Locator): Promise<void> {
     try {
-      await expect.soft(identifier).toBeVisible({ timeout: 60000 });
+      await expect(identifier).toBeVisible({ timeout: 60000 });
       this.logMessage(
         `Verified element with identifier ${identifier} is visible`
       );
@@ -776,6 +776,48 @@ Actual message:      "${trimmedActual}"`;
       this.logMessage(msg, "error");
       await this.captureScreenshotOnFailure("verifyElementIsEnabled");
       throw new Error(msg);
+    }
+  }
+
+  async assertExpectedTextsInLocator(
+    locator: Locator,
+    expectedTexts: Record<string, string> | string[],
+    limit: number = 15
+  ): Promise<void> {
+    try {
+      // Wait for 15 elements to be rendered before continuing
+      await expect(locator).toHaveCount(15, { timeout: 5000 });
+
+      const expected = Array.isArray(expectedTexts)
+        ? expectedTexts
+        : Object.values(expectedTexts);
+
+      const actual = await locator.allTextContents();
+      const topResults = actual.slice(0, limit).map((t) => t.trim());
+
+      for (const text of expected) {
+        if (!topResults.some((actualText) => actualText.includes(text))) {
+          const errorMsg = `Expected text "${text}" not found in top ${limit} results: [${topResults.join(
+            ", "
+          )}]`;
+          this.logMessage(errorMsg, "error");
+          await this.captureScreenshotOnFailure("assertExpectedTextsInLocator");
+          throw new Error(errorMsg);
+        }
+      }
+
+      this.logMessage(
+        `Verified expected texts ${JSON.stringify(
+          expected
+        )} are present in top ${limit} results`
+      );
+    } catch (error) {
+      const fallbackMsg = `Error while asserting expected texts in locator: ${
+        (error as Error).message
+      }`;
+      this.logMessage(fallbackMsg, "error");
+      await this.captureScreenshotOnFailure("assertExpectedTextsInLocator");
+      throw new Error(fallbackMsg);
     }
   }
 

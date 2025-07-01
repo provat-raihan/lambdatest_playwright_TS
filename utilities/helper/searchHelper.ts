@@ -51,13 +51,47 @@ export class SearchHelper {
       );
       await this.utils.verifyContainText(
         this.searchResultsPage.header(searchValue),
-        searchValue
+        expectedHeaderText
       );
     } catch (error) {
       const msg = `❌ Search failed for "${searchValue}": ${error.message}`;
       this.utils.logMessage(msg, "error");
       await this.utils.captureScreenshotOnFailure(
         `search_error_${searchValue.replace(/\s+/g, "_")}`
+      );
+      throw new Error(msg);
+    }
+  }
+
+  async searchWithCategory(
+    category: string,
+    searchValue: string,
+    expectedUrl: string,
+    expectedHeaderText: string
+  ): Promise<void> {
+    try {
+      this.utils.logMessage(
+        `Searching in category "${category}" for "${searchValue}"`
+      );
+
+      // Step 1: Select category
+      await this.utils.verifyElementIsVisible(
+        this.homePage.searchBar.allCategoriesDropdownButton
+      );
+      await this.utils.clickOnElement(
+        this.homePage.searchBar.allCategoriesDropdownButton
+      );
+
+      const categoryOption = this.homePage.searchBar.allCategoriesLinks.filter({
+        hasText: category,
+      });
+      await this.utils.clickOnElement(categoryOption);
+      await this.search(searchValue, expectedUrl, expectedHeaderText);
+    } catch (error) {
+      const msg = `❌ Failed search with category "${category}": ${error.message}`;
+      this.utils.logMessage(msg, "error");
+      await this.utils.captureScreenshotOnFailure(
+        `search_with_category_error_${category.replace(/\s+/g, "_")}`
       );
       throw new Error(msg);
     }

@@ -1,11 +1,13 @@
 // pageObjectModel/searchResult.ts
-import { Page, Locator, expect } from "@playwright/test";
+import { Page, Locator } from "@playwright/test";
 
 export class SearchResultPage {
   private readonly page: Page;
+  readonly breadcrumb: Locator;
 
   constructor(page: Page) {
     this.page = page;
+    this.breadcrumb = page.getByLabel("breadcrumb").getByText("Search");
   }
 
   /**

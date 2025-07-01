@@ -9,6 +9,7 @@ import { MyAccountPage } from "../pageObjectModel/myAccount.ts";
 import { AuthHelper } from "./helper/authHelper.ts";
 import { SearchResultPage } from "../pageObjectModel/searchResult.page.ts";
 import { SearchHelper } from "./helper/searchHelper.ts";
+import { Products } from "../pageObjectModel/products.ts";
 
 const test = base.extend<{
   runner: Utils;
@@ -21,6 +22,7 @@ const test = base.extend<{
   authHelper: AuthHelper;
   searchResultPage: SearchResultPage;
   searchHelper: SearchHelper;
+  products: Products;
 }>({
   runner: async ({ page }: { page: Page }, use) => {
     const utilsInstance = new Utils(page);
@@ -51,21 +53,30 @@ const test = base.extend<{
     const blogPageInstance = new BlogPage(page);
     await use(blogPageInstance);
   },
+
   myAccountPage: async ({ page }: { page: Page }, use) => {
     const myAccountPageInstance = new MyAccountPage(page);
     await use(myAccountPageInstance);
   },
+
   authHelper: async ({ page }: { page: Page }, use) => {
     const authHelperInstance = new AuthHelper(page);
     await use(authHelperInstance);
   },
+
   searchResultPage: async ({ page }: { page: Page }, use) => {
     const searchResultPageInstance = new SearchResultPage(page);
     await use(searchResultPageInstance);
   },
+
   searchHelper: async ({ page }: { page: Page }, use) => {
     const searchHelperInstance = new SearchHelper(page);
     await use(searchHelperInstance);
+  },
+
+  products: async ({ page }: { page: Page }, use) => {
+    const productsInstance = new Products(page);
+    await use(productsInstance);
   },
 });
 
