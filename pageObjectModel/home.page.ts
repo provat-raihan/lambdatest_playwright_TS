@@ -83,10 +83,11 @@ export class HomePage {
         .locator("#entry_217822")
         .getByText("All Categories Desktops"),
       allCategoriesLinks: page.locator(
-        "div.dropdown-menu.dropdown-menu-left.show a"
+        "#entry_217822 div.dropdown-menu.dropdown-menu-left a"
       ),
       inputField: page.getByRole("textbox", { name: "Search For Products" }),
       button: page.getByRole("button", { name: "Search" }),
+      // button: page.locator("//button[normalize-space()='Search']"),
     };
   }
 }

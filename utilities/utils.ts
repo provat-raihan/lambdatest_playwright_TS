@@ -782,11 +782,20 @@ Actual message:      "${trimmedActual}"`;
   async assertExpectedTextsInLocator(
     locator: Locator,
     expectedTexts: Record<string, string> | string[],
-    limit: number = 15
+    limit?: number
   ): Promise<void> {
     try {
-      // Wait for 15 elements to be rendered before continuing
-      await expect(locator).toHaveCount(15, { timeout: 5000 });
+      // Ensure at least 1 product is rendered before continuing
+
+      if (limit) await expect(locator).toHaveCount(limit, { timeout: 10000 });
+
+      const count = await locator.count();
+      if (count === 0) {
+        const errorMsg = `No elements found in locator for asserting texts.`;
+        this.logMessage(errorMsg, "error");
+        await this.captureScreenshotOnFailure("assertExpectedTextsInLocator");
+        throw new Error(errorMsg);
+      }
 
       const expected = Array.isArray(expectedTexts)
         ? expectedTexts

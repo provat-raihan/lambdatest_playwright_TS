@@ -24,7 +24,6 @@ class HeaderTest extends ExpectedValueProvider {
       });
 
       test.describe("Navbar tests", () => {
-        // Done
         test("Verify that header logo renders correctly", async ({
           runner,
           homePage,
@@ -42,7 +41,6 @@ class HeaderTest extends ExpectedValueProvider {
           );
         });
 
-        // Done -> An example of data driven testing technique
         test("Verify navbar items are visible and contain expected links and texts", async ({
           runner,
           homePage,
@@ -97,8 +95,6 @@ class HeaderTest extends ExpectedValueProvider {
           }
         });
 
-        // Done
-        // Message: Using test.step inside test function for better reporting and debugging (For checking only)
         test("Should display a modal when 'Shop by Category' is clicked", async ({
           runner,
           homePage,
@@ -130,7 +126,6 @@ class HeaderTest extends ExpectedValueProvider {
           });
         });
 
-        // Done: API response checking
         test("Verify each 'Shop by Category' modal link returns a 200 OK response", async ({
           runner,
           envData,
@@ -153,7 +148,6 @@ class HeaderTest extends ExpectedValueProvider {
           );
         });
 
-        // Done
         test("Verify that clicking on navbar's items navigates to expected pages", async ({
           page,
           runner,
@@ -213,7 +207,6 @@ class HeaderTest extends ExpectedValueProvider {
             });
           });
 
-          // Mega menu note
           await test.step("Mega Menu → Skipped (navigates to incorrect page)", async () => {
             test.info().annotations.push({
               type: "skip",
@@ -223,7 +216,6 @@ class HeaderTest extends ExpectedValueProvider {
           });
         });
 
-        // Done
         test("Verify that hovering over 'Mega Menu' on navbar displays a dropdown and all dropdown links return a 200 OK response", async ({
           runner,
           homePage,
@@ -236,7 +228,6 @@ class HeaderTest extends ExpectedValueProvider {
           );
         });
 
-        // Done
         test("Verify that hovering over 'AddOns Featured' on navbar displays a dropdown and all dropdown links return a 200 OK response", async ({
           runner,
           homePage,
@@ -249,7 +240,6 @@ class HeaderTest extends ExpectedValueProvider {
           await runner.validateMultipleUrlStatuses(homePage.addOnItems.links);
         });
 
-        // Done
         test("Verify that hovering over 'My account' on navbar displays a dropdown and all dropdown links return a 200 OK response", async ({
           runner,
           homePage,
@@ -286,8 +276,7 @@ class HeaderTest extends ExpectedValueProvider {
           );
         });
 
-        // Done
-        test("Verify that user can select each link", async ({
+        test("Verify that user can select each dropdown element", async ({
           runner,
           page,
           homePage,
@@ -299,13 +288,12 @@ class HeaderTest extends ExpectedValueProvider {
             homeData.header.searchBar.allCategoriesText.components,
             homeData.header.searchBar.allCategoriesText.tablets,
             homeData.header.searchBar.allCategoriesText.software,
-            homeData.header.searchBar.allCategoriesText.phonesAndPdas,
+            homeData.header.searchBar.allCategoriesText.phonesAndPDAs,
             homeData.header.searchBar.allCategoriesText.cameras,
             homeData.header.searchBar.allCategoriesText.mp3Players,
           ];
 
           for (const category of categoryOptions) {
-            // Message: normal selection
             await runner.verifyElementIsVisible(
               homePage.searchBar.allCategoriesDropdownButton
             );
@@ -320,14 +308,13 @@ class HeaderTest extends ExpectedValueProvider {
 
             const escapedCategory = await runner.escapeRegExp(category);
             const updatedButton = page.getByRole("button", {
-              name: new RegExp(`${escapedCategory}.*`, "i"), // i means 'case-insensitive here' and '.*' means any char after category
+              name: new RegExp(`${escapedCategory}.*`, "i"),
             });
             await runner.verifyElementIsVisible(updatedButton);
             await runner.verifyContainText(updatedButton, category);
           }
         });
 
-        // Done
         test("Verify that the search input field is enabled and user can type anything into it", async ({
           runner,
           homePage,
@@ -342,7 +329,7 @@ class HeaderTest extends ExpectedValueProvider {
           await runner.fillInputBox(homePage.searchBar.inputField, "anything");
         });
 
-        // Done
+        // Working
         test("Verify empty search navigates to search results page and displays all products for each category", async ({
           runner,
           homePage,
@@ -353,9 +340,9 @@ class HeaderTest extends ExpectedValueProvider {
           const value =
             searchResultData.searchResultProducts.valueEmptyResults.value;
           const expectedTexts =
-            searchResultData.searchResultProducts.valueEmptyResults.texts;
-          const expectedHeader =
-            searchResultData.searchResultPageHeaderText + value;
+            searchResultData.searchResultProducts.valueEmptyResults
+              .expectedTextsOfPaginationOne;
+          const expectedHeader = searchResultData.searchResultPageHeaderText;
           const expectedUrl = envData.searchResultUrl + value;
 
           const categoryLabels = homeData.header.searchBar.allCategoriesText;
@@ -367,14 +354,13 @@ class HeaderTest extends ExpectedValueProvider {
             { name: "Components", label: categoryLabels.components },
             { name: "Tablets", label: categoryLabels.tablets },
             { name: "Software", label: categoryLabels.software },
-            { name: "Phones & PDAs", label: categoryLabels.phonesAndPdas },
+            { name: "Phones & PDAs", label: categoryLabels.phonesAndPDAs },
             { name: "Cameras", label: categoryLabels.cameras },
             { name: "MP3 Players", label: categoryLabels.mp3Players },
           ];
 
           for (const category of categories) {
             await test.step(`🔎 Search for "${value}" in "${category.name}"`, async () => {
-              // First step is special — no category selection needed
               if (category.name === "All Categories") {
                 await runner.verifyElementIsVisible(
                   homePage.searchBar.allCategoriesDropdownButton
@@ -400,11 +386,103 @@ class HeaderTest extends ExpectedValueProvider {
                 expectedTexts,
                 15
               );
+
+              await runner.navigateTo(envData.baseUrl);
             });
           }
         });
+
+        test("Verify valid search 'ipod' returns relevant results", async ({
+          runner,
+          envData,
+          searchHelper,
+          products,
+        }) => {
+          const value =
+            searchResultData.searchResultProducts.validResultSearchOne.value;
+          const expectedTexts =
+            searchResultData.searchResultProducts.validResultSearchOne
+              .expectedTextsOfPaginationOne;
+          const expectedHeader =
+            searchResultData.searchResultPageHeaderText + value;
+          const expectedUrl = envData.searchResultUrl + value;
+
+          await test.step(`🔎 Search for "${value}"`, async () => {
+            await searchHelper.search(value, expectedUrl, expectedHeader);
+            await runner.verifyElementsIsExist(products.productTitles);
+
+            const count = await products.productTitles.count();
+
+            await runner.assertExpectedTextsInLocator(
+              products.productTitles,
+              expectedTexts,
+              count
+            );
+          });
+        });
+
+        test("Verify valid search 'iphone' return relevant results", async ({
+          runner,
+          envData,
+          searchHelper,
+          products,
+        }) => {
+          const value =
+            searchResultData.searchResultProducts.validResultSearchTwo.value;
+          const expectedTexts =
+            searchResultData.searchResultProducts.validResultSearchTwo
+              .expectedTextsOfPaginationOne;
+          const expectedHeader =
+            searchResultData.searchResultPageHeaderText + value;
+          const expectedUrl = envData.searchResultUrl + value;
+
+          await test.step(`🔎 Search for "${value}"`, async () => {
+            await searchHelper.search(value, expectedUrl, expectedHeader);
+            await runner.verifyElementsIsExist(products.productTitles);
+
+            const count = await products.productTitles.count();
+
+            await runner.assertExpectedTextsInLocator(
+              products.productTitles,
+              expectedTexts,
+              count
+            );
+          });
+        });
+
+        test("Verify valid search 'macbook' returns relevant results", async ({
+          runner,
+          envData,
+          searchHelper,
+          products,
+        }) => {
+          const value =
+            searchResultData.searchResultProducts.validResultSearchThree.value;
+
+          const expectedTexts =
+            searchResultData.searchResultProducts.validResultSearchThree
+              .expectedTextsOfPaginationOne;
+
+          const expectedHeader =
+            searchResultData.searchResultPageHeaderText + value;
+
+          const expectedUrl = envData.searchResultUrl + value;
+
+          await test.step(`🔎 Search for "${value}"`, async () => {
+            await searchHelper.search(value, expectedUrl, expectedHeader);
+            await runner.verifyElementsIsExist(products.productTitles);
+
+            const count = await products.productTitles.count();
+
+            await runner.assertExpectedTextsInLocator(
+              products.productTitles,
+              expectedTexts,
+              count
+            );
+          });
+        });
       }); // End of search bar test describe block
-    }); // End of describe block
+    }); // end of main describe block
   }
 }
 

@@ -3,13 +3,43 @@
     "searchResultProducts": {
         "valueEmptyResults": {
             "value": "",
-            "texts": {
+            "expectedTextsOfPaginationOne": {
                 "firstProductTitle": "HTC Touch HD",
                 "secondProductTitle": "Palm Treo Pro",
                 "thirdProductTitle": "Canon EOS 5D",
                 "fourthProductTitle": "Nikon D300",
-                "lastProductTitleOfPaginationOne": "Sony VAIO"
+                "lastProductTitle": "Sony VAIO"
+            }
+        },
+        "validResultSearchOne": {
+            "value": "ipod",
+            "expectedTextsOfPaginationOne": {
+                "firstProductTitle": "iPod Touch",
+                "secondProductTitle": "iPod Shuffle",
+                "thirdProductTitle": "iPod Nano",
+                "fourthProductTitle": "iPod Classic",
+                "lastProductTitle": "iPod Touch"
+            }
+        },
+        "validResultSearchTwo": {
+            "value": "iphone",
+            "expectedTextsOfPaginationOne": {
+                "firstProductTitle": "iPhone",
+                "secondProductTitle": "iPhone",
+                "thirdProductTitle": "iPhone",
+                "fourthProductTitle": "iPhone",
+                "lastProductTitle": "iPhone"
+            }
+        },
+        "validResultSearchThree": {
+            "value": "macbook",
+            "expectedTextsOfPaginationOne": {
+                "firstProductTitle": "MacBook",
+                "secondProductTitle": "MacBook Air",
+                "thirdProductTitle": "MacBook Pro",
+                "fourthProductTitle": "MacBook",
+                "lastProductTitle": "MacBook Pro"
             }
         }
-    }   
+    }
 }
