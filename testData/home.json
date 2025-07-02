@@ -51,6 +51,10 @@
                 "mp3Players": "MP3 Players"
             },
             "placeholderText": "Search For Products"
+        },
+        "cartModalItems": {
+            "headerText": "Cart",
+            "emptyMessageText": "Your shopping cart is empty!"
         }
     }
 }

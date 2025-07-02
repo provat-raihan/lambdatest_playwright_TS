@@ -331,7 +331,8 @@ class HeaderTest extends ExpectedValueProvider {
           await runner.fillInputBox(homePage.searchBar.inputField, "anything");
         });
 
-        // Message: getting passed on single run, but in all run, it sometimes behave flaky
+        // Message: Skipping due to flakiness in full run mode; passes reliably in single run
+        // todo: Have to fix this later
         test.skip("Verify empty search navigates to search results page and displays all products for each category", async ({
           runner,
           homePage,
@@ -598,6 +599,27 @@ class HeaderTest extends ExpectedValueProvider {
           await runner.verifyElementIsVisible(
             myAccountPage.loginPage.loginPageHeader
           );
+        });
+
+        test("Verify clicking on cart button opens a modal and cart empty message should be shown", async ({
+          runner,
+          homePage,
+        }) => {
+          await runner.verifyElementIsVisible(homePage.cartButton);
+          await runner.clickOnElement(homePage.cartButton);
+          await runner.verifyElementIsVisible(homePage.cartModal.header);
+          await runner.verifyContainText(
+            homePage.cartModal.header,
+            homeData.header.cartModalItems.headerText
+          );
+          await runner.verifyElementIsVisible(
+            homePage.cartModal.emptyMessageText
+          );
+          await runner.verifyContainText(
+            homePage.cartModal.emptyMessageText,
+            homeData.header.cartModalItems.emptyMessageText
+          );
+          await runner.clickOnElement(homePage.cartModal.crossButton);
         });
       });
     }); // end of main describe block
