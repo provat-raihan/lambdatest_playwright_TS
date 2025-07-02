@@ -12,6 +12,7 @@ import { SearchHelper } from "./helper/searchHelper.ts";
 import { Products } from "../pageObjectModel/products.ts";
 import { ProductDetailsPage } from "../pageObjectModel/productDetails.page.ts";
 import { ProductComparePage } from "../pageObjectModel/productCompare.page.ts";
+import { NavigationHelper } from "./helper/navigationHelper.ts";
 
 const test = base.extend<{
   runner: Utils;
@@ -27,6 +28,7 @@ const test = base.extend<{
   products: Products;
   productDetailsPage: ProductDetailsPage;
   productComparePage: ProductComparePage;
+  navigationHelper: NavigationHelper;
 }>({
   runner: async ({ page }: { page: Page }, use) => {
     const utilsInstance = new Utils(page);
@@ -89,6 +91,10 @@ const test = base.extend<{
   productComparePage: async ({ page }: { page: Page }, use) => {
     const productComparePageInstance = new ProductComparePage(page);
     await use(productComparePageInstance);
+  },
+  navigationHelper: async ({ page }: { page: Page }, use) => {
+    const navigationHelperInstance = new NavigationHelper(page);
+    await use(navigationHelperInstance);
   },
 });
 

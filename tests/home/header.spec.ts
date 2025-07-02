@@ -130,7 +130,6 @@ class HeaderTest extends ExpectedValueProvider {
 
         test("Verify each 'Shop by Category' modal link returns a 200 OK response", async ({
           runner,
-          envData,
           homePage,
         }) => {
           await runner.verifyElementIsVisible(
@@ -151,13 +150,13 @@ class HeaderTest extends ExpectedValueProvider {
         });
 
         test("Verify that clicking on navbar's items navigates to expected pages", async ({
-          page,
           runner,
           envData,
           homePage,
           specialOfferPage,
           blogPage,
           myAccountPage,
+          navigationHelper,
         }) => {
           await test.step("Home → Should navigate to Home page", async () => {
             await runner.verifyElementIsVisible(homePage.navbarItems.home);
@@ -165,8 +164,6 @@ class HeaderTest extends ExpectedValueProvider {
             await runner.verifyUrlContains(envData.homeUrl);
             await runner.verifyElementIsVisible(homePage.headerLogo);
           });
-
-          const navigationHelper = new NavigationHelper(page);
 
           await test.step("Special Hot → Should navigate to Special Offers page", async () => {
             await navigationHelper.verifyNavigation({
