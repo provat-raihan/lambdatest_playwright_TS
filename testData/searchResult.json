@@ -1,5 +1,6 @@
 {
     "searchResultPageHeaderText": "Search - ",
+    "expectedNoResultText": "There is no product that matches the search criteria.",
     "searchResultProducts": {
         "valueEmptyResults": {
             "value": "",
@@ -40,6 +41,12 @@
                 "fourthProductTitle": "MacBook",
                 "lastProductTitle": "MacBook Pro"
             }
+        },
+        "invalidSearchOne": {
+            "value": "computer"
+        },
+        "invalidSearchTwo": {
+            "value": "laptop"
         }
     }
 }

@@ -3,6 +3,8 @@ import { Page, Locator } from "@playwright/test";
 export class HomePage {
   private readonly page: Page;
   readonly headerLogo: Locator;
+  readonly compareButton: Locator;
+  readonly wishlistButton: Locator;
 
   readonly navbarItems: {
     shopByCategory: Locator;
@@ -39,11 +41,20 @@ export class HomePage {
     allCategoriesLinks: Locator;
     inputField: Locator;
     button: Locator;
+    searchResultSuggestionsContainer: Locator;
   };
 
   constructor(page: Page) {
     this.page = page;
     this.headerLogo = page.locator("#entry_217821 img");
+    this.compareButton = page.getByRole("link", {
+      name: "Compare",
+      exact: true,
+    });
+    this.wishlistButton = page.getByRole("link", {
+      name: "Wishlist",
+      exact: true,
+    });
 
     this.navbarItems = {
       shopByCategory: page.getByRole("button", { name: "Shop by Category" }),
@@ -87,7 +98,9 @@ export class HomePage {
       ),
       inputField: page.getByRole("textbox", { name: "Search For Products" }),
       button: page.getByRole("button", { name: "Search" }),
-      // button: page.locator("//button[normalize-space()='Search']"),
+      searchResultSuggestionsContainer: page.locator(
+        "#entry_217822 .dropdown-menu.autocomplete.w-100 h4"
+      ),
     };
   }
 }

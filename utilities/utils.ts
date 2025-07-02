@@ -782,12 +782,12 @@ Actual message:      "${trimmedActual}"`;
   async assertExpectedTextsInLocator(
     locator: Locator,
     expectedTexts: Record<string, string> | string[],
-    limit?: number
+    limit: number
   ): Promise<void> {
     try {
       // Ensure at least 1 product is rendered before continuing
 
-      if (limit) await expect(locator).toHaveCount(limit, { timeout: 10000 });
+      await expect(locator).toHaveCount(limit, { timeout: 10000 });
 
       const count = await locator.count();
       if (count === 0) {
@@ -840,6 +840,25 @@ Actual message:      "${trimmedActual}"`;
 
   async escapeRegExp(text: string): Promise<string> {
     return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  // utilities/searchUtils.ts (or wherever your helpers live)
+
+  async verifySearchSuggestionsContain(
+    suggestions: Locator,
+    expectedText: string
+  ): Promise<void> {
+    // Wait until at least one suggestion appears
+    await expect(suggestions.first()).toBeVisible({ timeout: 5000 });
+
+    const count = await suggestions.count();
+
+    for (let i = 0; i < count; i++) {
+      const locator = suggestions.nth(i);
+      await expect(locator).toContainText(expectedText, {
+        ignoreCase: true,
+      });
+    }
   }
 
   // ---------------------------------------------------------------------------------------------------------------------------------
