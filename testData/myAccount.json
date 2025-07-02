@@ -38,5 +38,11 @@
     "passwordConfirmationWarningText": "Password confirmation does not match password!",
     "passwordWarningText": "Password must be between 4 and 20 characters!",
     "invalidEmailWarning": "Please include an '@' in the email address."
+},
+"forgottenPassword":{
+    "forgottenPasswordHeaderText": "Forgot Your Password?",
+    "forgottenPasswordEmailLegendText": "Your E-Mail Address",
+    "forgottenPasswordSuccessText": "An email with a confirmation link has been sent your email address.",
+    "forgottenPasswordInvalidEmailText": "Warning: The E-Mail Address was not found in our records, please try again!"
 }
 }
