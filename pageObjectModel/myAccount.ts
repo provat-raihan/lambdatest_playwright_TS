@@ -201,8 +201,8 @@ export class MyAccountPage {
       myOrdersItems: page.locator(`css=div[class="row"] div[class="col-6 col-sm-4 col-lg-2"]`),
       
       myAffiliateAccountHeader: page.getByRole('heading', { name: 'My Affiliate Account' }),
-      myAffiliateAccountItems: page.locator('#content div').filter({ hasText: 'My Affiliate Account Register' }).locator('div'),
-      registerAffiliateAccount: page.getByRole('link', { name: ' Register for an affiliate' }),
+      myAffiliateAccountItems: page.locator(`css=div[class="card-body text-center text-sm-left"] a`),
+      registerAffiliateAccount: page.locator(`css=div[class="card-body text-center text-sm-left"] a`).first(),
     };
     this.registerAffiliateAccountPage = {
       AffiliateAccountPageHeader: page.getByRole('heading', { name: 'Your Affiliate Information' }),
@@ -211,7 +211,7 @@ export class MyAccountPage {
       AffiliateAccountPageWebsiteField: page.getByRole('textbox', { name: 'Web Site' }),
       paymentInfoLegend: page.getByText('Payment Information'),
       paymentInfoTaxIdInputField: page.getByRole('textbox', { name: 'Tax ID' }),
-      paymentMethodRadioInput: page.getByText('Cheque PayPal Bank Transfer'),
+      paymentMethodRadioInput: page.locator(`css=input[type = "radio"]`),
       checkPayeeNameInputField: page.getByRole('textbox', { name: 'Cheque Payee Name*' }),
       aboutUsCheckboxInput: page.getByRole('checkbox'),
       continueButton: page.getByRole('button', { name: 'Continue' }),

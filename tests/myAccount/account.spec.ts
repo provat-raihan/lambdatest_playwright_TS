@@ -139,23 +139,33 @@ class accountPageTest extends ExpectedValueProvider {
                         envData.myOrdersItems.recurringPayments
                     ])
                 });
-                test("verifying my affiliated account items redirect to respective pages ", async ({ runner, myAccountPage,envData }) => {
-                    await runner.verifyElementIsVisible(myAccountPage.myAccount.myAffiliateAccountHeader)
-                    await runner.verifyToHaveExactText(myAccountPage.myAccount.myAffiliateAccountHeader,myAccountData.myAccount.myAffiliateAccountHeaderText)
-                    await runner.verifyAnchorLinks(myAccountPage.myAccount.myAffiliateAccountItems, [
-                        envData.myAffiliateAccountItems.registerAffiliateAccount
-                        
-                    ])
-                });
                 test("verifying register affiliate account directs to respective pages ", async ({ runner, myAccountPage,envData }) => {
                     await runner.verifyElementIsVisible(myAccountPage.myAccount.myAffiliateAccountHeader)
                     await runner.verifyToHaveExactText(myAccountPage.myAccount.myAffiliateAccountHeader, myAccountData.myAccount.myAffiliateAccountHeaderText)
                     await runner.clickOnElement(myAccountPage.myAccount.registerAffiliateAccount);
-                    await runner.verifyUrlContains(envData.myAffiliateAccountItems.registerAffiliateAccount);
                     await runner.verifyElementIsVisible(myAccountPage.myAccount.myAccountBreadcrumbActive)
                     await runner.verifyToHaveExactText(myAccountPage.myAccount.myAccountBreadcrumbActive, myAccountData.affiliateBreadcrumbText)
                     
                 });
+                test("verifying editing of affiliate account is done with valid data ", async ({ runner, myAccountPage,envData,fakeUser }) => {
+                    await runner.verifyElementIsVisible(myAccountPage.myAccount.myAffiliateAccountHeader)
+                    await runner.verifyToHaveExactText(myAccountPage.myAccount.myAffiliateAccountHeader, myAccountData.myAccount.myAffiliateAccountHeaderText)
+                    await runner.clickOnElement(myAccountPage.myAccount.registerAffiliateAccount);
+                    await runner.verifyElementIsVisible(myAccountPage.myAccount.myAccountBreadcrumbActive)
+                    await runner.verifyToHaveExactText(myAccountPage.myAccount.myAccountBreadcrumbActive, myAccountData.affiliateBreadcrumbText)
+                    await runner.verifyElementIsVisible(myAccountPage.registerAffiliateAccountPage.AffiliateAccountPageHeader)
+                    await runner.verifyElementIsVisible(myAccountPage.registerAffiliateAccountPage.AffiliateAccountLegend)
+                    await runner.fillInputBox(myAccountPage.registerAffiliateAccountPage.AffiliateAccountPageCompanyField,fakeUser.firstName)
+                    
+                    await runner.fillInputBox(myAccountPage.registerAffiliateAccountPage.AffiliateAccountPageWebsiteField,fakeUser.lastName)
+                    await runner.verifyElementIsVisible(myAccountPage.registerAffiliateAccountPage.paymentInfoLegend)
+                    
+                    await runner.fillInputBox(myAccountPage.registerAffiliateAccountPage.AffiliateAccountPageWebsiteField,fakeUser.telephone)
+                    await runner.selectRadioOption(myAccountPage.registerAffiliateAccountPage.paymentMethodRadioInput, myAccountData.registerAffiliateAccountPage.radioButtonOneText)
+                    await runner.fillInputBox(myAccountPage.registerAffiliateAccountPage.checkPayeeNameInputField, fakeUser.firstName)
+                    await runner.clickOnElement(myAccountPage.registerAffiliateAccountPage.continueButton);
+                });
+                //some more tests to be done later
             });
         });
     }

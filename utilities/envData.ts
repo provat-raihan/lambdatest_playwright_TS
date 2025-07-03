@@ -45,6 +45,7 @@ export class EnvData {
   };
   readonly myAffiliateAccountItems: {
     registerAffiliateAccount: string;
+    trackingAffiliateAccount: string;
   };
 
   constructor(page: Page) {
@@ -95,6 +96,7 @@ export class EnvData {
     this.myAffiliateAccountItems = {
 
       registerAffiliateAccount: `${process.env.AFFILIATE_ACCOUNT_URL}`,
+      trackingAffiliateAccount: `${process.env.TRACKING_ACCOUNT_URL}`,
 
     };
   }

@@ -831,7 +831,32 @@ async  verifyAnchorLinks(containerLocator: Locator, expectedLinks: string[]) {
     await expect(anchor).toHaveAttribute('href', expectedLinks[i]);
   }
 }
+async  selectRadioOption(radioGroup: Locator, value: string): Promise<void> {
+  const count = await radioGroup.count();
+  logger.info(`Found ${count} radio buttons. Looking for value: "${value}"`);
 
+  for (let i = 0; i < count; i++) {
+    const radio = radioGroup.nth(i);
+    const radioValue = await radio.getAttribute('value');
+
+    logger.info(`Checking radio index [${i}]: value="${radioValue}"`);
+
+    if (radioValue === value) {
+      try {
+        await radio.check();
+        logger.info(`✅ Successfully selected radio button with value: "${value}"`);
+        return;
+      } catch (error) {
+        logger.error(`❌ Failed to check radio button with value "${value}": ${error}`);
+        throw error;
+      }
+    }
+  }
+
+  const errorMsg = `❌ Radio button with value "${value}" not found among ${count} options.`;
+  logger.error(errorMsg);
+  throw new Error(errorMsg);
+}
   // <------------------------------------------------------------ X ------------------------------------------------------------>
   // To Test Utils
   // ---------------------------------------------------------------------------------------------------------------------------------

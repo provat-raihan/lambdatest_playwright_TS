@@ -51,5 +51,11 @@
     "myAccountHeaderText": "My Account",
     "myOrdersHeaderText": "My Orders",
     "myAffiliateAccountHeaderText": "My Affiliate Account"
+},
+"registerAffiliateAccountPage":{
+    "radioButtonOneText": "cheque",
+    "radioButtonTwoText": "paypal",
+    "radioButtonThreeText": "bank"
+
 }
 }
