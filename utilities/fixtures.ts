@@ -10,6 +10,9 @@ import { AuthHelper } from "./helper/authHelper.ts";
 import { SearchResultPage } from "../pageObjectModel/searchResult.page.ts";
 import { SearchHelper } from "./helper/searchHelper.ts";
 import { Products } from "../pageObjectModel/products.ts";
+import { ProductDetailsPage } from "../pageObjectModel/productDetails.page.ts";
+import { ProductComparePage } from "../pageObjectModel/productCompare.page.ts";
+import { NavigationHelper } from "./helper/navigationHelper.ts";
 
 const test = base.extend<{
   runner: Utils;
@@ -23,6 +26,9 @@ const test = base.extend<{
   searchResultPage: SearchResultPage;
   searchHelper: SearchHelper;
   products: Products;
+  productDetailsPage: ProductDetailsPage;
+  productComparePage: ProductComparePage;
+  navigationHelper: NavigationHelper;
 }>({
   runner: async ({ page }: { page: Page }, use) => {
     const utilsInstance = new Utils(page);
@@ -77,6 +83,18 @@ const test = base.extend<{
   products: async ({ page }: { page: Page }, use) => {
     const productsInstance = new Products(page);
     await use(productsInstance);
+  },
+  productDetailsPage: async ({ page }: { page: Page }, use) => {
+    const productDetailsPageInstance = new ProductDetailsPage(page);
+    await use(productDetailsPageInstance);
+  },
+  productComparePage: async ({ page }: { page: Page }, use) => {
+    const productComparePageInstance = new ProductComparePage(page);
+    await use(productComparePageInstance);
+  },
+  navigationHelper: async ({ page }: { page: Page }, use) => {
+    const navigationHelperInstance = new NavigationHelper(page);
+    await use(navigationHelperInstance);
   },
 });
 

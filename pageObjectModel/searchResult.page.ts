@@ -4,10 +4,12 @@ import { Page, Locator } from "@playwright/test";
 export class SearchResultPage {
   private readonly page: Page;
   readonly breadcrumb: Locator;
+  readonly noResultText: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.breadcrumb = page.getByLabel("breadcrumb").getByText("Search");
+    this.noResultText = page.getByText("There is no product that");
   }
 
   /**
