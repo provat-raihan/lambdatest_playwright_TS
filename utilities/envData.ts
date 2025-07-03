@@ -28,6 +28,24 @@ export class EnvData {
     airConditioner: string;
     webCameras: string;
   };
+  readonly myAccountItems: {
+    editAccount: string;
+    password: string;
+    wishList: string;
+    addressBook: string;
+    newsletter: string;
+  };
+  readonly myOrdersItems: {
+    orderHistory: string;
+    downloads: string;
+    rewardPoints: string;
+    returns: string;
+    transactions: string;
+    recurringPayments: string;
+  };
+  readonly myAffiliateAccountItems: {
+    registerAffiliateAccount: string;
+  };
 
   constructor(page: Page) {
     this.baseUrl = `${process.env.BASE_URL}`;
@@ -57,6 +75,27 @@ export class EnvData {
       gamingConsole: `${process.env.GAMING_CONSOLE_URL}`,
       airConditioner: `${process.env.AIR_CONDITIONER_URL}`,
       webCameras: `${process.env.WEB_CAMERAS}`,
+    };
+    this.myAccountItems = {
+      editAccount: `${process.env.EDIT_ACCOUNT_URL}`,
+      password: `${process.env.PASSWORD_URL}`,
+      wishList: `${process.env.WISHLIST_URL}`,
+      addressBook: `${process.env.ADDRESS_BOOK_URL}`,
+      newsletter: `${process.env.NEWSLETTER_URL}`,
+    };
+    this.myOrdersItems = {
+  
+      orderHistory: `${process.env.ORDER_HISTORY_URL}`,
+      downloads: `${process.env.DOWNLOADS_URL}`,
+      rewardPoints: `${process.env.REWARD_POINTS_URL}`,
+      returns: `${process.env.RETURNS_URL}`,
+      transactions: `${process.env.TRANSACTIONS_URL}`,
+      recurringPayments: `${process.env.RECURRING_PAYMENTS_URL}`,
+    };
+    this.myAffiliateAccountItems = {
+
+      registerAffiliateAccount: `${process.env.AFFILIATE_ACCOUNT_URL}`,
+
     };
   }
 }

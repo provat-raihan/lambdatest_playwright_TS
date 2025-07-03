@@ -820,6 +820,17 @@ Actual message:      "${trimmedActual}"`;
       throw new Error(fallbackMsg);
     }
   }
+async  verifyAnchorLinks(containerLocator: Locator, expectedLinks: string[]) {
+  const count = await containerLocator.count();
+  expect(count).toBe(expectedLinks.length);
+
+  for (let i = 0; i < count; i++) {
+    const anchor = containerLocator.nth(i).locator('a');
+    const actualHref = await anchor.getAttribute('href');
+    console.log(`Checking item ${i}: Expected = ${expectedLinks[i]}, Actual = ${actualHref}`);
+    await expect(anchor).toHaveAttribute('href', expectedLinks[i]);
+  }
+}
 
   // <------------------------------------------------------------ X ------------------------------------------------------------>
   // To Test Utils

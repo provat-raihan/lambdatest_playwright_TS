@@ -17,6 +17,8 @@
   "giftCertificateBreadcrumbText": "Gift Certificate",
   "successBreadcrumbText": "Success",
   "accountBreadcrumbText": "Account",
+  "affiliateBreadcrumbText": "Affiliate",
+  "affiliateTrackingBreadcrumbText": "Affiliate Tracking",
 
   "login": {
     "loginBreadcrumbText": "Login",
@@ -44,5 +46,10 @@
     "forgottenPasswordEmailLegendText": "Your E-Mail Address",
     "forgottenPasswordSuccessText": "An email with a confirmation link has been sent your email address.",
     "forgottenPasswordInvalidEmailText": "Warning: The E-Mail Address was not found in our records, please try again!"
+},
+"myAccount":{
+    "myAccountHeaderText": "My Account",
+    "myOrdersHeaderText": "My Orders",
+    "myAffiliateAccountHeaderText": "My Affiliate Account"
 }
 }

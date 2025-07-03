@@ -70,6 +70,26 @@ export class MyAccountPage {
   readonly myAccount: {
     myAccountBreadcrumb: Locator;
     myAccountBreadcrumbActive: Locator;
+    myAccountHeader: Locator;
+    myAccountItems: Locator;
+    myOrdersHeader: Locator;
+    myOrdersItems: Locator;
+    myAffiliateAccountHeader: Locator;
+    myAffiliateAccountItems: Locator;
+    registerAffiliateAccount: Locator;
+  };
+  readonly registerAffiliateAccountPage: {
+    AffiliateAccountPageHeader: Locator;
+    AffiliateAccountLegend: Locator;
+    AffiliateAccountPageCompanyField: Locator;
+    AffiliateAccountPageWebsiteField: Locator;
+    paymentInfoLegend: Locator;
+    paymentInfoTaxIdInputField: Locator;
+    paymentMethodRadioInput: Locator;
+    checkPayeeNameInputField: Locator;
+    aboutUsCheckboxInput: Locator;
+    continueButton: Locator;
+    
   };
 
   constructor(page: Page) {
@@ -172,6 +192,31 @@ export class MyAccountPage {
       myAccountBreadcrumbActive: page.locator(
         `css=li[class="breadcrumb-item active"]`
       ),
+      myAccountHeader: page.getByRole('heading', { name: 'My Account' }),
+      myAccountItems: page.locator(
+        `css=div[class="row"] div[class="col-6 col-sm-4 col-lg-2_4"]`
+      ),
+    
+      myOrdersHeader: page.getByRole('heading', { name: 'My Orders' }),
+      myOrdersItems: page.locator(`css=div[class="row"] div[class="col-6 col-sm-4 col-lg-2"]`),
+      
+      myAffiliateAccountHeader: page.getByRole('heading', { name: 'My Affiliate Account' }),
+      myAffiliateAccountItems: page.locator('#content div').filter({ hasText: 'My Affiliate Account Register' }).locator('div'),
+      registerAffiliateAccount: page.getByRole('link', { name: ' Register for an affiliate' }),
     };
+    this.registerAffiliateAccountPage = {
+      AffiliateAccountPageHeader: page.getByRole('heading', { name: 'Your Affiliate Information' }),
+      AffiliateAccountLegend: page.getByText('My Affiliate Account'),
+      AffiliateAccountPageCompanyField: page.getByRole('textbox', { name: 'Company' }),
+      AffiliateAccountPageWebsiteField: page.getByRole('textbox', { name: 'Web Site' }),
+      paymentInfoLegend: page.getByText('Payment Information'),
+      paymentInfoTaxIdInputField: page.getByRole('textbox', { name: 'Tax ID' }),
+      paymentMethodRadioInput: page.getByText('Cheque PayPal Bank Transfer'),
+      checkPayeeNameInputField: page.getByRole('textbox', { name: 'Cheque Payee Name*' }),
+      aboutUsCheckboxInput: page.getByRole('checkbox'),
+      continueButton: page.getByRole('button', { name: 'Continue' }),
+      
+    };
+    
   }
 }
