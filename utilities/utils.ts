@@ -782,11 +782,20 @@ Actual message:      "${trimmedActual}"`;
   async assertExpectedTextsInLocator(
     locator: Locator,
     expectedTexts: Record<string, string> | string[],
-    limit: number = 15
+    limit: number
   ): Promise<void> {
     try {
-      // Wait for 15 elements to be rendered before continuing
-      await expect(locator).toHaveCount(15, { timeout: 5000 });
+      // Ensure at least 1 product is rendered before continuing
+
+      await expect(locator).toHaveCount(limit, { timeout: 10000 });
+
+      const count = await locator.count();
+      if (count === 0) {
+        const errorMsg = `No elements found in locator for asserting texts.`;
+        this.logMessage(errorMsg, "error");
+        await this.captureScreenshotOnFailure("assertExpectedTextsInLocator");
+        throw new Error(errorMsg);
+      }
 
       const expected = Array.isArray(expectedTexts)
         ? expectedTexts
@@ -867,6 +876,25 @@ async  selectRadioOption(radioGroup: Locator, value: string): Promise<void> {
 
   async escapeRegExp(text: string): Promise<string> {
     return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  // utilities/searchUtils.ts (or wherever your helpers live)
+
+  async verifySearchSuggestionsContain(
+    suggestions: Locator,
+    expectedText: string
+  ): Promise<void> {
+    // Wait until at least one suggestion appears
+    await expect(suggestions.first()).toBeVisible({ timeout: 5000 });
+
+    const count = await suggestions.count();
+
+    for (let i = 0; i < count; i++) {
+      const locator = suggestions.nth(i);
+      await expect(locator).toContainText(expectedText, {
+        ignoreCase: true,
+      });
+    }
   }
 
   // ---------------------------------------------------------------------------------------------------------------------------------

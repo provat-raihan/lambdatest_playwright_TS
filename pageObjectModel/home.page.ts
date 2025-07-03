@@ -1,8 +1,10 @@
 import { Page, Locator } from "@playwright/test";
 
 export class HomePage {
-  private readonly page: Page;
   readonly headerLogo: Locator;
+  readonly compareButton: Locator;
+  readonly wishlistButton: Locator;
+  readonly cartButton: Locator;
 
   readonly navbarItems: {
     shopByCategory: Locator;
@@ -39,11 +41,26 @@ export class HomePage {
     allCategoriesLinks: Locator;
     inputField: Locator;
     button: Locator;
+    searchResultSuggestionsContainer: Locator;
+  };
+
+  readonly cartModal: {
+    header: Locator;
+    emptyMessageText: Locator;
+    crossButton: Locator;
   };
 
   constructor(page: Page) {
-    this.page = page;
     this.headerLogo = page.locator("#entry_217821 img");
+    this.compareButton = page.getByRole("link", {
+      name: "Compare",
+      exact: true,
+    });
+    this.wishlistButton = page.getByRole("link", {
+      name: "Wishlist",
+      exact: true,
+    });
+    this.cartButton = page.getByRole("button", { name: "0" });
 
     this.navbarItems = {
       shopByCategory: page.getByRole("button", { name: "Shop by Category" }),
@@ -83,10 +100,20 @@ export class HomePage {
         .locator("#entry_217822")
         .getByText("All Categories Desktops"),
       allCategoriesLinks: page.locator(
-        "div.dropdown-menu.dropdown-menu-left.show a"
+        "#entry_217822 div.dropdown-menu.dropdown-menu-left a"
       ),
       inputField: page.getByRole("textbox", { name: "Search For Products" }),
       button: page.getByRole("button", { name: "Search" }),
+      searchResultSuggestionsContainer: page.locator(
+        "#entry_217822 .dropdown-menu.autocomplete.w-100 h4"
+      ),
+    };
+    this.cartModal = {
+      header: page.getByRole("heading", { name: "Cart" }),
+      emptyMessageText: page.getByText("Your shopping cart is empty!"),
+      crossButton: page
+        .getByRole("heading", { name: "Cart close" })
+        .getByLabel("close"),
     };
   }
 }

@@ -1,4 +1,4 @@
-{ 
+{
     "header": {
         "logoSrc": "https://ecommerce-playground.lambdatest.io/image/catalog/maza/svg/image2vector.svg",
         "logoAlt": "Poco Electro",
@@ -20,7 +20,7 @@
             "myAccount": "https://ecommerce-playground.lambdatest.io/index.php?route=account/account"
         },
         "shopByCategoryModalHeaderText": "Top categories",
-        "shopByCategoryModalTexts":{
+        "shopByCategoryModalTexts": {
             "components": "Components",
             "cameras": "Cameras",
             "phonesTabletAndIpod": "Phone, Tablets & Ipod",
@@ -43,14 +43,18 @@
                 "allCategories": "All Categories",
                 "desktops": "Desktops",
                 "laptops": "Laptops",
-                "components": "Component",
+                "components": "Components",
                 "tablets": "Tablets",
                 "software": "Software",
-                "phonesAndPdas": "Phones & PDAs",
+                "phonesAndPDAs": "Phones & PDAs",
                 "cameras": "Cameras",
-                "mp3Players":"MP3 Players"
+                "mp3Players": "MP3 Players"
             },
             "placeholderText": "Search For Products"
+        },
+        "cartModalItems": {
+            "headerText": "Cart",
+            "emptyMessageText": "Your shopping cart is empty!"
         }
     }
 }

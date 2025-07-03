@@ -9,6 +9,7 @@ export class EnvData {
   readonly email: string;
   readonly password: string;
   readonly searchResultUrl: string;
+  readonly productCompareUrl: string;
 
   readonly shopByCategoryItemsHrefValues: {
     components: string;
@@ -58,6 +59,7 @@ export class EnvData {
     this.email = `${process.env.EMAIL}`;
     this.password = `${process.env.PASSWORD}`;
     this.searchResultUrl = `${process.env.SEARCH_RESULT_URL}`;
+    this.productCompareUrl = `${process.env.PRODUCT_COMPARE_URL}`;
 
     this.shopByCategoryItemsHrefValues = {
       components: `${process.env.COMPONENTS_URL}`,
