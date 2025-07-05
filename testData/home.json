@@ -39,6 +39,7 @@
             "webCameras": "Web Cameras"
         },
         "searchBar": {
+            "userAcceptValue": "anything",
             "allCategoriesText": {
                 "allCategories": "All Categories",
                 "desktops": "Desktops",

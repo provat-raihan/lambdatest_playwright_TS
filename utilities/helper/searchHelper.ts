@@ -1,19 +1,23 @@
 import { Utils } from "../utils";
 import { HomePage } from "../../pageObjectModel/home.page";
 import { SearchResultPage } from "../../pageObjectModel/searchResult.page";
-import { expect, Locator, Page } from "playwright/test";
+import { Locator, Page } from "playwright/test";
+import { EnvData } from "../envData";
+import searchResultPageData from "../../testData/searchResult.json";
 
 export class SearchHelper {
   private page: Page;
   private utils: Utils;
   private homePage: HomePage;
   private searchResultsPage: SearchResultPage;
+  private envData: EnvData;
 
   constructor(page: Page) {
     this.page = page;
     this.utils = new Utils(page);
     this.homePage = new HomePage(page);
     this.searchResultsPage = new SearchResultPage(page);
+    this.envData = new EnvData(page);
   }
 
   /**
@@ -30,7 +34,9 @@ export class SearchHelper {
     expectedHeaderText: string
   ): Promise<void> {
     try {
+      await this.utils.navigateTo(this.envData.baseUrl);
       this.utils.logMessage(`Searching for "${searchValue}"`);
+
       await this.utils.verifyElementIsVisible(
         this.homePage.searchBar.inputField
       );
@@ -43,9 +49,9 @@ export class SearchHelper {
       );
       await this.utils.verifyElementIsVisible(this.homePage.searchBar.button);
       await this.utils.verifyElementIsEnabled(this.homePage.searchBar.button);
-      await this.utils.clickOnElement(this.homePage.searchBar.button);
 
-      await this.utils.verifyUrlContains(expectedUrl);
+      await this.utils.clickOnElement(this.homePage.searchBar.button),
+        await this.utils.verifyUrlContains(expectedUrl);
 
       await this.utils.verifyElementIsVisible(
         this.searchResultsPage.header(searchValue)
@@ -64,41 +70,47 @@ export class SearchHelper {
     }
   }
 
-  async searchWithCategory(
-    category: string,
+  async verifySearchResults(
     searchValue: string,
     expectedUrl: string,
-    expectedHeaderText: string
+    expectedHeaderText: string,
+    productTitleLocator: Locator,
+    expectResults: boolean = true
   ): Promise<void> {
     try {
-      this.utils.logMessage(
-        `🔎 Searching "${searchValue}" in category "${category}"`
-      );
+      this.utils.logMessage(`🔍 Verifying search results for "${searchValue}"`);
 
-      /* 1️⃣  Open the dropdown */
-      await this.utils.clickOnElement(
-        this.homePage.searchBar.allCategoriesDropdownButton
-      );
-
-      await this.utils.wait(500);
-
-      /* 2️⃣  Locate the correct menu item (ignore whitespace / case) */
-      const categoryOption: Locator = this.homePage.searchBar.allCategoriesLinks
-        .filter({ hasText: category })
-        .first();
-
-      /* 4️⃣  Click the category */
-      await this.utils.clickOnElement(categoryOption);
-
-      /* 5️⃣  Perform the search itself */
       await this.search(searchValue, expectedUrl, expectedHeaderText);
+      this.utils.logMessage(`✅ Search page loaded for "${searchValue}"`);
+
+      if (expectResults) {
+        await this.utils.verifyElementsIsExist(productTitleLocator);
+        this.utils.logMessage(`✅ Product titles found for "${searchValue}"`);
+
+        await this.utils.verifyProductTitlesContain(
+          productTitleLocator,
+          searchValue
+        );
+        this.utils.logMessage(`✅ All product titles contain "${searchValue}"`);
+      } else {
+        const noResultsMessageLocator = this.searchResultsPage.noResultText;
+        const expectedMessage = searchResultPageData.expectedNoResultText;
+
+        await this.utils.verifyElementIsVisible(noResultsMessageLocator);
+        await this.utils.verifyContainText(
+          noResultsMessageLocator,
+          expectedMessage
+        );
+
+        this.utils.logMessage(
+          `✅ Verified no results message for "${searchValue}"`
+        );
+      }
     } catch (error) {
-      const msg = `❌ Failed search with category "${category}": ${
-        (error as Error).message
-      }`;
+      const msg = `❌ Failed to verify search results for "${searchValue}": ${error.message}`;
       this.utils.logMessage(msg, "error");
       await this.utils.captureScreenshotOnFailure(
-        `search_with_category_error_${category.replace(/\s+/g, "_")}`
+        `verify_search_results_error_${searchValue.replace(/\s+/g, "_")}`
       );
       throw new Error(msg);
     }
