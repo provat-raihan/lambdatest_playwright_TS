@@ -6,6 +6,9 @@ export class EnvData {
   readonly blogUrl: string;
   readonly loginUrl: string;
   readonly registerUrl: string;
+  readonly firstName: string;
+  readonly lastName: string;
+  readonly telephone: string;
   readonly email: string;
   readonly password: string;
   readonly searchResultUrl: string;
@@ -56,6 +59,9 @@ export class EnvData {
     this.blogUrl = `${process.env.BLOG_URL}`;
     this.loginUrl = `${process.env.LOGIN_URL}`;
     this.registerUrl = `${process.env.REGISTER_URL}`;
+    this.firstName = `${process.env.FIRST_NAME}`;
+    this.lastName = `${process.env.LAST_NAME}`;
+    this.telephone = `${process.env.TELEPHONE}`;
     this.email = `${process.env.EMAIL}`;
     this.password = `${process.env.PASSWORD}`;
     this.searchResultUrl = `${process.env.SEARCH_RESULT_URL}`;

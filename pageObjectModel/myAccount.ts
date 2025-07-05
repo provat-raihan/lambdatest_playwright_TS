@@ -22,7 +22,6 @@ export class MyAccountPage {
   };
   readonly registerPage: {
     registerPageHeader: Locator;
-    // registerPageBreadcrumbText: Locator;
     warningTextToAgreePolicy: Locator;
     warningTextAlreadyRegistered: Locator;
     firstNameInputBox: Locator;
@@ -90,6 +89,22 @@ export class MyAccountPage {
     aboutUsCheckboxInput: Locator;
     continueButton: Locator;
     
+  };
+  readonly editAccountPage: {
+    editAccountPageHeader: Locator;
+    personalInfoLegend: Locator;
+    firstNameInputBox: Locator;
+    lastNameInputBox: Locator;
+    emailInputBox: Locator;
+    telephoneInputBox: Locator;
+    continueButton: Locator;
+    backButton: Locator;
+    telephoneGuideMessage: Locator;
+    telephoneWarning: Locator;
+    firstNameWarning: Locator;
+    lastNameWarning: Locator;
+    emailWarning: Locator;
+
   };
 
   constructor(page: Page) {
@@ -215,6 +230,22 @@ export class MyAccountPage {
       checkPayeeNameInputField: page.getByRole('textbox', { name: 'Cheque Payee Name*' }),
       aboutUsCheckboxInput: page.getByRole('checkbox'),
       continueButton: page.getByRole('button', { name: 'Continue' }),
+      
+    };
+    this.editAccountPage = {
+      editAccountPageHeader: page.getByRole('heading', { name: 'My Account Information' }),
+      personalInfoLegend: page.getByText('Your Personal Details'),
+      firstNameInputBox: page.getByRole('textbox', { name: 'First Name *' }),
+      lastNameInputBox: page.getByRole('textbox', { name: 'Last Name*' }),
+      emailInputBox: page.getByRole('textbox', { name: 'E-Mail*' }),
+      telephoneInputBox: page.getByRole('textbox', { name: 'Telephone*' }),
+      continueButton: page.getByRole('button', { name: 'Continue' }),
+      backButton: page.getByRole('link', { name: ' Back' }),
+      telephoneGuideMessage: page.getByText('Enter valid phone number with'),
+      telephoneWarning: page.getByText('Telephone must be between 3'),
+      firstNameWarning: page.getByText('First Name must be between 1'),
+      lastNameWarning: page.getByText('Last Name must be between 1'),
+      emailWarning: page.getByText('E-Mail Address does not'),
       
     };
     

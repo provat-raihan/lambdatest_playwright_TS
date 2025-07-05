@@ -19,6 +19,7 @@
   "accountBreadcrumbText": "Account",
   "affiliateBreadcrumbText": "Affiliate",
   "affiliateTrackingBreadcrumbText": "Affiliate Tracking",
+  "editAccountBreadcrumbText": "Edit Information",
 
   "login": {
     "loginBreadcrumbText": "Login",
@@ -56,6 +57,11 @@
     "radioButtonOneText": "cheque",
     "radioButtonTwoText": "paypal",
     "radioButtonThreeText": "bank"
+
+},
+"editAccountPage":{
+    "accountUpdateWarningText": " Success: Your account has been successfully updated."
+    
 
 }
 }
