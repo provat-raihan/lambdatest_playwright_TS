@@ -30,6 +30,7 @@ class editAccountPageTest extends ExpectedValueProvider {
             );
             await runner.mouseHover(homePage.navbarItems.myAccount);
             await runner.clickOnElement(homePage.navbarItems.myAccountLogin);
+            await runner.verifyUrlContains(envData.loginUrl)
 
             await runner.verifyElementIsVisible(
               myAccountPage.loginPage.loginPageHeader
@@ -48,6 +49,7 @@ class editAccountPageTest extends ExpectedValueProvider {
               email: envData.email,
               password: envData.password,
             });
+            await runner.verifyUrlContains(envData.myAccountItems.myAccount)
             await runner.verifyElementIsVisible(
               myAccountPage.myAccount.myAccountBreadcrumb
             );
@@ -61,6 +63,7 @@ class editAccountPageTest extends ExpectedValueProvider {
             await runner.clickOnElement(
               myAccountPage.sidebarOptions.editAccount
             );
+            await runner.verifyUrlContains(envData.myAccountItems.editAccount)
             await runner.verifyElementIsVisible(
               myAccountPage.editAccountPage.editAccountPageHeader
             );
@@ -77,7 +80,6 @@ class editAccountPageTest extends ExpectedValueProvider {
           runner,
           myAccountPage,
           envData,
-          homePage,
         }) => {
           await runner.verifyToHaveValue(
             myAccountPage.editAccountPage.firstNameInputBox,
@@ -100,7 +102,6 @@ class editAccountPageTest extends ExpectedValueProvider {
           runner,
           myAccountPage,
           envData,
-          homePage,
         }) => {
           await runner.verifyToHaveValue(
             myAccountPage.editAccountPage.firstNameInputBox,
@@ -121,6 +122,7 @@ class editAccountPageTest extends ExpectedValueProvider {
           await runner.clickOnElement(
             myAccountPage.editAccountPage.continueButton
           );
+          await runner.verifyUrlContains(envData.myAccountItems.myAccount)
           await runner.verifyElementIsVisible(
             myAccountPage.myAccount.myAccountHeader
           );
@@ -143,7 +145,6 @@ class editAccountPageTest extends ExpectedValueProvider {
           runner,
           myAccountPage,
           envData,
-          homePage,
         }) => {
           await runner.verifyToHaveValue(
             myAccountPage.editAccountPage.firstNameInputBox,
@@ -162,6 +163,7 @@ class editAccountPageTest extends ExpectedValueProvider {
             envData.telephone
           );
           await runner.clickOnElement(myAccountPage.editAccountPage.backButton);
+          await runner.verifyUrlContains(envData.myAccountItems.myAccount)
           await runner.verifyElementIsVisible(
             myAccountPage.myAccount.myAccountHeader
           );
@@ -243,7 +245,7 @@ class editAccountPageTest extends ExpectedValueProvider {
             );
             await runner.mouseHover(homePage.navbarItems.myAccount);
             await runner.clickOnElement(homePage.navbarItems.myAccountRegister);
-
+            await runner.verifyUrlContains(envData.registerUrl)
             await runner.verifyElementIsVisible(
               myAccountPage.registerPage.registerPageHeader
             );
@@ -263,6 +265,7 @@ class editAccountPageTest extends ExpectedValueProvider {
               passwordConfirm: fakeUser.password,
               newsletterSubscribe: fakeUser.newsletterSubscribe,
             });
+            await runner.verifyUrlContains(envData.successUrl)
             await runner.verifyElementIsVisible(
               myAccountPage.myAccount.myAccountBreadcrumbActive
             );
@@ -280,9 +283,11 @@ class editAccountPageTest extends ExpectedValueProvider {
             await runner.clickOnElement(
               myAccountPage.successPage.successPageContinueButton
             );
+            await runner.verifyUrlContains(envData.myAccountItems.myAccount)
             await runner.clickOnElement(
               myAccountPage.sidebarOptions.editAccount
             );
+            await runner.verifyUrlContains(envData.myAccountItems.editAccount)
             await runner.verifyElementIsVisible(
               myAccountPage.editAccountPage.editAccountPageHeader
             );
@@ -315,8 +320,8 @@ class editAccountPageTest extends ExpectedValueProvider {
         test("verifying to update first name successfully ", async ({
           runner,
           myAccountPage,
-          envData,
           fakeUser,
+          envData
         }) => {
           await runner.fillInputBox(
             myAccountPage.editAccountPage.firstNameInputBox,
@@ -325,6 +330,7 @@ class editAccountPageTest extends ExpectedValueProvider {
           await runner.clickOnElement(
             myAccountPage.editAccountPage.continueButton
           );
+          await runner.verifyUrlContains(envData.myAccountItems.myAccount)
           await runner.verifyElementIsVisible(
             myAccountPage.myAccount.myAccountHeader
           );
@@ -356,6 +362,7 @@ class editAccountPageTest extends ExpectedValueProvider {
           await runner.clickOnElement(
             myAccountPage.editAccountPage.continueButton
           );
+          await runner.verifyUrlContains(envData.myAccountItems.myAccount)
           await runner.verifyElementIsVisible(
             myAccountPage.myAccount.myAccountHeader
           );
@@ -387,6 +394,7 @@ class editAccountPageTest extends ExpectedValueProvider {
           await runner.clickOnElement(
             myAccountPage.editAccountPage.continueButton
           );
+          await runner.verifyUrlContains(envData.myAccountItems.myAccount)
           await runner.verifyElementIsVisible(
             myAccountPage.myAccount.myAccountHeader
           );
@@ -418,6 +426,7 @@ class editAccountPageTest extends ExpectedValueProvider {
           await runner.clickOnElement(
             myAccountPage.editAccountPage.continueButton
           );
+          await runner.verifyUrlContains(envData.myAccountItems.myAccount)
           await runner.verifyElementIsVisible(
             myAccountPage.myAccount.myAccountHeader
           );
@@ -436,44 +445,8 @@ class editAccountPageTest extends ExpectedValueProvider {
             myAccountData.editAccountPage.accountUpdateWarningText
           );
         });
-        // test("verifying my orders items redirect to respective pages ", async ({ runner, myAccountPage,envData }) => {
-        //     await runner.verifyElementIsVisible(myAccountPage.myAccount.myOrdersHeader)
-        //     await runner.verifyToHaveExactText(myAccountPage.myAccount.myOrdersHeader,myAccountData.myAccount.myOrdersHeaderText)
-        //     await runner.verifyAnchorLinks(myAccountPage.myAccount.myOrdersItems, [
-        //         envData.myOrdersItems.orderHistory,
-        //         envData.myOrdersItems.downloads,
-        //         envData.myOrdersItems.rewardPoints,
-        //         envData.myOrdersItems.returns,
-        //         envData.myOrdersItems.transactions,
-        //         envData.myOrdersItems.recurringPayments
-        //     ])
-        // });
-        // test("verifying register affiliate account directs to respective pages ", async ({ runner, myAccountPage,envData }) => {
-        //     await runner.verifyElementIsVisible(myAccountPage.myAccount.myAffiliateAccountHeader)
-        //     await runner.verifyToHaveExactText(myAccountPage.myAccount.myAffiliateAccountHeader, myAccountData.myAccount.myAffiliateAccountHeaderText)
-        //     await runner.clickOnElement(myAccountPage.myAccount.registerAffiliateAccount);
-        //     await runner.verifyElementIsVisible(myAccountPage.myAccount.myAccountBreadcrumbActive)
-        //     await runner.verifyToHaveExactText(myAccountPage.myAccount.myAccountBreadcrumbActive, myAccountData.affiliateBreadcrumbText)
+      
 
-        // });
-        // test("verifying editing of affiliate account is done with valid data ", async ({ runner, myAccountPage,envData,fakeUser }) => {
-        //     await runner.verifyElementIsVisible(myAccountPage.myAccount.myAffiliateAccountHeader)
-        //     await runner.verifyToHaveExactText(myAccountPage.myAccount.myAffiliateAccountHeader, myAccountData.myAccount.myAffiliateAccountHeaderText)
-        //     await runner.clickOnElement(myAccountPage.myAccount.registerAffiliateAccount);
-        //     await runner.verifyElementIsVisible(myAccountPage.myAccount.myAccountBreadcrumbActive)
-        //     await runner.verifyToHaveExactText(myAccountPage.myAccount.myAccountBreadcrumbActive, myAccountData.affiliateBreadcrumbText)
-        //     await runner.verifyElementIsVisible(myAccountPage.registerAffiliateAccountPage.AffiliateAccountPageHeader)
-        //     await runner.verifyElementIsVisible(myAccountPage.registerAffiliateAccountPage.AffiliateAccountLegend)
-        //     await runner.fillInputBox(myAccountPage.registerAffiliateAccountPage.AffiliateAccountPageCompanyField,fakeUser.firstName)
-
-        //     await runner.fillInputBox(myAccountPage.registerAffiliateAccountPage.AffiliateAccountPageWebsiteField,fakeUser.lastName)
-        //     await runner.verifyElementIsVisible(myAccountPage.registerAffiliateAccountPage.paymentInfoLegend)
-
-        //     await runner.fillInputBox(myAccountPage.registerAffiliateAccountPage.AffiliateAccountPageWebsiteField,fakeUser.telephone)
-        //     await runner.selectRadioOption(myAccountPage.registerAffiliateAccountPage.paymentMethodRadioInput, myAccountData.registerAffiliateAccountPage.radioButtonOneText)
-        //     await runner.fillInputBox(myAccountPage.registerAffiliateAccountPage.checkPayeeNameInputField, fakeUser.firstName)
-        //     await runner.clickOnElement(myAccountPage.registerAffiliateAccountPage.continueButton);
-        // });
         //some more tests to be done later
       });
     });

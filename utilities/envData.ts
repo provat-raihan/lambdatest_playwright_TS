@@ -6,6 +6,8 @@ export class EnvData {
   readonly blogUrl: string;
   readonly loginUrl: string;
   readonly registerUrl: string;
+  readonly forgotPasswordUrl: string;
+  readonly successUrl: string;
   readonly firstName: string;
   readonly lastName: string;
   readonly telephone: string;
@@ -33,6 +35,7 @@ export class EnvData {
     webCameras: string;
   };
   readonly myAccountItems: {
+    myAccount: string;
     editAccount: string;
     password: string;
     wishList: string;
@@ -59,6 +62,8 @@ export class EnvData {
     this.blogUrl = `${process.env.BLOG_URL}`;
     this.loginUrl = `${process.env.LOGIN_URL}`;
     this.registerUrl = `${process.env.REGISTER_URL}`;
+    this.forgotPasswordUrl = `${process.env.FORGOT_PASSWORD_URL}`;
+    this.successUrl = `${process.env.SUCCESS_URL}`;
     this.firstName = `${process.env.FIRST_NAME}`;
     this.lastName = `${process.env.LAST_NAME}`;
     this.telephone = `${process.env.TELEPHONE}`;
@@ -86,6 +91,7 @@ export class EnvData {
       webCameras: `${process.env.WEB_CAMERAS}`,
     };
     this.myAccountItems = {
+      myAccount: `${process.env.MY_ACCOUNT_URL}`,
       editAccount: `${process.env.EDIT_ACCOUNT_URL}`,
       password: `${process.env.PASSWORD_URL}`,
       wishList: `${process.env.WISHLIST_URL}`,
