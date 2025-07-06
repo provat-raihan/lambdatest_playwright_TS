@@ -10,7 +10,7 @@ class loginPageTest extends ExpectedValueProvider {
 
   runTest() {
     test.describe("LoginPage functionality test", () => {
-      test.beforeEach(async ({ runner, envData, homePage }) => {
+      test.beforeEach(async ({ runner, envData, homePage,myAccountPage }) => {
         await runner.navigateTo(envData.baseUrl);
         await runner.verifyUrlContains(envData.baseUrl);
         await runner.verifyElementIsVisible(homePage.headerLogo);
@@ -24,15 +24,6 @@ class loginPageTest extends ExpectedValueProvider {
           "alt",
           homeData.header.logoAlt
         );
-      });
-
-      test("Verify login is done with valid credentials", async ({
-        runner,
-        homePage,
-        myAccountPage,
-        authHelper,
-        envData,
-      }) => {
         await runner.mouseHover(homePage.navbarItems.myAccount);
         await runner.clickOnElement(homePage.navbarItems.myAccountLogin);
 
@@ -49,10 +40,19 @@ class loginPageTest extends ExpectedValueProvider {
         await runner.verifyElementIsVisible(
           myAccountPage.loginPage.registerSectionHeader
         );
+      });
+
+      test("Verify login is done with valid credentials", async ({
+        runner,
+        myAccountPage,
+        authHelper,
+        envData,
+      }) => {
         await authHelper.login(envData.baseUrl, {
           email: envData.email,
           password: envData.password,
         });
+        await runner.verifyUrlContains(envData.myAccountItems.myAccount)
         await runner.verifyElementIsVisible(
           myAccountPage.myAccount.myAccountBreadcrumb
         );
@@ -67,32 +67,16 @@ class loginPageTest extends ExpectedValueProvider {
 
       test("Verify login can't be done with invalid email", async ({
         runner,
-        homePage,
         myAccountPage,
         authHelper,
         envData,
         fakeUser,
       }) => {
-        await runner.mouseHover(homePage.navbarItems.myAccount);
-        await runner.clickOnElement(homePage.navbarItems.myAccountLogin);
-
-        await runner.verifyElementIsVisible(
-          myAccountPage.loginPage.loginPageHeader
-        );
-        await runner.verifyElementIsVisible(
-          myAccountPage.myAccount.myAccountBreadcrumbActive
-        );
-        await runner.verifyToHaveExactText(
-          myAccountPage.myAccount.myAccountBreadcrumbActive,
-          myAccountData.loginBreadcrumbText
-        );
-        await runner.verifyElementIsVisible(
-          myAccountPage.loginPage.registerSectionHeader
-        );
         await authHelper.login(envData.baseUrl, {
           email: fakeUser.email,
           password: envData.password,
         });
+        await runner.verifyUrlContains(envData.myAccountItems.myAccount)
         await runner.verifyElementIsVisible(
           myAccountPage.loginPage.loginPageDangerWarningSection
         );
@@ -104,32 +88,16 @@ class loginPageTest extends ExpectedValueProvider {
 
       test("Verify login can't be done with invalid password", async ({
         runner,
-        homePage,
         myAccountPage,
         authHelper,
         envData,
         fakeUser,
       }) => {
-        await runner.mouseHover(homePage.navbarItems.myAccount);
-        await runner.clickOnElement(homePage.navbarItems.myAccountLogin);
-
-        await runner.verifyElementIsVisible(
-          myAccountPage.loginPage.loginPageHeader
-        );
-        await runner.verifyElementIsVisible(
-          myAccountPage.myAccount.myAccountBreadcrumbActive
-        );
-        await runner.verifyToHaveExactText(
-          myAccountPage.myAccount.myAccountBreadcrumbActive,
-          myAccountData.loginBreadcrumbText
-        );
-        await runner.verifyElementIsVisible(
-          myAccountPage.loginPage.registerSectionHeader
-        );
         await authHelper.login(envData.baseUrl, {
           email: envData.email,
           password: fakeUser.password,
         });
+        await runner.verifyUrlContains(envData.myAccountItems.myAccount)
         await runner.verifyElementIsVisible(
           myAccountPage.loginPage.loginPageDangerWarningSection
         );
@@ -141,31 +109,15 @@ class loginPageTest extends ExpectedValueProvider {
 
       test("Verify login can't be done with proper warning with empty fields", async ({
         runner,
-        homePage,
         myAccountPage,
         authHelper,
         envData,
       }) => {
-        await runner.mouseHover(homePage.navbarItems.myAccount);
-        await runner.clickOnElement(homePage.navbarItems.myAccountLogin);
-
-        await runner.verifyElementIsVisible(
-          myAccountPage.loginPage.loginPageHeader
-        );
-        await runner.verifyElementIsVisible(
-          myAccountPage.myAccount.myAccountBreadcrumbActive
-        );
-        await runner.verifyToHaveExactText(
-          myAccountPage.myAccount.myAccountBreadcrumbActive,
-          myAccountData.loginBreadcrumbText
-        );
-        await runner.verifyElementIsVisible(
-          myAccountPage.loginPage.registerSectionHeader
-        );
         await authHelper.login(envData.baseUrl, {
           email: "",
           password: "",
         });
+        await runner.verifyUrlContains(envData.myAccountItems.myAccount)
         await runner.verifyElementIsVisible(
           myAccountPage.loginPage.loginPageDangerWarningSection
         );
@@ -177,32 +129,16 @@ class loginPageTest extends ExpectedValueProvider {
 
       test("Verify warning message when login attempted more than 5 times", async ({
         runner,
-        homePage,
         myAccountPage,
         authHelper,
         envData,
         fakeUser,
       }) => {
-        await runner.mouseHover(homePage.navbarItems.myAccount);
-        await runner.clickOnElement(homePage.navbarItems.myAccountLogin);
-
-        await runner.verifyElementIsVisible(
-          myAccountPage.loginPage.loginPageHeader
-        );
-        await runner.verifyElementIsVisible(
-          myAccountPage.myAccount.myAccountBreadcrumbActive
-        );
-        await runner.verifyToHaveExactText(
-          myAccountPage.myAccount.myAccountBreadcrumbActive,
-          myAccountData.loginBreadcrumbText
-        );
-        await runner.verifyElementIsVisible(
-          myAccountPage.loginPage.registerSectionHeader
-        );
         await authHelper.login(envData.baseUrl, {
           email: fakeUser.email,
           password: fakeUser.password,
         });
+        
         await authHelper.login(envData.baseUrl, {
           email: fakeUser.email,
           password: fakeUser.password,
@@ -233,27 +169,13 @@ class loginPageTest extends ExpectedValueProvider {
       });
       test("Verify forgotten password button directs to the correct page", async ({
         runner,
-        homePage,
         myAccountPage,
+        envData
       }) => {
-        await runner.mouseHover(homePage.navbarItems.myAccount);
-        await runner.clickOnElement(homePage.navbarItems.myAccountLogin);
-
-        await runner.verifyElementIsVisible(
-          myAccountPage.loginPage.loginPageHeader
-        );
-        await runner.verifyElementIsVisible(
-          myAccountPage.myAccount.myAccountBreadcrumbActive
-        );
-        await runner.verifyToHaveExactText(
-          myAccountPage.myAccount.myAccountBreadcrumbActive,
-          myAccountData.loginBreadcrumbText
-        );
-        await runner.verifyElementIsVisible(
-          myAccountPage.loginPage.registerSectionHeader
-        );
         await runner.clickOnElement(myAccountPage.loginPage.loginPageForgottenPasswordButton)
-
+        await runner.verifyUrlContains(
+          envData.forgotPasswordUrl
+        );
         await runner.verifyElementIsVisible(
           myAccountPage.forgottenPasswordPage.forgottenPasswordPageHeader
         );
@@ -283,26 +205,12 @@ class loginPageTest extends ExpectedValueProvider {
         envData,
         authHelper
       }) => {
-        await runner.mouseHover(homePage.navbarItems.myAccount);
-        await runner.clickOnElement(homePage.navbarItems.myAccountLogin);
-
-        await runner.verifyElementIsVisible(
-          myAccountPage.loginPage.loginPageHeader
-        );
-        await runner.verifyElementIsVisible(
-          myAccountPage.myAccount.myAccountBreadcrumbActive
-        );
-        await runner.verifyToHaveExactText(
-          myAccountPage.myAccount.myAccountBreadcrumbActive,
-          myAccountData.loginBreadcrumbText
-        );
-        await runner.verifyElementIsVisible(
-          myAccountPage.loginPage.registerSectionHeader
-        );
+        
         await authHelper.login(envData.baseUrl, {
           email: envData.email,
           password: envData.password,
         });
+        await runner.verifyUrlContains(envData.myAccountItems.myAccount)
         await runner.verifyElementIsVisible(
           myAccountPage.myAccount.myAccountBreadcrumb
         );

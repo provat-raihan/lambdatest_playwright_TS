@@ -34,7 +34,7 @@ class changePasswordTest extends ExpectedValueProvider {
           );
           await runner.mouseHover(homePage.navbarItems.myAccount);
           await runner.clickOnElement(homePage.navbarItems.myAccountRegister);
-
+          await runner.verifyUrlContains(envData.registerUrl);
           await runner.verifyElementIsVisible(
             myAccountPage.registerPage.registerPageHeader
           );
@@ -54,6 +54,7 @@ class changePasswordTest extends ExpectedValueProvider {
             passwordConfirm: fakeUser.password,
             newsletterSubscribe: fakeUser.newsletterSubscribe,
           });
+          await runner.verifyUrlContains(envData.successUrl);
           await runner.verifyElementIsVisible(
             myAccountPage.myAccount.myAccountBreadcrumbActive
           );
@@ -71,6 +72,7 @@ class changePasswordTest extends ExpectedValueProvider {
           await runner.clickOnElement(
             myAccountPage.successPage.successPageContinueButton
           );
+          await runner.verifyUrlContains(envData.myAccountItems.myAccount);
           await runner.clickOnElement(myAccountPage.sidebarOptions.password);
           await runner.verifyElementIsVisible(
             myAccountPage.changePasswordPage.changePasswordPageHeader
@@ -88,6 +90,7 @@ class changePasswordTest extends ExpectedValueProvider {
         runner,
         myAccountPage,
         fakeUser,
+        envData,
       }) => {
         await runner.fillInputBox(
           myAccountPage.changePasswordPage.passwordInputField,
@@ -100,6 +103,7 @@ class changePasswordTest extends ExpectedValueProvider {
         await runner.clickOnElement(
           myAccountPage.changePasswordPage.continueButton
         );
+        await runner.verifyUrlContains(envData.myAccountItems.myAccount);
         await runner.verifyElementIsVisible(
           myAccountPage.myAccount.myAccountHeader
         );
@@ -121,10 +125,12 @@ class changePasswordTest extends ExpectedValueProvider {
       test("Verify  back button works properly", async ({
         runner,
         myAccountPage,
+        envData,
       }) => {
         await runner.clickOnElement(
           myAccountPage.changePasswordPage.backButton
         );
+        await runner.verifyUrlContains(envData.myAccountItems.myAccount);
         await runner.verifyElementIsVisible(
           myAccountPage.myAccount.myAccountHeader
         );

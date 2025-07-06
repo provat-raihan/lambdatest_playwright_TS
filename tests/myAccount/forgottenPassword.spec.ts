@@ -43,6 +43,9 @@ class forgottenPasswordTest extends ExpectedValueProvider {
         await runner.clickOnElement(
           myAccountPage.loginPage.loginPageForgottenPasswordButton
         );
+        await runner.verifyUrlContains(
+          envData.forgotPasswordUrl
+        );
 
         await runner.verifyElementIsVisible(
           myAccountPage.forgottenPasswordPage.forgottenPasswordPageHeader
@@ -79,6 +82,7 @@ class forgottenPasswordTest extends ExpectedValueProvider {
           myAccountPage.forgottenPasswordPage
             .forgottenPasswordPageContinueButton
         );
+        await runner.verifyUrlContains(envData.loginUrl)
         await runner.verifyElementIsVisible(
           myAccountPage.loginPage.loginPageHeader
         );
