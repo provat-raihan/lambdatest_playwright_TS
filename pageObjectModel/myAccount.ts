@@ -55,7 +55,6 @@ export class MyAccountPage {
     loginPageDangerWarningSection: Locator;
   };
   readonly successPage: {
-    
     successPageHeader: Locator;
     successPageContinueButton: Locator;
   };
@@ -112,12 +111,10 @@ export class MyAccountPage {
     backButton: Locator;
     passwordFieldWarning: Locator;
     confirmPasswordFieldWarning: Locator;
-
   };
   readonly logoutPage: {
     logoutPageHeader: Locator;
     continueButton: Locator;
-
   };
 
   constructor(page: Page) {
@@ -284,24 +281,22 @@ export class MyAccountPage {
       lastNameWarning: page.getByText("Last Name must be between 1"),
       emailWarning: page.getByText("E-Mail Address does not"),
     };
-<<<<<<< HEAD
     this.changePasswordPage = {
-      changePasswordPageHeader: page.getByRole('heading', { name: 'Change Password' }),
-      passwordInputField: page.getByRole('textbox', { name: 'Password*' }),
-      confirmPasswordInputField: page.getByRole('textbox', { name: 'Password Confirm*' }),
-      continueButton: page.getByRole('button', { name: 'Continue' }),
-      backButton: page.getByRole('link', { name: ' Back' }),
-      passwordFieldWarning: page.getByText('Password must be between 4'),
-      confirmPasswordFieldWarning: page.getByText('Password confirmation does'),
-
+      changePasswordPageHeader: page.getByRole("heading", {
+        name: "Change Password",
+      }),
+      passwordInputField: page.getByRole("textbox", { name: "Password*" }),
+      confirmPasswordInputField: page.getByRole("textbox", {
+        name: "Password Confirm*",
+      }),
+      continueButton: page.getByRole("button", { name: "Continue" }),
+      backButton: page.getByRole("link", { name: " Back" }),
+      passwordFieldWarning: page.getByText("Password must be between 4"),
+      confirmPasswordFieldWarning: page.getByText("Password confirmation does"),
     };
     this.logoutPage = {
-      logoutPageHeader: page.getByRole('heading', { name: ' Account Logout' }),
-      continueButton: page.getByRole('link', { name: 'Continue' }),
-
+      logoutPageHeader: page.getByRole("heading", { name: " Account Logout" }),
+      continueButton: page.getByRole("link", { name: "Continue" }),
     };
-    
-=======
->>>>>>> 1f53113 (fixed code)
   }
 }
