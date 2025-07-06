@@ -1,28 +1,6 @@
 {
-  "loginBreadcrumbText": "Login",
-  "logoutBreadcrumbText": "Logout",
-  "registerBreadcrumbText": "Register",
-  "changePasswordBreadcrumbText": "Change Password",
-  "forgottenPasswordBreadcrumbText": "Forgotten Password",
-  "addressBookBreadcrumbText": "Address Book",
-  "wishListBreadcrumbText": "My Wish List",
-  "notificationBreadcrumbText": "Subscribed products",
-  "orderHistoryBreadcrumbText": "Order History",
-  "downloadsBreadcrumbText": "Downloads",
-  "recurringPaymentsBreadcrumbText": "Recurring Payments",
-  "rewardPointsBreadcrumbText": "Reward Points",
-  "productReturnsBreadcrumbText": "Product Returns",
-  "transactionsBreadcrumbText": "Your Transactions",
-  "newsletterBreadcrumbText": "Newsletter",
-  "giftCertificateBreadcrumbText": "Gift Certificate",
-  "successBreadcrumbText": "Success",
-  "accountBreadcrumbText": "Account",
-  "affiliateBreadcrumbText": "Affiliate",
-  "affiliateTrackingBreadcrumbText": "Affiliate Tracking",
-  "editAccountBreadcrumbText": "Edit Information",
-
-  "login": {
     "loginBreadcrumbText": "Login",
+<<<<<<< HEAD
     "loginFormHeader": "Returning Customer",
     "registerFormHeader": "New Customer",
     "loginPageInvalidCredentialWarningText": "Warning: No match for E-Mail Address and/or Password.",
@@ -69,4 +47,66 @@
     "confirmPasswordFieldWarningText": "Password confirmation does not match password!"
 
 }
+=======
+    "logoutBreadcrumbText": "Logout",
+    "registerBreadcrumbText": "Register",
+    "changePasswordBreadcrumbText": "Change Password",
+    "forgottenPasswordBreadcrumbText": "Forgotten Password",
+    "addressBookBreadcrumbText": "Address Book",
+    "wishListBreadcrumbText": "My Wish List",
+    "notificationBreadcrumbText": "Subscribed products",
+    "orderHistoryBreadcrumbText": "Order History",
+    "downloadsBreadcrumbText": "Downloads",
+    "recurringPaymentsBreadcrumbText": "Recurring Payments",
+    "rewardPointsBreadcrumbText": "Reward Points",
+    "productReturnsBreadcrumbText": "Product Returns",
+    "transactionsBreadcrumbText": "Your Transactions",
+    "newsletterBreadcrumbText": "Newsletter",
+    "giftCertificateBreadcrumbText": "Gift Certificate",
+    "successBreadcrumbText": "Success",
+    "accountBreadcrumbText": "Account",
+    "affiliateBreadcrumbText": "Affiliate",
+    "affiliateTrackingBreadcrumbText": "Affiliate Tracking",
+    "editAccountBreadcrumbText": "Edit Information",
+    "login": {
+        "loginBreadcrumbText": "Login",
+        "loginFormHeader": "Returning Customer",
+        "registerFormHeader": "New Customer",
+        "loginPageInvalidCredentialWarningText": "Warning: No match for E-Mail Address and/or Password.",
+        "loginPageRetryLimitWarningText": "Warning: Your account has exceeded allowed number of login attempts. Please try again in 1 hour."
+    },
+    "register": {
+        "registerFormHeader": "Register Account",
+        "warningTextToAgreePolicy": " Warning: You must agree to the Privacy Policy!",
+        "warningTextAlreadyRegistered": " Warning: E-Mail Address is already registered!",
+        "successOfAccountCreation": " Your Account Has Been Created!",
+        "firstNameWarningText": "First Name must be between 1 and 32 characters!",
+        "lastNameWarningText": "Last Name must be between 1 and 32 characters!",
+        "emailWarningText": "E-Mail Address does not appear to be valid!",
+        "telephoneWarningText": "Telephone must be between 3 and 32 characters!",
+        "telephoneGuideMessageText": "Enter valid phone number with country code!",
+        "passwordConfirmationWarningText": "Password confirmation does not match password!",
+        "passwordWarningText": "Password must be between 4 and 20 characters!",
+        "invalidEmailWarning": "Please include an '@' in the email address."
+    },
+    "forgottenPassword": {
+        "forgottenPasswordHeaderText": "Forgot Your Password?",
+        "forgottenPasswordEmailLegendText": "Your E-Mail Address",
+        "forgottenPasswordSuccessText": "An email with a confirmation link has been sent your email address.",
+        "forgottenPasswordInvalidEmailText": "Warning: The E-Mail Address was not found in our records, please try again!"
+    },
+    "myAccount": {
+        "myAccountHeaderText": "My Account",
+        "myOrdersHeaderText": "My Orders",
+        "myAffiliateAccountHeaderText": "My Affiliate Account"
+    },
+    "registerAffiliateAccountPage": {
+        "radioButtonOneText": "cheque",
+        "radioButtonTwoText": "paypal",
+        "radioButtonThreeText": "bank"
+    },
+    "editAccountPage": {
+        "accountUpdateWarningText": " Success: Your account has been successfully updated."
+    }
+>>>>>>> 1f53113 (fixed code)
 }

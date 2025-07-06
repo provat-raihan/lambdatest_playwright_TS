@@ -11,20 +11,8 @@ class HomePageTest extends ExpectedValueProvider {
 
   runTest() {
     test.describe("Homepage functionality test", () => {
-      test.beforeEach(async ({ runner, envData, homePage }) => {
-        await runner.navigateTo(envData.baseUrl);
-        await runner.verifyUrlContains(envData.baseUrl);
-        await runner.verifyElementIsVisible(homePage.headerLogo);
-        await runner.validateAttribute(
-          homePage.headerLogo,
-          "src",
-          homeData.header.logoSrc
-        );
-        await runner.validateAttribute(
-          homePage.headerLogo,
-          "alt",
-          homeData.header.logoAlt
-        );
+      test.beforeEach(async ({ homePageNavigationHelper }) => {
+        await homePageNavigationHelper.navigateToHomePage();
       });
 
       test("Verify something", async ({ runner, homePage }) => {

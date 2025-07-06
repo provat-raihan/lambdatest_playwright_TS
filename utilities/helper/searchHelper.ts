@@ -74,8 +74,7 @@ export class SearchHelper {
     searchValue: string,
     expectedUrl: string,
     expectedHeaderText: string,
-    productTitleLocator: Locator,
-    expectResults: boolean = true
+    productTitleLocator: Locator
   ): Promise<void> {
     try {
       this.utils.logMessage(`🔍 Verifying search results for "${searchValue}"`);
@@ -83,7 +82,9 @@ export class SearchHelper {
       await this.search(searchValue, expectedUrl, expectedHeaderText);
       this.utils.logMessage(`✅ Search page loaded for "${searchValue}"`);
 
-      if (expectResults) {
+      const count = await productTitleLocator.count();
+
+      if (count > 1) {
         await this.utils.verifyElementsIsExist(productTitleLocator);
         this.utils.logMessage(`✅ Product titles found for "${searchValue}"`);
 

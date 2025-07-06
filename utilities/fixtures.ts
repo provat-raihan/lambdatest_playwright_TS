@@ -12,7 +12,8 @@ import { SearchHelper } from "./helper/searchHelper.ts";
 import { Products } from "../pageObjectModel/products.ts";
 import { ProductDetailsPage } from "../pageObjectModel/productDetails.page.ts";
 import { ProductComparePage } from "../pageObjectModel/productCompare.page.ts";
-import { NavigationHelper } from "./helper/navigationHelper.ts";
+import { NavbarNavigationHelper } from "./helper/navbarNavigationHelper.ts";
+import { HomePageNavigationHelper } from "./helper/homePageNavigationHelper.ts";
 
 const test = base.extend<{
   runner: Utils;
@@ -28,7 +29,8 @@ const test = base.extend<{
   products: Products;
   productDetailsPage: ProductDetailsPage;
   productComparePage: ProductComparePage;
-  navigationHelper: NavigationHelper;
+  navbarNavigationHelper: NavbarNavigationHelper;
+  homePageNavigationHelper: HomePageNavigationHelper;
 }>({
   runner: async ({ page }: { page: Page }, use) => {
     const utilsInstance = new Utils(page);
@@ -92,9 +94,13 @@ const test = base.extend<{
     const productComparePageInstance = new ProductComparePage(page);
     await use(productComparePageInstance);
   },
-  navigationHelper: async ({ page }: { page: Page }, use) => {
-    const navigationHelperInstance = new NavigationHelper(page);
-    await use(navigationHelperInstance);
+  navbarNavigationHelper: async ({ page }: { page: Page }, use) => {
+    const navbarNavigationHelperInstance = new NavbarNavigationHelper(page);
+    await use(navbarNavigationHelperInstance);
+  },
+  homePageNavigationHelper: async ({ page }: { page: Page }, use) => {
+    const homePageHelperInstance = new HomePageNavigationHelper(page);
+    await use(homePageHelperInstance);
   },
 });
 
