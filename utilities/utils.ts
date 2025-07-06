@@ -779,93 +779,89 @@ Actual message:      "${trimmedActual}"`;
     }
   }
 
-  async assertExpectedTextsInLocator(
-    locator: Locator,
-    expectedTexts: Record<string, string> | string[],
-    limit: number
+  async verifyAnchorLinks(containerLocator: Locator, expectedLinks: string[]) {
+    const count = await containerLocator.count();
+    expect(count).toBe(expectedLinks.length);
+
+    for (let i = 0; i < count; i++) {
+      const anchor = containerLocator.nth(i).locator("a");
+      const actualHref = await anchor.getAttribute("href");
+      console.log(
+        `Checking item ${i}: Expected = ${expectedLinks[i]}, Actual = ${actualHref}`
+      );
+      await expect(anchor).toHaveAttribute("href", expectedLinks[i]);
+    }
+  }
+
+  async selectRadioOption(radioGroup: Locator, value: string): Promise<void> {
+    const count = await radioGroup.count();
+    logger.info(`Found ${count} radio buttons. Looking for value: "${value}"`);
+
+    for (let i = 0; i < count; i++) {
+      const radio = radioGroup.nth(i);
+      const radioValue = await radio.getAttribute("value");
+
+      logger.info(`Checking radio index [${i}]: value="${radioValue}"`);
+
+      if (radioValue === value) {
+        try {
+          await radio.check();
+          logger.info(
+            `✅ Successfully selected radio button with value: "${value}"`
+          );
+          return;
+        } catch (error) {
+          logger.error(
+            `❌ Failed to check radio button with value "${value}": ${error}`
+          );
+          throw error;
+        }
+      }
+    }
+
+    const errorMsg = `❌ Radio button with value "${value}" not found among ${count} options.`;
+    logger.error(errorMsg);
+    throw new Error(errorMsg);
+  }
+
+  async verifyProductTitlesContain(
+    productTitleLocator: Locator,
+    expectedValue: string
   ): Promise<void> {
     try {
-      // Ensure at least 1 product is rendered before continuing
+      const count = await productTitleLocator.count();
+      logger.info(
+        `🔍 Found ${count} product titles. Verifying each contains: "${expectedValue}"`
+      );
 
-      await expect(locator).toHaveCount(limit, { timeout: 10000 });
-
-      const count = await locator.count();
       if (count === 0) {
-        const errorMsg = `No elements found in locator for asserting texts.`;
-        this.logMessage(errorMsg, "error");
-        await this.captureScreenshotOnFailure("assertExpectedTextsInLocator");
-        throw new Error(errorMsg);
+        const emptyError = `❌ No product titles found to verify.`;
+        logger.error(emptyError);
+        throw new Error(emptyError);
       }
 
-      const expected = Array.isArray(expectedTexts)
-        ? expectedTexts
-        : Object.values(expectedTexts);
+      for (let i = 0; i < count; i++) {
+        const titleElement = productTitleLocator.nth(i);
+        const title = await titleElement.innerText();
 
-      const actual = await locator.allTextContents();
-      const topResults = actual.slice(0, limit).map((t) => t.trim());
+        logger.info(`🔎 Checking product [${i}]: "${title}"`);
 
-      for (const text of expected) {
-        if (!topResults.some((actualText) => actualText.includes(text))) {
-          const errorMsg = `Expected text "${text}" not found in top ${limit} results: [${topResults.join(
-            ", "
-          )}]`;
-          this.logMessage(errorMsg, "error");
-          await this.captureScreenshotOnFailure("assertExpectedTextsInLocator");
+        if (!title.toLowerCase().includes(expectedValue.toLowerCase())) {
+          const errorMsg = `❌ Product title [${i}] does not contain "${expectedValue}": "${title}"`;
+          logger.error(errorMsg);
           throw new Error(errorMsg);
         }
       }
 
-      this.logMessage(
-        `Verified expected texts ${JSON.stringify(
-          expected
-        )} are present in top ${limit} results`
+      logger.info(
+        `✅ All product titles contain the expected value: "${expectedValue}"`
       );
     } catch (error) {
-      const fallbackMsg = `Error while asserting expected texts in locator: ${
-        (error as Error).message
-      }`;
-      this.logMessage(fallbackMsg, "error");
-      await this.captureScreenshotOnFailure("assertExpectedTextsInLocator");
-      throw new Error(fallbackMsg);
-    }
-  }
-async  verifyAnchorLinks(containerLocator: Locator, expectedLinks: string[]) {
-  const count = await containerLocator.count();
-  expect(count).toBe(expectedLinks.length);
-
-  for (let i = 0; i < count; i++) {
-    const anchor = containerLocator.nth(i).locator('a');
-    const actualHref = await anchor.getAttribute('href');
-    console.log(`Checking item ${i}: Expected = ${expectedLinks[i]}, Actual = ${actualHref}`);
-    await expect(anchor).toHaveAttribute('href', expectedLinks[i]);
-  }
-}
-async  selectRadioOption(radioGroup: Locator, value: string): Promise<void> {
-  const count = await radioGroup.count();
-  logger.info(`Found ${count} radio buttons. Looking for value: "${value}"`);
-
-  for (let i = 0; i < count; i++) {
-    const radio = radioGroup.nth(i);
-    const radioValue = await radio.getAttribute('value');
-
-    logger.info(`Checking radio index [${i}]: value="${radioValue}"`);
-
-    if (radioValue === value) {
-      try {
-        await radio.check();
-        logger.info(`✅ Successfully selected radio button with value: "${value}"`);
-        return;
-      } catch (error) {
-        logger.error(`❌ Failed to check radio button with value "${value}": ${error}`);
-        throw error;
-      }
+      logger.error(`❌ Error while verifying product titles: ${error}`);
+      throw error;
     }
   }
 
-  const errorMsg = `❌ Radio button with value "${value}" not found among ${count} options.`;
-  logger.error(errorMsg);
-  throw new Error(errorMsg);
-}
   // <------------------------------------------------------------ X ------------------------------------------------------------>
   // To Test Utils
   // ---------------------------------------------------------------------------------------------------------------------------------

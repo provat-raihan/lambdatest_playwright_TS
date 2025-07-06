@@ -1,6 +1,7 @@
 import { Page, Locator } from "@playwright/test";
 
 export class HomePage {
+  readonly page: Page;
   readonly headerLogo: Locator;
   readonly compareButton: Locator;
   readonly wishlistButton: Locator;
@@ -51,6 +52,7 @@ export class HomePage {
   };
 
   constructor(page: Page) {
+    this.page = page;
     this.headerLogo = page.locator("#entry_217821 img");
     this.compareButton = page.getByRole("link", {
       name: "Compare",
@@ -115,5 +117,11 @@ export class HomePage {
         .getByRole("heading", { name: "Cart close" })
         .getByLabel("close"),
     };
+  }
+  getAllCategoriesDropdownButtonWithText(category: string): Locator {
+    const escapedCategory = category.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return this.page.getByRole("button", {
+      name: new RegExp(`${escapedCategory}.*`, "i"),
+    });
   }
 }

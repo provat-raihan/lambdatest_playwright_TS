@@ -6,7 +6,6 @@ import specialOfferData from "../../testData/specialOffer.json";
 import blogData from "../../testData/blog.json";
 import myAccountData from "../../testData/myAccount.json";
 import searchResultData from "../../testData/searchResult.json";
-import { NavigationHelper } from "../../utilities/helper/navigationHelper";
 import productDetailsData from "../../testData/productDetails.json";
 import productCompareData from "../../testData/productsCompare.json";
 
@@ -304,17 +303,14 @@ class HeaderTest extends ExpectedValueProvider {
             });
             await runner.verifyElementIsVisible(categoryLink);
             await runner.clickOnElement(categoryLink);
-
-            const escapedCategory = await runner.escapeRegExp(category);
-            const updatedButton = page.getByRole("button", {
-              name: new RegExp(`${escapedCategory}.*`, "i"),
-            });
+            const updatedButton =
+              homePage.getAllCategoriesDropdownButtonWithText(category);
             await runner.verifyElementIsVisible(updatedButton);
             await runner.verifyContainText(updatedButton, category);
           }
         });
 
-        test("Verify that the search input field is enabled and user can type anything into it", async ({
+        test("Verify that the search box accepts input from the user.", async ({
           runner,
           homePage,
         }) => {
@@ -325,194 +321,131 @@ class HeaderTest extends ExpectedValueProvider {
             "placeholder",
             homeData.header.searchBar.placeholderText
           );
-          await runner.fillInputBox(homePage.searchBar.inputField, "anything");
+          await runner.fillInputBox(
+            homePage.searchBar.inputField,
+            homeData.header.searchBar.userAcceptValue
+          );
+          await runner.verifyToHaveValue(
+            homePage.searchBar.inputField,
+            homeData.header.searchBar.userAcceptValue
+          );
         });
 
-        // Message: Skipping due to flakiness in full run mode; passes reliably in single run
-        // todo: Have to fix this later
-        test.skip("Verify empty search navigates to search results page and displays all products for each category", async ({
-          runner,
-          homePage,
+        test("Verify that the search results are relevant to the search query.", async ({
           envData,
-          products,
           searchHelper,
+          products,
         }) => {
-          const value =
-            searchResultData.searchResultProducts.valueEmptyResults.value;
-          const expectedTexts =
-            searchResultData.searchResultProducts.valueEmptyResults
-              .expectedTextsOfPaginationOne;
           const expectedHeader = searchResultData.searchResultPageHeaderText;
-          const expectedUrl = envData.searchResultUrl + value;
+          const expectedUrl = envData.searchResultUrl;
 
-          const categoryOptions = [
-            homeData.header.searchBar.allCategoriesText.allCategories,
-            homeData.header.searchBar.allCategoriesText.desktops,
-            homeData.header.searchBar.allCategoriesText.laptops,
-            homeData.header.searchBar.allCategoriesText.components,
-            homeData.header.searchBar.allCategoriesText.tablets,
-            homeData.header.searchBar.allCategoriesText.software,
-            homeData.header.searchBar.allCategoriesText.phonesAndPDAs,
-            homeData.header.searchBar.allCategoriesText.cameras,
-            homeData.header.searchBar.allCategoriesText.mp3Players,
+          const validValues = searchResultData.searchResultProducts.validValues;
+
+          const searchTerms = [
+            validValues.valueIpod,
+            validValues.valueIphone,
+            validValues.valueMacbook,
           ];
 
-          for (const category of categoryOptions) {
-            await test.step(`🔎 Search for "${value}" in "${category}"`, async () => {
-              await runner.verifyElementIsVisible(
-                homePage.searchBar.allCategoriesDropdownButton
-              );
-              await runner.clickOnElement(
-                homePage.searchBar.allCategoriesDropdownButton
-              );
-              const categoryOption = homePage.searchBar.allCategoriesLinks
-                .filter({ hasText: category })
-                .first();
-              await runner.clickOnElement(categoryOption);
-              await searchHelper.search(value, expectedUrl, expectedHeader);
-              await runner.assertExpectedTextsInLocator(
-                products.productTitles,
-                expectedTexts,
-                15
+          for (const searchTerm of searchTerms) {
+            await test.step(`🔎 Search for "${searchTerm}" and expect relevant results`, async () => {
+              await searchHelper.verifySearchResults(
+                searchTerm,
+                expectedUrl + searchTerm,
+                expectedHeader + searchTerm,
+                products.productTitles
               );
             });
           }
         });
 
-        test("Verify valid search 'ipod' returns relevant results", async ({
-          runner,
+        test("Displays appropriate message for invalid search terms", async ({
           envData,
           searchHelper,
           products,
         }) => {
-          const value =
-            searchResultData.searchResultProducts.validResultSearchOne.value;
-          const expectedTexts =
-            searchResultData.searchResultProducts.validResultSearchOne
-              .expectedTextsOfPaginationOne;
-          const expectedHeader =
-            searchResultData.searchResultPageHeaderText + value;
-          const expectedUrl = envData.searchResultUrl + value;
+          const expectedHeader = searchResultData.searchResultPageHeaderText;
+          const expectedUrl = envData.searchResultUrl;
+          const { valueComputer, valueLaptop } =
+            searchResultData.searchResultProducts.invalidValues;
 
-          await test.step(`🔎 Search for "${value}"`, async () => {
-            await searchHelper.search(value, expectedUrl, expectedHeader);
-            await runner.verifyElementsIsExist(products.productTitles);
-
-            const count = await products.productTitles.count();
-
-            await runner.assertExpectedTextsInLocator(
-              products.productTitles,
-              expectedTexts,
-              count
-            );
-          });
+          for (const value of [valueComputer, valueLaptop]) {
+            await test.step(`🔎 Search for "${value}" and expect no results`, async () => {
+              await searchHelper.verifySearchResults(
+                value,
+                expectedUrl + value,
+                expectedHeader + value,
+                products.productTitles,
+                false
+              );
+            });
+          }
         });
 
-        test("Verify valid search 'iphone' return relevant results", async ({
-          runner,
+        test("Verify that the search functionality works correctly when multiple search terms are used", async ({
           envData,
           searchHelper,
           products,
         }) => {
-          const value =
-            searchResultData.searchResultProducts.validResultSearchTwo.value;
-          const expectedTexts =
-            searchResultData.searchResultProducts.validResultSearchTwo
-              .expectedTextsOfPaginationOne;
-          const expectedHeader =
-            searchResultData.searchResultPageHeaderText + value;
-          const expectedUrl = envData.searchResultUrl + value;
+          const { macbookPro, palmTreo } =
+            searchResultData.searchResultProducts.multipleTerm;
+          const { randomJunk, xyz123abc } =
+            searchResultData.searchResultProducts.multipleTerm;
 
-          await test.step(`🔎 Search for "${value}"`, async () => {
-            await searchHelper.search(value, expectedUrl, expectedHeader);
-            await runner.verifyElementsIsExist(products.productTitles);
+          const expectedHeader = searchResultData.searchResultPageHeaderText;
+          const expectedUrl = envData.searchResultUrl;
 
-            const count = await products.productTitles.count();
+          const validSearches = [
+            {
+              value: macbookPro,
+              description:
+                'Search for "macbook pro" should return relevant results',
+            },
+            {
+              value: palmTreo,
+              description:
+                'Search for "palm treo" should return relevant results',
+            },
+          ];
 
-            await runner.assertExpectedTextsInLocator(
-              products.productTitles,
-              expectedTexts,
-              count
-            );
-          });
-        });
+          for (const { value, description } of validSearches) {
+            const encoded = value.replace(/\s+/g, "+");
+            await test.step(`✅ ${description}`, async () => {
+              await searchHelper.verifySearchResults(
+                value,
+                expectedUrl + encoded,
+                expectedHeader + value,
+                products.productTitles,
+                true
+              );
+            });
+          }
 
-        test("Verify valid search 'macbook' returns relevant results", async ({
-          runner,
-          envData,
-          searchHelper,
-          products,
-        }) => {
-          const value =
-            searchResultData.searchResultProducts.validResultSearchThree.value;
+          const invalidSearches = [
+            {
+              value: randomJunk,
+              description:
+                'Search for "random junk" should show no results message',
+            },
+            {
+              value: xyz123abc,
+              description:
+                'Search for "xyz 123 abc" should show no results message',
+            },
+          ];
 
-          const expectedTexts =
-            searchResultData.searchResultProducts.validResultSearchThree
-              .expectedTextsOfPaginationOne;
-
-          const expectedHeader =
-            searchResultData.searchResultPageHeaderText + value;
-
-          const expectedUrl = envData.searchResultUrl + value;
-
-          await test.step(`🔎 Search for "${value}"`, async () => {
-            await searchHelper.search(value, expectedUrl, expectedHeader);
-            await runner.verifyElementsIsExist(products.productTitles);
-
-            const count = await products.productTitles.count();
-
-            await runner.assertExpectedTextsInLocator(
-              products.productTitles,
-              expectedTexts,
-              count
-            );
-          });
-        });
-
-        test("Verify invalid search 'computer' return expected message", async ({
-          runner,
-          envData,
-          searchHelper,
-          searchResultPage,
-        }) => {
-          const value =
-            searchResultData.searchResultProducts.invalidSearchOne.value;
-          const expectedHeader =
-            searchResultData.searchResultPageHeaderText + value;
-          const expectedUrl = envData.searchResultUrl + value;
-          const expectedNoResultText = searchResultData.expectedNoResultText;
-
-          await test.step(`🔎 Search for "${value}"`, async () => {
-            await searchHelper.search(value, expectedUrl, expectedHeader);
-            await runner.verifyElementIsVisible(searchResultPage.noResultText);
-            await runner.verifyContainText(
-              searchResultPage.noResultText,
-              expectedNoResultText
-            );
-          });
-        });
-
-        test("Verify invalid search 'laptop' returns expected message", async ({
-          runner,
-          envData,
-          searchHelper,
-          searchResultPage,
-        }) => {
-          const value =
-            searchResultData.searchResultProducts.invalidSearchTwo.value;
-          const expectedHeader =
-            searchResultData.searchResultPageHeaderText + value;
-          const expectedUrl = envData.searchResultUrl + value;
-          const expectedNoResultText = searchResultData.expectedNoResultText;
-
-          await test.step(`🔎 Search for "${value}"`, async () => {
-            await searchHelper.search(value, expectedUrl, expectedHeader);
-            await runner.verifyElementIsVisible(searchResultPage.noResultText);
-            await runner.verifyContainText(
-              searchResultPage.noResultText,
-              expectedNoResultText
-            );
-          });
+          for (const { value, description } of invalidSearches) {
+            const encoded = value.replace(/\s+/g, "+");
+            await test.step(`❌ ${description}`, async () => {
+              await searchHelper.verifySearchResults(
+                value,
+                expectedUrl + encoded,
+                expectedHeader + value,
+                products.productTitles,
+                false
+              );
+            });
+          }
         });
 
         test("Verify while typing on searchbar should have the expected suggestions and user can navigate to that product details page by clicking on that product", async ({
@@ -618,8 +551,8 @@ class HeaderTest extends ExpectedValueProvider {
           );
           await runner.clickOnElement(homePage.cartModal.crossButton);
         });
-      });
-    }); // end of main describe block
+      }); // End of cart button test describe block
+    }); // End of main describe block
   }
 }
 
