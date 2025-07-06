@@ -276,6 +276,59 @@ class loginPageTest extends ExpectedValueProvider {
           myAccountData.forgottenPasswordBreadcrumbText
         );
       });
+      test("Verify logout button successfully logs out the user", async ({
+        runner,
+        homePage,
+        myAccountPage,
+        envData,
+        authHelper
+      }) => {
+        await runner.mouseHover(homePage.navbarItems.myAccount);
+        await runner.clickOnElement(homePage.navbarItems.myAccountLogin);
+
+        await runner.verifyElementIsVisible(
+          myAccountPage.loginPage.loginPageHeader
+        );
+        await runner.verifyElementIsVisible(
+          myAccountPage.myAccount.myAccountBreadcrumbActive
+        );
+        await runner.verifyToHaveExactText(
+          myAccountPage.myAccount.myAccountBreadcrumbActive,
+          myAccountData.loginBreadcrumbText
+        );
+        await runner.verifyElementIsVisible(
+          myAccountPage.loginPage.registerSectionHeader
+        );
+        await authHelper.login(envData.baseUrl, {
+          email: envData.email,
+          password: envData.password,
+        });
+        await runner.verifyElementIsVisible(
+          myAccountPage.myAccount.myAccountBreadcrumb
+        );
+        await runner.verifyElementIsVisible(
+          myAccountPage.myAccount.myAccountBreadcrumbActive
+        );
+        await runner.verifyToHaveExactText(
+          myAccountPage.myAccount.myAccountBreadcrumbActive,
+          myAccountData.accountBreadcrumbText
+        );
+        await runner.clickOnElement(myAccountPage.sidebarOptions.logout)
+        await runner.verifyElementIsVisible(myAccountPage.logoutPage.logoutPageHeader)
+        await runner.clickOnElement(myAccountPage.logoutPage.continueButton)
+        await runner.verifyUrlContains(envData.baseUrl);
+        await runner.verifyElementIsVisible(homePage.headerLogo);
+        await runner.validateAttribute(
+          homePage.headerLogo,
+          "src",
+          homeData.header.logoSrc
+        );
+        await runner.validateAttribute(
+          homePage.headerLogo,
+          "alt",
+          homeData.header.logoAlt
+        );
+      });
     });
   }
 }

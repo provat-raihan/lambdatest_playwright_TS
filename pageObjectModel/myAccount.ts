@@ -55,7 +55,7 @@ export class MyAccountPage {
     loginPageDangerWarningSection: Locator;
   };
   readonly successPage: {
-    // successPageBreadcrumbText: Locator;
+    
     successPageHeader: Locator;
     successPageContinueButton: Locator;
   };
@@ -114,6 +114,11 @@ export class MyAccountPage {
     backButton: Locator;
     passwordFieldWarning: Locator;
     confirmPasswordFieldWarning: Locator;
+
+  };
+  readonly logoutPage: {
+    logoutPageHeader: Locator;
+    continueButton: Locator;
 
   };
 
@@ -266,6 +271,11 @@ export class MyAccountPage {
       backButton: page.getByRole('link', { name: ' Back' }),
       passwordFieldWarning: page.getByText('Password must be between 4'),
       confirmPasswordFieldWarning: page.getByText('Password confirmation does'),
+
+    };
+    this.logoutPage = {
+      logoutPageHeader: page.getByRole('heading', { name: ' Account Logout' }),
+      continueButton: page.getByRole('link', { name: 'Continue' }),
 
     };
     
