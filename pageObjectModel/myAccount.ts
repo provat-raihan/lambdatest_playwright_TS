@@ -55,7 +55,7 @@ export class MyAccountPage {
     loginPageDangerWarningSection: Locator;
   };
   readonly successPage: {
-    // successPageBreadcrumbText: Locator;
+    
     successPageHeader: Locator;
     successPageContinueButton: Locator;
   };
@@ -104,6 +104,21 @@ export class MyAccountPage {
     firstNameWarning: Locator;
     lastNameWarning: Locator;
     emailWarning: Locator;
+
+  };
+  readonly changePasswordPage: {
+    changePasswordPageHeader: Locator;
+    passwordInputField: Locator;
+    confirmPasswordInputField: Locator;
+    continueButton: Locator;
+    backButton: Locator;
+    passwordFieldWarning: Locator;
+    confirmPasswordFieldWarning: Locator;
+
+  };
+  readonly logoutPage: {
+    logoutPageHeader: Locator;
+    continueButton: Locator;
 
   };
 
@@ -247,6 +262,21 @@ export class MyAccountPage {
       lastNameWarning: page.getByText('Last Name must be between 1'),
       emailWarning: page.getByText('E-Mail Address does not'),
       
+    };
+    this.changePasswordPage = {
+      changePasswordPageHeader: page.getByRole('heading', { name: 'Change Password' }),
+      passwordInputField: page.getByRole('textbox', { name: 'Password*' }),
+      confirmPasswordInputField: page.getByRole('textbox', { name: 'Password Confirm*' }),
+      continueButton: page.getByRole('button', { name: 'Continue' }),
+      backButton: page.getByRole('link', { name: ' Back' }),
+      passwordFieldWarning: page.getByText('Password must be between 4'),
+      confirmPasswordFieldWarning: page.getByText('Password confirmation does'),
+
+    };
+    this.logoutPage = {
+      logoutPageHeader: page.getByRole('heading', { name: ' Account Logout' }),
+      continueButton: page.getByRole('link', { name: 'Continue' }),
+
     };
     
   }

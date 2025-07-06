@@ -62,6 +62,11 @@
 "editAccountPage":{
     "accountUpdateWarningText": " Success: Your account has been successfully updated."
     
+},
+"changePasswordPage":{
+    "passwordUpdateWarningText": " Success: Your password has been successfully updated.",
+    "passwordFieldWarningText": "Password must be between 4 and 20 characters!",
+    "confirmPasswordFieldWarningText": "Password confirmation does not match password!"
 
 }
 }
