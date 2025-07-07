@@ -12,7 +12,7 @@ export interface NavigationDetails {
   stepDescription?: string;
 }
 
-export class NavigationHelper {
+export class NavbarNavigationHelper {
   private utils: Utils;
 
   constructor(page: Page) {
