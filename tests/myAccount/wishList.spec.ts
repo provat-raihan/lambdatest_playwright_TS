@@ -190,16 +190,29 @@ class wishListPageTest extends ExpectedValueProvider {
             myAccountPage.wishListPage.emptyCartMessage
           );
         });
+        //working
         test("verify that wish list shows a product when it has been added", async ({
           runner,
           myAccountPage,
-            homePage,
-          envData
+          homePage,
+          envData,
         }) => {
-            await runner.clickOnElement(homePage.navbarItems.home)
-            await runner.verifyUrlContains(envData.homeUrl)
+          await runner.clickOnElement(homePage.navbarItems.home);
+          await runner.verifyUrlContains(envData.homeUrl);
+          const whishListedProducts: string[] = [];
+          const productOne = await runner.addRandomProductToWishlist(
+            homePage.productCards.topCollectionPopular,
+            homePage.productCards.topCollectionNextButton
+          );
+          whishListedProducts.push(productOne)
+          const productTwo = await runner.addRandomProductToWishlist(
+            homePage.productCards.topProducts,
+            homePage.productCards.topProductsNextButton
+          );
+          whishListedProducts.push(productTwo)
+
+        
         });
-          
       });
       //   test.describe("Edit account info changed", () => {
       //     test.beforeEach(

@@ -824,43 +824,75 @@ Actual message:      "${trimmedActual}"`;
     throw new Error(errorMsg);
   }
 
-  async verifyProductTitlesContain(
-    productTitleLocator: Locator,
-    expectedValue: string
-  ): Promise<void> {
-    try {
-      const count = await productTitleLocator.count();
-      logger.info(
-        `🔍 Found ${count} product titles. Verifying each contains: "${expectedValue}"`
-      );
+async  addRandomProductToWishlist(
+  productCards: Locator,
+  nextButton?: Locator
+): Promise<string> {
+  try {
+    // 1. Wait for at least one product card to be visible
+    await productCards.first().waitFor({ state: 'visible', timeout: 10000 });
 
-      if (count === 0) {
-        const emptyError = `❌ No product titles found to verify.`;
-        logger.error(emptyError);
-        throw new Error(emptyError);
+    const totalCount = await productCards.count();
+    if (totalCount === 0) throw new Error('❌ No product cards found');
+
+    // 2. Randomly select index
+    const maxVisible = nextButton ? totalCount : Math.min(5, totalCount);
+    const index = Math.floor(Math.random() * maxVisible);
+    logger.info(`🎲 Selected random index: ${index} ${nextButton ? '(with carousel)' : '(visible only)'}`);
+
+    const targetCard = productCards.nth(index);
+
+    // 3. If product is hidden, use carousel to reveal it
+    if (nextButton) {
+      const maxTries = totalCount;
+      let tries = 0;
+
+      while (!(await targetCard.isVisible()) && tries < maxTries) {
+        logger.info(`➡️ Clicking 'Next' to reveal product index ${index} (try #${tries + 1})`);
+        await nextButton.click();
+        await productCards.nth(index).waitFor({ state: 'attached' });
+        await new Promise(res => setTimeout(res, 500)); // Allow carousel to transition
+        tries++;
       }
 
-      for (let i = 0; i < count; i++) {
-        const titleElement = productTitleLocator.nth(i);
-        const title = await titleElement.innerText();
-
-        logger.info(`🔎 Checking product [${i}]: "${title}"`);
-
-        if (!title.toLowerCase().includes(expectedValue.toLowerCase())) {
-          const errorMsg = `❌ Product title [${i}] does not contain "${expectedValue}": "${title}"`;
-          logger.error(errorMsg);
-          throw new Error(errorMsg);
-        }
+      if (!(await targetCard.isVisible())) {
+        const msg = `❌ Failed to reveal product at index ${index} after ${tries} attempts`;
+        logger.error(msg);
+        throw new Error(msg);
       }
-
-      logger.info(
-        `✅ All product titles contain the expected value: "${expectedValue}"`
-      );
-    } catch (error) {
-      logger.error(`❌ Error while verifying product titles: ${error}`);
-      throw error;
     }
+
+    // 4. Get product link
+    const anchor = targetCard.locator('div.image a');
+    const href = await anchor.getAttribute('href');
+    if (!href) {
+      const errorMsg = `❌ No href found at index ${index}`;
+      logger.error(errorMsg);
+      throw new Error(errorMsg);
+    }
+
+    logger.info(`🔍 Found product link: ${href}`);
+
+    // 5. Hover to reveal wishlist button
+    await targetCard.hover();
+    logger.info(`🖱️ Hovered over product card at index ${index}`);
+
+    const wishlistBtn = targetCard.locator('div.product-action button[title="Add to Wish List"]');
+
+    // 6. Wait for wishlist button to become visible after hover
+    await wishlistBtn.waitFor({ state: 'visible', timeout: 3000 });
+
+    // 7. Click the wishlist button (forcefully to avoid hover-intercept issues)
+    await wishlistBtn.click({ force: true });
+    logger.info(`❤️ Clicked 'Add to Wish List' for product at index ${index}`);
+
+    return href;
+  } catch (error) {
+    logger.error(`❌ Failed to wishlist product: ${error}`);
+    throw error;
   }
+}
+
 
   // <------------------------------------------------------------ X ------------------------------------------------------------>
   // To Test Utils

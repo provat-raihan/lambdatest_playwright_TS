@@ -50,6 +50,16 @@ export class HomePage {
     emptyMessageText: Locator;
     crossButton: Locator;
   };
+  readonly productCards: {
+    topCollectionPopular: Locator;
+    topCollectionLatest: Locator;
+    topCollectionBestSeller: Locator;
+    topCollectionNextButton: Locator;
+    topProducts: Locator;
+    topProductsNextButton: Locator;
+    under99: Locator;
+    
+  };
 
   constructor(page: Page) {
     this.page = page;
@@ -116,6 +126,42 @@ export class HomePage {
       crossButton: page
         .getByRole("heading", { name: "Cart close" })
         .getByLabel("close"),
+    };
+    this.productCards = {
+      
+      topCollectionPopular: page.locator(
+        `css=div[id="mz-product-tab-39217984-0"] div[class="product-thumb image-top"]  `
+      ),
+      topCollectionLatest: page.locator(
+        `css=div[id="mz-product-tab-39217984-1""] div[class="product-thumb image-top"]  `
+      ),
+      topCollectionBestSeller: page.locator(
+        `css=div[id="mz-product-tab-39217984-2"] div[class="product-thumb image-top"]  `
+      ),
+      topCollectionNextButton: page.locator(
+        `css=a[class="mz-swiper-nav-next"]  `
+      ),
+      topProductsNextButton: page.locator(
+        `css=div[id="mz-product-tab-37217979-0"] a[class="swiper-button-next"]  `
+      ),
+      topProducts: page.locator(
+        `css=div[id="mz-product-tab-37217979-0"] div[class="product-thumb image-top"]  `
+      ),
+      under99: page.locator(
+        `css=div[id="mz-product-tab-81217990-0"] div[class="product-thumb image-top"]  `
+      ),
+      // wishListButton: page.locator(
+      //   `css=div[id="mz-product-tab-39217984-0"] div[class="product-thumb image-top"]  div[class="product-action"] button[title="Add to Wish List"]`
+      // ),
+      // addToCartButton: page.locator(
+      //   `css=div[id="mz-product-tab-39217984-0"] div[class="product-thumb image-top"]  div[class="product-action"] button[title="Add to Cart"]`
+      // ),
+      // compareButton: page.locator(
+      //   `css=div[id="mz-product-tab-39217984-0"] div[class="product-thumb image-top"]  div[class="product-action"] button[title="Compare this Product"]`
+      // ),
+      // quickViewButton: page.locator(
+      //   `css=div[id="mz-product-tab-39217984-0"] div[class="product-thumb image-top"]  div[class="product-action"] button[title="Quick view"]`
+      // ),
     };
   }
   getAllCategoriesDropdownButtonWithText(category: string): Locator {
