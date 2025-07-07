@@ -3,7 +3,7 @@ import { ExpectedValueProvider } from "../../utilities/valueProvider";
 import homeData from "../../testData/home.json";
 import myAccountData from "../../testData/myAccount.json";
 import { MyAccountPage } from "../../pageObjectModel/myAccount";
-import { FakeUser } from "../../utilities/fakeData";
+
 
 class editAccountPageTest extends ExpectedValueProvider {
   constructor() {

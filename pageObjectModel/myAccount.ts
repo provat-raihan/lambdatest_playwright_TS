@@ -55,7 +55,6 @@ export class MyAccountPage {
     loginPageDangerWarningSection: Locator;
   };
   readonly successPage: {
-    
     successPageHeader: Locator;
     successPageContinueButton: Locator;
   };
@@ -88,7 +87,6 @@ export class MyAccountPage {
     checkPayeeNameInputField: Locator;
     aboutUsCheckboxInput: Locator;
     continueButton: Locator;
-    
   };
   readonly editAccountPage: {
     editAccountPageHeader: Locator;
@@ -104,7 +102,6 @@ export class MyAccountPage {
     firstNameWarning: Locator;
     lastNameWarning: Locator;
     emailWarning: Locator;
-
   };
   readonly changePasswordPage: {
     changePasswordPageHeader: Locator;
@@ -114,12 +111,19 @@ export class MyAccountPage {
     backButton: Locator;
     passwordFieldWarning: Locator;
     confirmPasswordFieldWarning: Locator;
-
   };
   readonly logoutPage: {
     logoutPageHeader: Locator;
     continueButton: Locator;
-
+  };
+  readonly wishListPage: {
+    wishListPageHeader: Locator;
+    continueButton: Locator;
+    tableHeaderRow: Locator;
+    tableBodyRow: Locator;
+    productAddToCartButton: Locator;
+    productRemoveCartButton: Locator;
+    emptyCartMessage: Locator;
   };
 
   constructor(page: Page) {
@@ -141,10 +145,10 @@ export class MyAccountPage {
       returns: page.getByRole("link", { name: " Returns" }),
       transactions: page.getByRole("link", { name: " Transactions" }),
       newsletter: page.getByRole("link", { name: " Newsletter" }),
-      editAccount: page.getByRole('link', { name: ' Edit Account' }),
-      password: page.getByRole('link', { name: ' Password' }),
-      notification: page.getByRole('link', { name: ' Notification' }),
-      logout: page.getByRole('link', { name: ' Logout' }),
+      editAccount: page.getByRole("link", { name: " Edit Account" }),
+      password: page.getByRole("link", { name: " Password" }),
+      notification: page.getByRole("link", { name: " Notification" }),
+      logout: page.getByRole("link", { name: " Logout" }),
     };
     this.registerPage = {
       registerPageHeader: page.getByRole("heading", {
@@ -210,74 +214,111 @@ export class MyAccountPage {
       successPageContinueButton: page.getByRole("link", { name: "Continue" }),
     };
     this.forgottenPasswordPage = {
-      forgottenPasswordPageHeader: page.getByRole('heading', { name: 'Forgot Your Password?' }),
-      forgottenPasswordPageEmailField: page.getByRole('textbox', { name: 'E-Mail Address*' }),
-      forgottenPasswordPageEmailLegend: page.getByText('Your E-Mail Address'),
-      forgottenPasswordPageContinueButton: page.getByRole('button', { name: 'Continue' }),
-      forgottenPasswordPageBackButton: page.getByRole('link', { name: ' Back' })
-      
+      forgottenPasswordPageHeader: page.getByRole("heading", {
+        name: "Forgot Your Password?",
+      }),
+      forgottenPasswordPageEmailField: page.getByRole("textbox", {
+        name: "E-Mail Address*",
+      }),
+      forgottenPasswordPageEmailLegend: page.getByText("Your E-Mail Address"),
+      forgottenPasswordPageContinueButton: page.getByRole("button", {
+        name: "Continue",
+      }),
+      forgottenPasswordPageBackButton: page.getByRole("link", {
+        name: " Back",
+      }),
     };
     this.myAccount = {
       myAccountBreadcrumb: page.locator(`css=ol[class="breadcrumb"]`),
       myAccountBreadcrumbActive: page.locator(
         `css=li[class="breadcrumb-item active"]`
       ),
-      myAccountHeader: page.getByRole('heading', { name: 'My Account' }),
+      myAccountHeader: page.getByRole("heading", { name: "My Account" }),
       myAccountItems: page.locator(
         `css=div[class="row"] div[class="col-6 col-sm-4 col-lg-2_4"]`
       ),
-    
-      myOrdersHeader: page.getByRole('heading', { name: 'My Orders' }),
-      myOrdersItems: page.locator(`css=div[class="row"] div[class="col-6 col-sm-4 col-lg-2"]`),
-      
-      myAffiliateAccountHeader: page.getByRole('heading', { name: 'My Affiliate Account' }),
-      myAffiliateAccountItems: page.locator(`css=div[class="card-body text-center text-sm-left"] a`),
-      registerAffiliateAccount: page.locator(`css=div[class="card-body text-center text-sm-left"] a`).first(),
+
+      myOrdersHeader: page.getByRole("heading", { name: "My Orders" }),
+      myOrdersItems: page.locator(
+        `css=div[class="row"] div[class="col-6 col-sm-4 col-lg-2"]`
+      ),
+
+      myAffiliateAccountHeader: page.getByRole("heading", {
+        name: "My Affiliate Account",
+      }),
+      myAffiliateAccountItems: page.locator(
+        `css=div[class="card-body text-center text-sm-left"] a`
+      ),
+      registerAffiliateAccount: page
+        .locator(`css=div[class="card-body text-center text-sm-left"] a`)
+        .first(),
     };
     this.registerAffiliateAccountPage = {
-      AffiliateAccountPageHeader: page.getByRole('heading', { name: 'Your Affiliate Information' }),
-      AffiliateAccountLegend: page.getByText('My Affiliate Account'),
-      AffiliateAccountPageCompanyField: page.getByRole('textbox', { name: 'Company' }),
-      AffiliateAccountPageWebsiteField: page.getByRole('textbox', { name: 'Web Site' }),
-      paymentInfoLegend: page.getByText('Payment Information'),
-      paymentInfoTaxIdInputField: page.getByRole('textbox', { name: 'Tax ID' }),
+      AffiliateAccountPageHeader: page.getByRole("heading", {
+        name: "Your Affiliate Information",
+      }),
+      AffiliateAccountLegend: page.getByText("My Affiliate Account"),
+      AffiliateAccountPageCompanyField: page.getByRole("textbox", {
+        name: "Company",
+      }),
+      AffiliateAccountPageWebsiteField: page.getByRole("textbox", {
+        name: "Web Site",
+      }),
+      paymentInfoLegend: page.getByText("Payment Information"),
+      paymentInfoTaxIdInputField: page.getByRole("textbox", { name: "Tax ID" }),
       paymentMethodRadioInput: page.locator(`css=input[type = "radio"]`),
-      checkPayeeNameInputField: page.getByRole('textbox', { name: 'Cheque Payee Name*' }),
-      aboutUsCheckboxInput: page.getByRole('checkbox'),
-      continueButton: page.getByRole('button', { name: 'Continue' }),
-      
+      checkPayeeNameInputField: page.getByRole("textbox", {
+        name: "Cheque Payee Name*",
+      }),
+      aboutUsCheckboxInput: page.getByRole("checkbox"),
+      continueButton: page.getByRole("button", { name: "Continue" }),
     };
     this.editAccountPage = {
-      editAccountPageHeader: page.getByRole('heading', { name: 'My Account Information' }),
-      personalInfoLegend: page.getByText('Your Personal Details'),
-      firstNameInputBox: page.getByRole('textbox', { name: 'First Name *' }),
-      lastNameInputBox: page.getByRole('textbox', { name: 'Last Name*' }),
-      emailInputBox: page.getByRole('textbox', { name: 'E-Mail*' }),
-      telephoneInputBox: page.getByRole('textbox', { name: 'Telephone*' }),
-      continueButton: page.getByRole('button', { name: 'Continue' }),
-      backButton: page.getByRole('link', { name: ' Back' }),
-      telephoneGuideMessage: page.getByText('Enter valid phone number with'),
-      telephoneWarning: page.getByText('Telephone must be between 3'),
-      firstNameWarning: page.getByText('First Name must be between 1'),
-      lastNameWarning: page.getByText('Last Name must be between 1'),
-      emailWarning: page.getByText('E-Mail Address does not'),
-      
+      editAccountPageHeader: page.getByRole("heading", {
+        name: "My Account Information",
+      }),
+      personalInfoLegend: page.getByText("Your Personal Details"),
+      firstNameInputBox: page.getByRole("textbox", { name: "First Name *" }),
+      lastNameInputBox: page.getByRole("textbox", { name: "Last Name*" }),
+      emailInputBox: page.getByRole("textbox", { name: "E-Mail*" }),
+      telephoneInputBox: page.getByRole("textbox", { name: "Telephone*" }),
+      continueButton: page.getByRole("button", { name: "Continue" }),
+      backButton: page.getByRole("link", { name: " Back" }),
+      telephoneGuideMessage: page.getByText("Enter valid phone number with"),
+      telephoneWarning: page.getByText("Telephone must be between 3"),
+      firstNameWarning: page.getByText("First Name must be between 1"),
+      lastNameWarning: page.getByText("Last Name must be between 1"),
+      emailWarning: page.getByText("E-Mail Address does not"),
     };
     this.changePasswordPage = {
-      changePasswordPageHeader: page.getByRole('heading', { name: 'Change Password' }),
-      passwordInputField: page.getByRole('textbox', { name: 'Password*' }),
-      confirmPasswordInputField: page.getByRole('textbox', { name: 'Password Confirm*' }),
-      continueButton: page.getByRole('button', { name: 'Continue' }),
-      backButton: page.getByRole('link', { name: ' Back' }),
-      passwordFieldWarning: page.getByText('Password must be between 4'),
-      confirmPasswordFieldWarning: page.getByText('Password confirmation does'),
-
+      changePasswordPageHeader: page.getByRole("heading", {
+        name: "Change Password",
+      }),
+      passwordInputField: page.getByRole("textbox", { name: "Password*" }),
+      confirmPasswordInputField: page.getByRole("textbox", {
+        name: "Password Confirm*",
+      }),
+      continueButton: page.getByRole("button", { name: "Continue" }),
+      backButton: page.getByRole("link", { name: " Back" }),
+      passwordFieldWarning: page.getByText("Password must be between 4"),
+      confirmPasswordFieldWarning: page.getByText("Password confirmation does"),
     };
     this.logoutPage = {
-      logoutPageHeader: page.getByRole('heading', { name: ' Account Logout' }),
-      continueButton: page.getByRole('link', { name: 'Continue' }),
-
+      logoutPageHeader: page.getByRole("heading", { name: " Account Logout" }),
+      continueButton: page.getByRole("link", { name: "Continue" }),
     };
-    
+    this.wishListPage = {
+      wishListPageHeader: page.getByRole("heading", { name: "My Wish List" }),
+      continueButton: page.getByRole("link", { name: "Continue" }),
+      tableHeaderRow: page.locator(`css=div[id="content"] thead`),
+      tableBodyRow: page.locator(`css=div[id="content"] tbody tr`),
+      productAddToCartButton: page.locator(
+        `css=div[id="content"] tbody tr button[data-original-title="Add to Cart"]`
+      ),
+      productRemoveCartButton: page.locator(
+        `css=div[id="content"] tbody tr a[data-original-title="Remove"]`
+      ),
+      emptyCartMessage: page.getByText('No results!'),
+    };
   }
 }
