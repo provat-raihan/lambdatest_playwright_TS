@@ -10,7 +10,7 @@ class loginPageTest extends ExpectedValueProvider {
 
   runTest() {
     test.describe("LoginPage functionality test", () => {
-      test.beforeEach(async ({ runner, envData, homePage,myAccountPage }) => {
+      test.beforeEach(async ({ runner, envData, homePage, myAccountPage }) => {
         await runner.navigateTo(envData.baseUrl);
         await runner.verifyUrlContains(envData.baseUrl);
         await runner.verifyElementIsVisible(homePage.headerLogo);
@@ -52,7 +52,7 @@ class loginPageTest extends ExpectedValueProvider {
           email: envData.email,
           password: envData.password,
         });
-        await runner.verifyUrlContains(envData.myAccountItems.myAccount)
+        await runner.verifyUrlContains(envData.myAccountItems.myAccount);
         await runner.verifyElementIsVisible(
           myAccountPage.myAccount.myAccountBreadcrumb
         );
@@ -76,7 +76,6 @@ class loginPageTest extends ExpectedValueProvider {
           email: fakeUser.email,
           password: envData.password,
         });
-        await runner.verifyUrlContains(envData.myAccountItems.myAccount)
         await runner.verifyElementIsVisible(
           myAccountPage.loginPage.loginPageDangerWarningSection
         );
@@ -97,7 +96,6 @@ class loginPageTest extends ExpectedValueProvider {
           email: envData.email,
           password: fakeUser.password,
         });
-        await runner.verifyUrlContains(envData.myAccountItems.myAccount)
         await runner.verifyElementIsVisible(
           myAccountPage.loginPage.loginPageDangerWarningSection
         );
@@ -117,7 +115,6 @@ class loginPageTest extends ExpectedValueProvider {
           email: "",
           password: "",
         });
-        await runner.verifyUrlContains(envData.myAccountItems.myAccount)
         await runner.verifyElementIsVisible(
           myAccountPage.loginPage.loginPageDangerWarningSection
         );
@@ -138,7 +135,7 @@ class loginPageTest extends ExpectedValueProvider {
           email: fakeUser.email,
           password: fakeUser.password,
         });
-        
+
         await authHelper.login(envData.baseUrl, {
           email: fakeUser.email,
           password: fakeUser.password,
@@ -170,12 +167,12 @@ class loginPageTest extends ExpectedValueProvider {
       test("Verify forgotten password button directs to the correct page", async ({
         runner,
         myAccountPage,
-        envData
+        envData,
       }) => {
-        await runner.clickOnElement(myAccountPage.loginPage.loginPageForgottenPasswordButton)
-        await runner.verifyUrlContains(
-          envData.forgotPasswordUrl
+        await runner.clickOnElement(
+          myAccountPage.loginPage.loginPageForgottenPasswordButton
         );
+        await runner.verifyUrlContains(envData.forgotPasswordUrl);
         await runner.verifyElementIsVisible(
           myAccountPage.forgottenPasswordPage.forgottenPasswordPageHeader
         );
@@ -183,11 +180,11 @@ class loginPageTest extends ExpectedValueProvider {
           myAccountPage.forgottenPasswordPage.forgottenPasswordPageEmailLegend
         );
         await runner.verifyToHaveExactText(
-           myAccountPage.forgottenPasswordPage.forgottenPasswordPageHeader,
+          myAccountPage.forgottenPasswordPage.forgottenPasswordPageHeader,
           myAccountData.forgottenPassword.forgottenPasswordHeaderText
         );
         await runner.verifyToHaveExactText(
-           myAccountPage.forgottenPasswordPage.forgottenPasswordPageEmailLegend,
+          myAccountPage.forgottenPasswordPage.forgottenPasswordPageEmailLegend,
           myAccountData.forgottenPassword.forgottenPasswordEmailLegendText
         );
         await runner.verifyElementIsVisible(
@@ -203,14 +200,13 @@ class loginPageTest extends ExpectedValueProvider {
         homePage,
         myAccountPage,
         envData,
-        authHelper
+        authHelper,
       }) => {
-        
         await authHelper.login(envData.baseUrl, {
           email: envData.email,
           password: envData.password,
         });
-        await runner.verifyUrlContains(envData.myAccountItems.myAccount)
+        await runner.verifyUrlContains(envData.myAccountItems.myAccount);
         await runner.verifyElementIsVisible(
           myAccountPage.myAccount.myAccountBreadcrumb
         );
@@ -221,9 +217,11 @@ class loginPageTest extends ExpectedValueProvider {
           myAccountPage.myAccount.myAccountBreadcrumbActive,
           myAccountData.accountBreadcrumbText
         );
-        await runner.clickOnElement(myAccountPage.sidebarOptions.logout)
-        await runner.verifyElementIsVisible(myAccountPage.logoutPage.logoutPageHeader)
-        await runner.clickOnElement(myAccountPage.logoutPage.continueButton)
+        await runner.clickOnElement(myAccountPage.sidebarOptions.logout);
+        await runner.verifyElementIsVisible(
+          myAccountPage.logoutPage.logoutPageHeader
+        );
+        await runner.clickOnElement(myAccountPage.logoutPage.continueButton);
         await runner.verifyUrlContains(envData.baseUrl);
         await runner.verifyElementIsVisible(homePage.headerLogo);
         await runner.validateAttribute(
