@@ -880,7 +880,8 @@ async  addRandomProductToWishlist(
     const wishlistBtn = targetCard.locator('div.product-action button[title="Add to Wish List"]');
 
     // 6. Wait for wishlist button to become visible after hover
-    await wishlistBtn.waitFor({ state: 'visible', timeout: 3000 });
+    await wishlistBtn.waitFor({ state: 'visible', timeout: 5000 });
+    await wishlistBtn.waitFor({ state: "attached", timeout: 5000 });
 
     // 7. Click the wishlist button (forcefully to avoid hover-intercept issues)
     await wishlistBtn.click({ force: true });
@@ -892,6 +893,34 @@ async  addRandomProductToWishlist(
     throw error;
   }
 }
+  async verifyWishListedProducts(
+    wishlistedHrefs: string[],
+    wishlistProductAnchors: Locator
+  ): Promise<void> {
+    // Wait for at least one wishlist product anchor to be visible
+    await expect(wishlistProductAnchors.first()).toBeVisible({ timeout: 10000 });
+
+    const anchorCount = await wishlistProductAnchors.count();
+    const foundHrefs: string[] = [];
+
+    for (let i = 0; i < anchorCount; i++) {
+      const href = await wishlistProductAnchors.nth(i).getAttribute("href");
+      if (href) {
+        foundHrefs.push(href);
+      }
+    }
+
+    for (const expectedHref of wishlistedHrefs) {
+      if (!foundHrefs.includes(expectedHref)) {
+        const errorMsg = `❌ Wishlisted product href not found in wishlist: ${expectedHref}`;
+        this.logMessage(errorMsg, "error");
+        await this.captureScreenshotOnFailure("verifyWishlistedProducts");
+        throw new Error(errorMsg);
+      } else {
+        this.logMessage(`✅ Wishlisted product href found: ${expectedHref}`);
+      }
+    }
+  }
 
 
   // <------------------------------------------------------------ X ------------------------------------------------------------>

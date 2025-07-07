@@ -121,6 +121,7 @@ export class MyAccountPage {
     continueButton: Locator;
     tableHeaderRow: Locator;
     tableBodyRow: Locator;
+    tableBodyRowName: Locator;
     productAddToCartButton: Locator;
     productRemoveCartButton: Locator;
     emptyCartMessage: Locator;
@@ -312,6 +313,7 @@ export class MyAccountPage {
       continueButton: page.getByRole("link", { name: "Continue" }),
       tableHeaderRow: page.locator(`css=div[id="content"] thead`),
       tableBodyRow: page.locator(`css=div[id="content"] tbody tr`),
+      tableBodyRowName: page.locator(`css=td[class="text-left"] a`),
       productAddToCartButton: page.locator(
         `css=div[id="content"] tbody tr button[data-original-title="Add to Cart"]`
       ),

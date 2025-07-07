@@ -6,6 +6,7 @@ export class HomePage {
   readonly compareButton: Locator;
   readonly wishlistButton: Locator;
   readonly cartButton: Locator;
+  readonly wishListToasterButton: Locator;
 
   readonly navbarItems: {
     shopByCategory: Locator;
@@ -53,7 +54,9 @@ export class HomePage {
   readonly productCards: {
     topCollectionPopular: Locator;
     topCollectionLatest: Locator;
+    topCollectionLatestButton: Locator;
     topCollectionBestSeller: Locator;
+    topCollectionBestSellerButton: Locator;
     topCollectionNextButton: Locator;
     topProducts: Locator;
     topProductsNextButton: Locator;
@@ -73,6 +76,7 @@ export class HomePage {
       exact: true,
     });
     this.cartButton = page.getByRole("button", { name: "0" });
+    this.wishListToasterButton = page.locator( `css=a[class="btn btn-secondary btn-block"]`);
 
     this.navbarItems = {
       shopByCategory: page.getByRole("button", { name: "Shop by Category" }),
@@ -133,7 +137,13 @@ export class HomePage {
         `css=div[id="mz-product-tab-39217984-0"] div[class="product-thumb image-top"]  `
       ),
       topCollectionLatest: page.locator(
-        `css=div[id="mz-product-tab-39217984-1""] div[class="product-thumb image-top"]  `
+        `css=div[id="mz-product-tab-39217984-1"] div[class="product-thumb image-top"]  `
+      ),
+      topCollectionLatestButton: page.locator(
+        `css=a[href="#mz-product-tab-39217984-1"] `
+      ),
+      topCollectionBestSellerButton: page.locator(
+        `css=a[href="#mz-product-tab-39217984-2"]`
       ),
       topCollectionBestSeller: page.locator(
         `css=div[id="mz-product-tab-39217984-2"] div[class="product-thumb image-top"]  `
