@@ -7,6 +7,8 @@ export class HomePage {
   readonly wishlistButton: Locator;
   readonly cartButton: Locator;
   readonly wishListToasterButton: Locator;
+  readonly wishListToasterLoginButton: Locator;
+  readonly wishListToasterRegisterButton: Locator;
 
   readonly navbarItems: {
     shopByCategory: Locator;
@@ -77,6 +79,8 @@ export class HomePage {
     });
     this.cartButton = page.getByRole("button", { name: "0" });
     this.wishListToasterButton = page.locator( `css=a[class="btn btn-secondary btn-block"]`);
+    this.wishListToasterLoginButton = page.locator( `css=a[class="btn btn-danger btn-block"]`);
+    this.wishListToasterRegisterButton = page.locator( `css=a[class="btn btn-secondary btn-block"]`);
 
     this.navbarItems = {
       shopByCategory: page.getByRole("button", { name: "Shop by Category" }),

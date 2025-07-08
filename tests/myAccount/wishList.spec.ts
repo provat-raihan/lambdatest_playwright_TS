@@ -67,6 +67,35 @@ class wishListPageTest extends ExpectedValueProvider {
             myAccountPage.loginPage.registerSectionHeader
           );
         });
+        test("verify that login or register is mandatory for wish list  product adding ", async ({
+          runner,
+          envData,
+          homePage,
+          
+          
+        }) => {
+          await runner.navigateTo(envData.baseUrl);
+          await runner.verifyUrlContains(envData.baseUrl);
+          await runner.verifyElementIsVisible(homePage.headerLogo);
+          await runner.validateAttribute(
+            homePage.headerLogo,
+            "src",
+            homeData.header.logoSrc
+          );
+          await runner.validateAttribute(
+            homePage.headerLogo,
+            "alt",
+            homeData.header.logoAlt
+          );
+          await runner.addRandomProductToWishlist(
+            homePage.productCards.topCollectionPopular,
+            homePage.productCards.topCollectionNextButton
+          );
+          await runner.verifyElementIsVisible(homePage.wishListToasterLoginButton)
+          await runner.verifyElementIsVisible(homePage.wishListToasterRegisterButton)
+          await runner.validateAttribute(homePage.wishListToasterLoginButton,'href',envData.loginUrl)
+          await runner.validateAttribute(homePage.wishListToasterRegisterButton,'href',envData.registerUrl)
+        });
         
       });
       test.describe("wish list functionality testing from the sidebar with log in", () => {
@@ -265,6 +294,7 @@ class wishListPageTest extends ExpectedValueProvider {
           await runner.verifyElementIsVisible(myAccountPage.wishListPage.tableBodyRow)
           await runner.verifyWishListedProducts(whishListedProducts,myAccountPage.wishListPage.tableBodyRowName)
         });
+        //this test is flaky . Sometimes it clicks the add to wishlist product but the click is done to the image and route to product details page
         test("verify that wish list shows a product when it has been added from top products section", async ({
           runner,
           myAccountPage,
@@ -297,6 +327,154 @@ class wishListPageTest extends ExpectedValueProvider {
           await runner.verifyElementIsVisible(myAccountPage.wishListPage.tableBodyRow)
           await runner.verifyWishListedProducts(whishListedProducts,myAccountPage.wishListPage.tableBodyRowName)
         });
+        test("verify that wish list shows a product when it has been added from under 99 section", async ({
+          runner,
+          myAccountPage,
+          homePage,
+          envData,
+        }) => {
+          await runner.clickOnElement(homePage.navbarItems.home);
+          await runner.verifyUrlContains(envData.homeUrl);
+          const whishListedProducts: string[] = [];
+          const productOne = await runner.addRandomProductToWishlist(
+            homePage.productCards.under99 
+          );
+          whishListedProducts.push(productOne)
+
+          await runner.verifyElementIsVisible(homePage.wishListToasterButton)
+          await runner.clickOnElement(homePage.wishListToasterButton)
+          await runner.verifyUrlContains(envData.myAccountItems.wishList);
+            await runner.verifyElementIsVisible(
+              myAccountPage.wishListPage.wishListPageHeader
+            );
+            await runner.verifyElementIsVisible(
+              myAccountPage.myAccount.myAccountBreadcrumbActive
+            );
+            await runner.verifyToHaveExactText(
+              myAccountPage.myAccount.myAccountBreadcrumbActive,
+              myAccountData.wishListBreadcrumbText
+            );
+          await runner.verifyElementIsVisible(myAccountPage.wishListPage.tableHeaderRow)
+          await runner.verifyElementIsVisible(myAccountPage.wishListPage.tableBodyRow)
+          await runner.verifyWishListedProducts(whishListedProducts,myAccountPage.wishListPage.tableBodyRowName)
+        });
+        test("verify that wish list shows multiple products when it has been added from different sections ", async ({
+          runner,
+          myAccountPage,
+          homePage,
+          envData,
+        }) => {
+          await runner.clickOnElement(homePage.navbarItems.home);
+          await runner.verifyUrlContains(envData.homeUrl);
+          const whishListedProducts: string[] = [];
+          const productOne = await runner.addRandomProductToWishlist(
+            homePage.productCards.under99 
+          );
+          whishListedProducts.push(productOne)
+          const productTwo = await runner.addRandomProductToWishlist(
+            homePage.productCards.topCollectionPopular,
+            homePage.productCards.topCollectionNextButton
+          );
+          whishListedProducts.push(productTwo)
+          await runner.verifyElementIsVisible(homePage.wishListToasterButton)
+          await runner.clickOnElement(homePage.wishListToasterButton)
+          await runner.verifyUrlContains(envData.myAccountItems.wishList);
+            await runner.verifyElementIsVisible(
+              myAccountPage.wishListPage.wishListPageHeader
+            );
+            await runner.verifyElementIsVisible(
+              myAccountPage.myAccount.myAccountBreadcrumbActive
+            );
+            await runner.verifyToHaveExactText(
+              myAccountPage.myAccount.myAccountBreadcrumbActive,
+              myAccountData.wishListBreadcrumbText
+            );
+          await runner.verifyElementIsVisible(myAccountPage.wishListPage.tableHeaderRow)
+          await runner.verifyWishListedProducts(whishListedProducts,myAccountPage.wishListPage.tableBodyRowName)
+        });
+        test("verify that wish list shows multiple products when it has been added from same section ", async ({
+          runner,
+          myAccountPage,
+          homePage,
+          envData,
+        }) => {
+          await runner.clickOnElement(homePage.navbarItems.home);
+          await runner.verifyUrlContains(envData.homeUrl);
+          const whishListedProducts: string[] = [];
+          const productOne = await runner.addRandomProductToWishlist(
+            homePage.productCards.topCollectionPopular,
+            homePage.productCards.topCollectionNextButton 
+          );
+          whishListedProducts.push(productOne)
+          const productTwo = await runner.addRandomProductToWishlist(
+            homePage.productCards.topCollectionPopular,
+            homePage.productCards.topCollectionNextButton
+          );
+          whishListedProducts.push(productTwo)
+          await runner.verifyElementIsVisible(homePage.wishListToasterButton)
+          await runner.clickOnElement(homePage.wishListToasterButton)
+          await runner.verifyUrlContains(envData.myAccountItems.wishList);
+            await runner.verifyElementIsVisible(
+              myAccountPage.wishListPage.wishListPageHeader
+            );
+            await runner.verifyElementIsVisible(
+              myAccountPage.myAccount.myAccountBreadcrumbActive
+            );
+            await runner.verifyToHaveExactText(
+              myAccountPage.myAccount.myAccountBreadcrumbActive,
+              myAccountData.wishListBreadcrumbText
+            );
+          await runner.verifyElementIsVisible(myAccountPage.wishListPage.tableHeaderRow)
+          await runner.verifyWishListedProducts(whishListedProducts,myAccountPage.wishListPage.tableBodyRowName)
+        });
+        test("verify that wish list shows multiple products and continue button redirects to my account ", async ({
+          runner,
+          myAccountPage,
+          homePage,
+          envData,
+        }) => {
+          await runner.clickOnElement(homePage.navbarItems.home);
+          await runner.verifyUrlContains(envData.homeUrl);
+          const whishListedProducts: string[] = [];
+          const productOne = await runner.addRandomProductToWishlist(
+            homePage.productCards.topCollectionPopular,
+            homePage.productCards.topCollectionNextButton 
+          );
+          whishListedProducts.push(productOne)
+          const productTwo = await runner.addRandomProductToWishlist(
+            homePage.productCards.topCollectionPopular,
+            homePage.productCards.topCollectionNextButton
+          );
+          whishListedProducts.push(productTwo)
+          await runner.verifyElementIsVisible(homePage.wishListToasterButton)
+          await runner.clickOnElement(homePage.wishListToasterButton)
+          await runner.verifyUrlContains(envData.myAccountItems.wishList);
+            await runner.verifyElementIsVisible(
+              myAccountPage.wishListPage.wishListPageHeader
+            );
+            await runner.verifyElementIsVisible(
+              myAccountPage.myAccount.myAccountBreadcrumbActive
+            );
+            await runner.verifyToHaveExactText(
+              myAccountPage.myAccount.myAccountBreadcrumbActive,
+              myAccountData.wishListBreadcrumbText
+            );
+          await runner.verifyElementIsVisible(myAccountPage.wishListPage.tableHeaderRow)
+          await runner.verifyWishListedProducts(whishListedProducts, myAccountPage.wishListPage.tableBodyRowName)
+          await runner.clickOnElement(myAccountPage.wishListPage.continueButton)
+          await runner.verifyUrlContains(envData.myAccountItems.myAccount);
+            await runner.verifyElementIsVisible(
+              myAccountPage.myAccount.myAccountHeader
+            );
+            await runner.verifyElementIsVisible(
+              myAccountPage.myAccount.myAccountBreadcrumbActive
+            );
+            await runner.verifyToHaveExactText(
+              myAccountPage.myAccount.myAccountBreadcrumbActive,
+              myAccountData.accountBreadcrumbText
+            );
+        });
+
       });
       //   test.describe("Edit account info changed", () => {
       //     test.beforeEach(
