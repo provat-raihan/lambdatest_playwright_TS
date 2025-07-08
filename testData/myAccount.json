@@ -20,6 +20,7 @@
   "affiliateBreadcrumbText": "Affiliate",
   "affiliateTrackingBreadcrumbText": "Affiliate Tracking",
   "editAccountBreadcrumbText": "Edit Information",
+  
 
   "login": {
     "loginBreadcrumbText": "Login",
@@ -67,6 +68,10 @@
     "passwordUpdateWarningText": " Success: Your password has been successfully updated.",
     "passwordFieldWarningText": "Password must be between 4 and 20 characters!",
     "confirmPasswordFieldWarningText": "Password confirmation does not match password!"
+
+},
+"wishListPage":{
+    
 
 }
 }

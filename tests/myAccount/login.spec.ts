@@ -26,7 +26,7 @@ class loginPageTest extends ExpectedValueProvider {
         );
         await runner.mouseHover(homePage.navbarItems.myAccount);
         await runner.clickOnElement(homePage.navbarItems.myAccountLogin);
-
+        await runner.verifyUrlContains(envData.loginUrl);
         await runner.verifyElementIsVisible(
           myAccountPage.loginPage.loginPageHeader
         );

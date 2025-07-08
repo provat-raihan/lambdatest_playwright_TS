@@ -8,6 +8,7 @@ export class EnvData {
   readonly registerUrl: string;
   readonly forgotPasswordUrl: string;
   readonly successUrl: string;
+  readonly wishlistUrl: string;
   readonly firstName: string;
   readonly lastName: string;
   readonly telephone: string;
@@ -64,6 +65,7 @@ export class EnvData {
     this.registerUrl = `${process.env.REGISTER_URL}`;
     this.forgotPasswordUrl = `${process.env.FORGOT_PASSWORD_URL}`;
     this.successUrl = `${process.env.SUCCESS_URL}`;
+    this.wishlistUrl = `${process.env.WISHLIST_URL}`;
     this.firstName = `${process.env.FIRST_NAME}`;
     this.lastName = `${process.env.LAST_NAME}`;
     this.telephone = `${process.env.TELEPHONE}`;
