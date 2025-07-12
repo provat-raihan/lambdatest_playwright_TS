@@ -72,6 +72,8 @@ export class HomePage {
   readonly actionButton: {
     wishlist: Locator;
     cart: Locator;
+    quickView: Locator;
+    compare: Locator;
   };
 
   constructor(page: Page) {
@@ -157,6 +159,12 @@ export class HomePage {
       ),
       cart: page.locator(
         `css=div[id="mz-product-tab-39217984-0"] div[class="product-action"] button[title="Add to Cart"]`
+      ),
+      quickView: page.locator(
+        `css=div[id="mz-product-tab-39217984-0"] div[class="product-action"] button[title="Quick view"]`
+      ),
+      compare: page.locator(
+        `css=div[id="mz-product-tab-39217984-0"] div[class="product-action"] button[title="Compare this Product"]`
       ),
     };
     this.productCards = {

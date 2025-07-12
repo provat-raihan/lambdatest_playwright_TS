@@ -828,103 +828,8 @@ Actual message:      "${trimmedActual}"`;
     throw new Error(errorMsg);
   }
 
-async  addRandomProductToWishlist(
-  productCards: Locator,
-  nextButton?: Locator
-): Promise<string> {
-  try {
-    // 1. Wait for at least one product card to be visible
-    await productCards.first().waitFor({ state: 'visible', timeout: 10000 });
 
-    const totalCount = await productCards.count();
-    if (totalCount === 0) throw new Error('❌ No product cards found');
-
-    // 2. Randomly select index
-    const maxVisible = nextButton ? totalCount : Math.min(5, totalCount);
-    const index = Math.floor(Math.random() * maxVisible);
-    logger.info(`🎲 Selected random index: ${index} ${nextButton ? '(with carousel)' : '(visible only)'}`);
-
-    const targetCard = productCards.nth(index);
-
-    // 3. If product is hidden, use carousel to reveal it
-    if (nextButton) {
-      const maxTries = totalCount;
-      let tries = 0;
-
-      while (!(await targetCard.isVisible()) && tries < maxTries) {
-        logger.info(`➡️ Clicking 'Next' to reveal product index ${index} (try #${tries + 1})`);
-        await nextButton.click();
-        await productCards.nth(index).waitFor({ state: 'attached' });
-        await new Promise(res => setTimeout(res, 500)); // Allow carousel to transition
-        tries++;
-      }
-
-      if (!(await targetCard.isVisible())) {
-        const msg = `❌ Failed to reveal product at index ${index} after ${tries} attempts`;
-        logger.error(msg);
-        throw new Error(msg);
-      }
-    }
-
-    // 4. Get product link
-    const anchor = targetCard.locator('div.image a');
-    const href = await anchor.getAttribute('href');
-    if (!href) {
-      const errorMsg = `❌ No href found at index ${index}`;
-      logger.error(errorMsg);
-      throw new Error(errorMsg);
-    }
-
-    logger.info(`🔍 Found product link: ${href}`);
-
-    // 5. Hover to reveal wishlist button
-    await targetCard.hover();
-    logger.info(`🖱️ Hovered over product card at index ${index}`);
-
-    const wishlistBtn = targetCard.locator('div.product-action button[title="Add to Wish List"]');
-
-    // 6. Wait for wishlist button to become visible after hover
-    await wishlistBtn.waitFor({ state: 'visible', timeout: 5000 });
-    await wishlistBtn.waitFor({ state: "attached", timeout: 5000 });
-
-    // 7. Click the wishlist button (forcefully to avoid hover-intercept issues)
-    await wishlistBtn.click({ force: true });
-    logger.info(`❤️ Clicked 'Add to Wish List' for product at index ${index}`);
-
-    return href;
-  } catch (error) {
-    logger.error(`❌ Failed to wishlist product: ${error}`);
-    throw error;
-  }
-}
-  async verifyWishListedProducts(
-    wishlistedHrefs: string[],
-    wishlistProductAnchors: Locator
-  ): Promise<void> {
-    // Wait for at least one wishlist product anchor to be visible
-    await expect(wishlistProductAnchors.first()).toBeVisible({ timeout: 10000 });
-
-    const anchorCount = await wishlistProductAnchors.count();
-    const foundHrefs: string[] = [];
-
-    for (let i = 0; i < anchorCount; i++) {
-      const href = await wishlistProductAnchors.nth(i).getAttribute("href");
-      if (href) {
-        foundHrefs.push(href);
-      }
-    }
-
-    for (const expectedHref of wishlistedHrefs) {
-      if (!foundHrefs.includes(expectedHref)) {
-        const errorMsg = `❌ Wishlisted product href not found in wishlist: ${expectedHref}`;
-        this.logMessage(errorMsg, "error");
-        await this.captureScreenshotOnFailure("verifyWishlistedProducts");
-        throw new Error(errorMsg);
-      } else {
-        this.logMessage(`✅ Wishlisted product href found: ${expectedHref}`);
-      }
-    }
-  }
+  
   async  clickRandomCategory(
   categoryCards: Locator
 ): Promise<void> {
@@ -1009,7 +914,7 @@ async  selectRandomCard(
 
     // 7. Save to test-specific JSON file
     const testSlug = this.testInfo.title.replace(/\s+/g, '_').toLowerCase();
-    const fileName = `wishlist_${testSlug}.json`;
+    const fileName = `${testSlug}.json`;
     const dir = 'test-data';
     const filePath = path.join(dir, fileName);
 
@@ -1026,6 +931,71 @@ async  selectRandomCard(
     logger.info(`✅ Appended product to ${fileName}`);
   } catch (error) {
     logger.error(`❌ Failed to add product to JSON: ${error}`);
+    throw error;
+  }
+}
+  async verifyWishListProducts(cartedProductCards: Locator): Promise<void> {
+  try {
+    const testSlug = this.testInfo.title.replace(/\s+/g, '_').toLowerCase();
+    const filePath = path.join('test-data', `${testSlug}.json`);
+
+    if (!fs.existsSync(filePath)) {
+      const msg = `❌ JSON file not found for test: ${filePath}`;
+      this.logMessage(msg, 'error');
+      throw new Error(msg);
+    }
+
+    const allProducts = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+
+    // Deduplicate by composite key: name + price + productId
+    const uniqueProductsMap = new Map<string, { name: string; price: string; productId: string }>();
+    for (const product of allProducts) {
+      const key = `${product.name}__${product.price}__${product.productId}`;
+      if (!uniqueProductsMap.has(key)) {
+        uniqueProductsMap.set(key, product);
+      }
+    }
+
+    const uniqueProducts = Array.from(uniqueProductsMap.values());
+    this.logMessage(`📦 Loaded ${uniqueProducts.length} unique products from JSON for validation.`);
+
+    const rows = cartedProductCards.locator('tr');
+    const rowCount = await rows.count();
+    this.logMessage(`🧾 Found ${rowCount} rows in the wishlist table.`);
+
+    for (const product of uniqueProducts) {
+      let found = false;
+
+      for (let i = 0; i < rowCount; i++) {
+        const row = rows.nth(i);
+
+        const name = (await row.locator('td:nth-child(2) a').textContent())?.trim() || 'N/A';
+        const price = (await row.locator('td:nth-child(5) .price').textContent())?.trim() || 'N/A';
+        const href = await row.locator('td:nth-child(2) a').getAttribute('href');
+        const productId = href?.match(/product_id=(\d+)/)?.[1] || 'N/A';
+
+        if (name === product.name && price === product.price && productId === product.productId) {
+          this.logMessage(`✅ Matched UI product: ${name} | ${price} | ID: ${productId}`);
+          found = true;
+          break;
+        }
+      }
+
+      if (!found) {
+        const errorMsg = `❌ Missing in UI: ${product.name} | ${product.price} | ID: ${product.productId}`;
+        this.logMessage(errorMsg, 'error');
+
+        const screenshotPath = path.join('screenshots', `wishlist-missing-${this.testInfo.workerIndex}-${Date.now()}.png`);
+        await this.page.screenshot({ path: screenshotPath, fullPage: false });
+        this.logMessage(`📸 Screenshot saved at ${screenshotPath}`, 'warn');
+
+        throw new Error(errorMsg);
+      }
+    }
+
+    this.logMessage(`🎉 All unique JSON products successfully verified in the wishlist UI.`);
+  } catch (error) {
+    this.logMessage(`❌ Wishlist verification failed: ${(error as Error).message}`, 'error');
     throw error;
   }
 }

@@ -83,8 +83,9 @@ class wishListPageTest extends ExpectedValueProvider {
             "alt",
             homeData.header.logoAlt
           );
-          await runner.addRandomProductToWishlist(
+          await runner.selectRandomCard(
             homePage.productCards.topCollectionPopular,
+            homePage.actionButton.wishlist,
             homePage.productCards.topCollectionNextButton
           );
           await runner.verifyElementIsVisible(
@@ -214,12 +215,12 @@ class wishListPageTest extends ExpectedValueProvider {
         }) => {
           await runner.clickOnElement(homePage.navbarItems.home);
           await runner.verifyUrlContains(envData.homeUrl);
-          const whishListedProducts: string[] = [];
-          const productOne = await runner.addRandomProductToWishlist(
+          await runner.selectRandomCard(
             homePage.productCards.topCollectionPopular,
+            homePage.actionButton.wishlist,
             homePage.productCards.topCollectionNextButton
           );
-          whishListedProducts.push(productOne);
+          
           await runner.clickOnElement(homePage.wishListToasterButton);
           await runner.verifyUrlContains(envData.myAccountItems.wishList);
           await runner.verifyElementIsVisible(
@@ -236,11 +237,10 @@ class wishListPageTest extends ExpectedValueProvider {
             myAccountPage.wishListPage.tableHeaderRow
           );
           await runner.verifyElementIsVisible(
-            myAccountPage.wishListPage.tableBodyRow
+            myAccountPage.wishListPage.tableBody
           );
-          await runner.verifyWishListedProducts(
-            whishListedProducts,
-            myAccountPage.wishListPage.tableBodyRowName
+          await runner.verifyWishListProducts(
+            myAccountPage.wishListPage.tableBody
           );
         });
         test("verify that wish list shows a product when it has been added from top collection latest section", async ({
@@ -254,12 +254,12 @@ class wishListPageTest extends ExpectedValueProvider {
           await runner.clickOnElement(
             homePage.productCards.topCollectionLatestButton
           );
-          const whishListedProducts: string[] = [];
-          const productOne = await runner.addRandomProductToWishlist(
+          
+          await runner.selectRandomCard(
             homePage.productCards.topCollectionLatest,
+            homePage.actionButton.wishlist,
             homePage.productCards.topCollectionNextButton
           );
-          whishListedProducts.push(productOne);
           await runner.clickOnElement(homePage.wishListToasterButton);
           await runner.verifyUrlContains(envData.myAccountItems.wishList);
           await runner.verifyElementIsVisible(
@@ -276,11 +276,10 @@ class wishListPageTest extends ExpectedValueProvider {
             myAccountPage.wishListPage.tableHeaderRow
           );
           await runner.verifyElementIsVisible(
-            myAccountPage.wishListPage.tableBodyRow
+            myAccountPage.wishListPage.tableBody
           );
-          await runner.verifyWishListedProducts(
-            whishListedProducts,
-            myAccountPage.wishListPage.tableBodyRowName
+          await runner.verifyWishListProducts(
+            myAccountPage.wishListPage.tableBody
           );
         });
         test("verify that wish list shows a product when it has been added from top collection best seller section", async ({
@@ -294,12 +293,11 @@ class wishListPageTest extends ExpectedValueProvider {
           await runner.clickOnElement(
             homePage.productCards.topCollectionBestSellerButton
           );
-          const whishListedProducts: string[] = [];
-          const productOne = await runner.addRandomProductToWishlist(
+          await runner.selectRandomCard(
             homePage.productCards.topCollectionBestSeller,
+            homePage.actionButton.wishlist,
             homePage.productCards.topCollectionNextButton
           );
-          whishListedProducts.push(productOne);
           await runner.clickOnElement(homePage.wishListToasterButton);
           await runner.verifyUrlContains(envData.myAccountItems.wishList);
           await runner.verifyElementIsVisible(
@@ -316,7 +314,7 @@ class wishListPageTest extends ExpectedValueProvider {
             myAccountPage.wishListPage.tableHeaderRow
           );
           await runner.verifyElementIsVisible(
-            myAccountPage.wishListPage.tableBodyRow
+            myAccountPage.wishListPage.tableBody
           );
           await runner.verifyWishListedProducts(
             whishListedProducts,
@@ -547,7 +545,7 @@ class wishListPageTest extends ExpectedValueProvider {
           const whishListedProducts: string[] = [];
           const productOne = await runner.addRandomProductToWishlist(
             homePage.categoryCards.categoryProductCards
-          
+
           );
           whishListedProducts.push(productOne)
           console.log(whishListedProducts)
