@@ -16,6 +16,7 @@ export class EnvData {
   readonly password: string;
   readonly searchResultUrl: string;
   readonly productCompareUrl: string;
+  readonly categoryUrl: string;
 
   readonly shopByCategoryItemsHrefValues: {
     components: string;
@@ -73,6 +74,7 @@ export class EnvData {
     this.password = `${process.env.PASSWORD}`;
     this.searchResultUrl = `${process.env.SEARCH_RESULT_URL}`;
     this.productCompareUrl = `${process.env.PRODUCT_COMPARE_URL}`;
+    this.categoryUrl = `${process.env.CATEGORY_URL}`;
 
     this.shopByCategoryItemsHrefValues = {
       components: `${process.env.COMPONENTS_URL}`,

@@ -65,6 +65,14 @@ export class HomePage {
     under99: Locator;
     
   };
+  readonly categoryCards: {
+    categoryCards: Locator;
+    categoryProductCards: Locator;
+  };
+  readonly actionButton: {
+    wishlist: Locator;
+    cart: Locator;
+  };
 
   constructor(page: Page) {
     this.page = page;
@@ -135,10 +143,26 @@ export class HomePage {
         .getByRole("heading", { name: "Cart close" })
         .getByLabel("close"),
     };
+    this.categoryCards = {
+      categoryCards: page.locator(
+        `css=figure[class="figure img-top"]`
+      ),
+      categoryProductCards: page.locator(
+        `css=div[class="product-thumb-top"]`
+      ),
+    };
+    this.actionButton = {
+      wishlist: page.locator(
+        `css=div[id="mz-product-tab-39217984-0"] div[class="product-action"] button[title="Add to Wish List"]`
+      ),
+      cart: page.locator(
+        `css=div[id="mz-product-tab-39217984-0"] div[class="product-action"] button[title="Add to Cart"]`
+      ),
+    };
     this.productCards = {
       
       topCollectionPopular: page.locator(
-        `css=div[id="mz-product-tab-39217984-0"] div[class="product-thumb image-top"]  `
+        `css=div[id="mz-product-tab-39217984-0"] div[class="product-thumb image-top"]`
       ),
       topCollectionLatest: page.locator(
         `css=div[id="mz-product-tab-39217984-1"] div[class="product-thumb image-top"]  `

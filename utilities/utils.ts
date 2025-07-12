@@ -1,5 +1,7 @@
-import { expect, Page, Locator, request } from "@playwright/test";
+import { expect, Page, Locator, request,TestInfo } from "@playwright/test";
 import logger from "./logger";
+import fs from 'fs';
+import path from 'path';
 
 const normalize = (value?: string | null): string | undefined => {
   return value?.trim() ? value.trim() : undefined;
@@ -7,9 +9,11 @@ const normalize = (value?: string | null): string | undefined => {
 
 export class Utils {
   private page: Page;
+  private testInfo: TestInfo;
 
-  constructor(page: Page) {
+  constructor(page: Page, testInfo: TestInfo) {
     this.page = page;
+    this.testInfo = testInfo;
   }
 
   public async captureScreenshotOnFailure(testName: string): Promise<void> {
@@ -921,7 +925,110 @@ async  addRandomProductToWishlist(
       }
     }
   }
+  async  clickRandomCategory(
+  categoryCards: Locator
+): Promise<void> {
+  const count = await categoryCards.count();
+  if (count === 0) throw new Error('❌ No categories found');
 
+  const index = Math.floor(Math.random() * count);
+  const target = categoryCards.nth(index);
+  logger.info(`🎯 Selected category index: ${index}`);
+
+  // Try to scroll into view if not visible
+  if (!(await target.isVisible())) {
+    logger.info(`🌀 Scrolling category into view`);
+    await target.scrollIntoViewIfNeeded(); // This is key for Swiper
+  }
+
+  if (!(await target.isVisible())) {
+    throw new Error(`❌ Category at index ${index} is still not visible after scroll`);
+  }
+
+  await target.click();
+  logger.info(`✅ Clicked on category at index ${index}`);
+}
+async  selectRandomCard(
+  cardLocator: Locator,
+  actionButtonLocator: Locator,
+  nextButton?: Locator
+): Promise<void> {
+  try {
+    // 1. Wait for at least one card to be visible
+    await cardLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+    const totalCount = await cardLocator.count();
+    if (totalCount === 0) throw new Error('❌ No product cards found');
+
+    // 2. Randomly select card index
+    const index = Math.floor(Math.random() * totalCount);
+    const targetCard = cardLocator.nth(index);
+    logger.info(`🎲 Selected random index: ${index} ${nextButton ? '(with carousel)' : '(visible only)'}`);
+
+    // 3. Scroll into view if needed
+    if (nextButton && !(await targetCard.isVisible())) {
+      const maxTries = totalCount;
+      let tries = 0;
+
+      while (!(await targetCard.isVisible()) && tries < maxTries) {
+        logger.info(`➡️ Clicking 'Next' to reveal product index ${index} (try #${tries + 1})`);
+        await nextButton.click();
+        await cardLocator.nth(index).waitFor({ state: 'attached' });
+        await new Promise(res => setTimeout(res, 500));
+        tries++;
+      }
+
+      if (!(await targetCard.isVisible())) {
+        const msg = `❌ Failed to reveal product at index ${index} after ${tries} attempts`;
+        logger.error(msg);
+        throw new Error(msg);
+      }
+    }
+
+    // 4. Hover on image to reveal action buttons
+    await targetCard.locator('div.image').hover();
+    logger.info(`🖱️ Hovered over product card at index ${index}`);
+
+    const actionButton = actionButtonLocator.nth(index);
+    await actionButton.waitFor({ state: 'visible', timeout: 5000 });
+    await actionButton.waitFor({ state: 'attached', timeout: 5000 });
+
+    // 5. Click the passed-in action button
+    await actionButton.click({ force: true });
+    logger.info(`⚡ Clicked action button on card at index ${index}`);
+
+    // 6. Extract product details
+    const name = (await targetCard.locator('.caption .title').textContent())?.trim() || 'N/A';
+    const price = (await targetCard.locator('.caption .price').textContent())?.trim() || 'N/A';
+    const anchorHref = await targetCard.locator('a').first().getAttribute('href') || '';
+    const productIdMatch = anchorHref.match(/product_id=(\d+)/);
+    const productId = productIdMatch ? productIdMatch[1] : 'unknown';
+
+    logger.info(`📦 Extracted: Name="${name}", Price="${price}", Product ID=${productId}`);
+
+    const productData = { name, price, productId };
+
+    // 7. Save to test-specific JSON file
+    const testSlug = this.testInfo.title.replace(/\s+/g, '_').toLowerCase();
+    const fileName = `wishlist_${testSlug}.json`;
+    const dir = 'test-data';
+    const filePath = path.join(dir, fileName);
+
+    fs.mkdirSync(dir, { recursive: true });
+
+    let existing: any[] = [];
+    if (fs.existsSync(filePath)) {
+      existing = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+      logger.info(`📂 Loaded existing data for this test: ${fileName}`);
+    }
+
+    existing.push(productData);
+    fs.writeFileSync(filePath, JSON.stringify(existing, null, 2));
+    logger.info(`✅ Appended product to ${fileName}`);
+  } catch (error) {
+    logger.error(`❌ Failed to add product to JSON: ${error}`);
+    throw error;
+  }
+}
 
   // <------------------------------------------------------------ X ------------------------------------------------------------>
   // To Test Utils
