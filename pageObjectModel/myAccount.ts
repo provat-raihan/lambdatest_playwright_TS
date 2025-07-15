@@ -120,8 +120,8 @@ export class MyAccountPage {
     wishListPageHeader: Locator;
     continueButton: Locator;
     tableHeaderRow: Locator;
-    tableBodyRow: Locator;
-    tableBodyRowName: Locator;
+    tableBody: Locator;
+    // tableBodyRowName: Locator;
     productAddToCartButton: Locator;
     productRemoveCartButton: Locator;
     emptyCartMessage: Locator;
@@ -311,9 +311,10 @@ export class MyAccountPage {
     this.wishListPage = {
       wishListPageHeader: page.getByRole("heading", { name: "My Wish List" }),
       continueButton: page.getByRole("link", { name: "Continue" }),
+
       tableHeaderRow: page.locator(`css=div[id="content"] thead`),
-      tableBodyRow: page.locator(`css=div[id="content"] tbody tr`),
-      tableBodyRowName: page.locator(`css=td[class="text-left"] a`),
+      tableBody: page.locator(`css=div[id="content"] tbody `),
+      // tableBodyRowName: page.locator(`css=td[class="text-left"] a`),
       productAddToCartButton: page.locator(
         `css=div[id="content"] tbody tr button[data-original-title="Add to Cart"]`
       ),

@@ -6,7 +6,10 @@ export class HomePage {
   readonly compareButton: Locator;
   readonly wishlistButton: Locator;
   readonly cartButton: Locator;
+  readonly wishListToasterCloseButton: Locator;
   readonly wishListToasterButton: Locator;
+  readonly wishListToasterLoginButton: Locator;
+  readonly wishListToasterRegisterButton: Locator;
 
   readonly navbarItems: {
     shopByCategory: Locator;
@@ -63,6 +66,16 @@ export class HomePage {
     under99: Locator;
     
   };
+  readonly categoryCards: {
+    categoryCards: Locator;
+    categoryProductCards: Locator;
+  };
+  readonly actionButton: {
+    wishlist: Locator;
+    cart: Locator;
+    quickView: Locator;
+    compare: Locator;
+  };
 
   constructor(page: Page) {
     this.page = page;
@@ -76,7 +89,10 @@ export class HomePage {
       exact: true,
     });
     this.cartButton = page.getByRole("button", { name: "0" });
+    this.wishListToasterCloseButton = page.locator( `css=button[aria-label="Close"]`);
     this.wishListToasterButton = page.locator( `css=a[class="btn btn-secondary btn-block"]`);
+    this.wishListToasterLoginButton = page.locator( `css=a[class="btn btn-danger btn-block"]`);
+    this.wishListToasterRegisterButton = page.locator( `css=a[class="btn btn-secondary btn-block"]`);
 
     this.navbarItems = {
       shopByCategory: page.getByRole("button", { name: "Shop by Category" }),
@@ -131,10 +147,32 @@ export class HomePage {
         .getByRole("heading", { name: "Cart close" })
         .getByLabel("close"),
     };
+    this.categoryCards = {
+      categoryCards: page.locator(
+        `css=figure[class="figure img-top"]`
+      ),
+      categoryProductCards: page.locator(
+        `css= div[class="product-thumb-top"] `
+      ),
+    };
+    this.actionButton = {
+      wishlist: page.locator(
+        `css= div[class="product-action"] button[title="Add to Wish List"]`
+      ),
+      cart: page.locator(
+        `css= div[class="product-action"] button[title="Add to Cart"]`
+      ),
+      quickView: page.locator(
+        `css= div[class="product-action"] button[title="Quick view"]`
+      ),
+      compare: page.locator(
+        `css= div[class="product-action"] button[title="Compare this Product"]`
+      ),
+    };
     this.productCards = {
       
       topCollectionPopular: page.locator(
-        `css=div[id="mz-product-tab-39217984-0"] div[class="product-thumb image-top"]  `
+        `css=div[id="mz-product-tab-39217984-0"] div[class="product-thumb image-top"]`
       ),
       topCollectionLatest: page.locator(
         `css=div[id="mz-product-tab-39217984-1"] div[class="product-thumb image-top"]  `

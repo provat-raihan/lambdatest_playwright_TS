@@ -1,4 +1,4 @@
-import { test as base, Page } from "@playwright/test";
+import { test as base, Page, TestInfo } from "@playwright/test";
 import { Utils } from "./utils";
 import { FakeUser } from "./fakeData.ts";
 import { EnvData } from "./envData.ts";
@@ -32,10 +32,10 @@ const test = base.extend<{
   navbarNavigationHelper: NavbarNavigationHelper;
   homePageNavigationHelper: HomePageNavigationHelper;
 }>({
-  runner: async ({ page }: { page: Page }, use) => {
-    const utilsInstance = new Utils(page);
-    await use(utilsInstance);
-  },
+  runner: async ({ page }, use, testInfo) => {
+  const utilsInstance = new Utils(page, testInfo);
+  await use(utilsInstance);
+},
 
   fakeUser: async ({ page }: { page: Page }, use) => {
     const fakeUserInstance = new FakeUser(page);
