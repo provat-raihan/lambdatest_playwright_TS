@@ -6,6 +6,7 @@ export class HomePage {
   readonly compareButton: Locator;
   readonly wishlistButton: Locator;
   readonly cartButton: Locator;
+  readonly wishListToasterCloseButton: Locator;
   readonly wishListToasterButton: Locator;
   readonly wishListToasterLoginButton: Locator;
   readonly wishListToasterRegisterButton: Locator;
@@ -88,6 +89,7 @@ export class HomePage {
       exact: true,
     });
     this.cartButton = page.getByRole("button", { name: "0" });
+    this.wishListToasterCloseButton = page.locator( `css=button[aria-label="Close"]`);
     this.wishListToasterButton = page.locator( `css=a[class="btn btn-secondary btn-block"]`);
     this.wishListToasterLoginButton = page.locator( `css=a[class="btn btn-danger btn-block"]`);
     this.wishListToasterRegisterButton = page.locator( `css=a[class="btn btn-secondary btn-block"]`);
@@ -150,21 +152,21 @@ export class HomePage {
         `css=figure[class="figure img-top"]`
       ),
       categoryProductCards: page.locator(
-        `css=div[class="product-thumb-top"]`
+        `css= div[class="product-thumb-top"] `
       ),
     };
     this.actionButton = {
       wishlist: page.locator(
-        `css=div[id="mz-product-tab-39217984-0"] div[class="product-action"] button[title="Add to Wish List"]`
+        `css= div[class="product-action"] button[title="Add to Wish List"]`
       ),
       cart: page.locator(
-        `css=div[id="mz-product-tab-39217984-0"] div[class="product-action"] button[title="Add to Cart"]`
+        `css= div[class="product-action"] button[title="Add to Cart"]`
       ),
       quickView: page.locator(
-        `css=div[id="mz-product-tab-39217984-0"] div[class="product-action"] button[title="Quick view"]`
+        `css= div[class="product-action"] button[title="Quick view"]`
       ),
       compare: page.locator(
-        `css=div[id="mz-product-tab-39217984-0"] div[class="product-action"] button[title="Compare this Product"]`
+        `css= div[class="product-action"] button[title="Compare this Product"]`
       ),
     };
     this.productCards = {
