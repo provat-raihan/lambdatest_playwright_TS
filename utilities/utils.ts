@@ -955,6 +955,7 @@ async selectRandomCard(
 
 
 
+
   async verifyWishListProducts(cartedProductCards: Locator): Promise<void> {
     try {
       const testSlug = this.testInfo.title.replace(/\s+/g, "_").toLowerCase();

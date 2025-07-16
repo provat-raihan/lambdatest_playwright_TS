@@ -152,7 +152,7 @@ export class HomePage {
         `css=figure[class="figure img-top"]`
       ),
       categoryProductCards: page.locator(
-        `css= div[class="product-thumb-top"] `
+        `css= div.product-thumb `
       ),
     };
     this.actionButton = {
